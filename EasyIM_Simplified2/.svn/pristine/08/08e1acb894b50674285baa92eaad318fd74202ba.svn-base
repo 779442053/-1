@@ -1,0 +1,26 @@
+//
+//  LoginVC.h
+//  EasyIM
+//
+//  Created by 魏勇城 on 2019/1/9.
+//  Copyright © 2019年 余谦. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "MMBaseViewController.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface LoginVC : MMBaseViewController
+
+@property (strong, nonatomic,nullable)  UITextField *host;
+@property (strong, nonatomic,nullable)  UITextField *message;
+@property (strong, nonatomic,nullable)  UITextField *port;
+@property (strong, nonatomic,nullable)  UITextView *status;
+@property (strong, nonatomic)  NSTimer *connectTimer;
+@property (strong, nonatomic)  NSString *preStr;
+@property (strong, nonatomic)  NSString *lastStr;
+
+@end
+
+NS_ASSUME_NONNULL_END

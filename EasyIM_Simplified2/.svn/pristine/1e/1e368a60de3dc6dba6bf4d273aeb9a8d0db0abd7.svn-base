@@ -1,0 +1,96 @@
+//
+//  MMMessage.m
+//  EasyIM
+//
+//  Created by momo on 2019/4/22.
+//  Copyright © 2019年 Looker. All rights reserved.
+//
+
+#import "MMMessage.h"
+
+@implementation MMMessage
+
+- (instancetype)initWithToUser:(NSString *)toUser
+                    toUserName:(NSString *)toUserName
+                      fromUser:(NSString *)fromUser
+                  fromUserName:(NSString *)fromUserName
+                      chatType:(NSString *)chatType
+                      isSender:(BOOL)isSender
+                           cmd:(NSString *)cmd
+                         cType:(MMConversationType)cType
+                   messageBody:( MMChatContentModel *)body{
+    
+    if (self = [super init]) {
+        
+        NSString *sessionId =  [YKUserInfoManager userInfo].sessionID;
+        
+        _toID = toUser;
+        _toUserName = toUserName;
+        _fromUserName = fromUserName;
+        _fromID = fromUser;
+        _type = chatType;
+        _sessionID = sessionId;
+        _msgID = [self msgIDWithFromId:fromUser andToUserId:toUser];
+        _isSender = isSender;
+        _cType = cType;
+        self.cmd = cmd;
+        self.slice = body;
+    }
+    return self;
+
+}
+
+//根据消息类型返回MsgID
+- (NSString *)msgIDWithFromId:(NSString *)fromId andToUserId:(NSString *)toUserId
+{
+    NSString *dateStr = [self timeFormatWithDate2:[self currentMessageTime]];
+    int x = arc4random() % 100000;
+    NSString *msgID = [NSString stringWithFormat:@"%@_%05d_%@_%@",dateStr,x,fromId,toUserId];
+    return msgID;
+}
+
+- (NSString *)timeFormatWithDate2:(NSInteger)time
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyMMdd-HHmmss"];
+    NSDate * currentDate = [NSDate dateWithTimeIntervalSince1970:time/1000];
+    NSString *date = [formatter stringFromDate:currentDate];
+    return date;
+}
+
+// current message time
+- (NSInteger)currentMessageTime
+{
+    NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+    NSInteger iTime     = (NSInteger)(time * 1000);
+    return iTime;
+}
+
+@end
+
+
+@implementation MMChatContentModel
+
+- (NSString *)content{
+    
+    if (!_content) return @"";
+    else{
+        if ([_content hasPrefix:@"<!"] || [_content hasPrefix:@"u"] || [_content hasPrefix:@"[u"]) {
+            NSString *strTemp = [[_content stringByReplacingOccurrencesOfString:@"<![CDATA[" withString:@""] stringByReplacingOccurrencesOfString:@"]]>" withString:@""];
+            
+            if ([strTemp hasPrefix:@"[u"]) {
+                NSMutableString *nsstrmutable = [NSMutableString stringWithString:strTemp];
+                [nsstrmutable replaceOccurrencesOfString:@"[" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, nsstrmutable.length)];
+                [nsstrmutable replaceOccurrencesOfString:@"u" withString:@"\\U" options:NSCaseInsensitiveSearch range:NSMakeRange(0, nsstrmutable.length)];
+                [nsstrmutable replaceOccurrencesOfString:@"]" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, nsstrmutable.length)];
+                
+                strTemp = [nsstrmutable copy];
+            }
+            
+            return [strTemp replaceUnicode];
+        }
+        else return _content;
+    }
+}
+
+@end

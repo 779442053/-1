@@ -1,0 +1,34 @@
+//
+//  MMRechargeStatusController.m
+//  EasyIM
+//
+//  Created by momo on 2019/9/15.
+//  Copyright © 2019 Looker. All rights reserved.
+//
+
+#import "MMRechargeStatusController.h"
+
+@interface MMRechargeStatusController ()
+
+@end
+
+@implementation MMRechargeStatusController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setupUI];
+}
+
+#pragma mark - Private
+
+- (void)setupUI
+{
+    //MARK: 初始化UI
+    self.navgationTitle = @"充值详情";
+    [self addBackBtn];
+}
+
+- (IBAction)finishAction:(UIButton *)sender {
+    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] -3)] animated:YES];
+}
+@end

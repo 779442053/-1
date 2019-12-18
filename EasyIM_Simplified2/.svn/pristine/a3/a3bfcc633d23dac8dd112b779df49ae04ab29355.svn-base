@@ -1,0 +1,46 @@
+//
+//  AddFriViewController.m
+//  EasyIM
+//
+//  Created by 魏冰杰 on 2019/8/27.
+//  Copyright © 2019年 Looker. All rights reserved.
+//
+
+#import "AddFriViewController.h"
+
+#import "SendMsgViewController.h"
+
+@interface AddFriViewController ()
+@property (weak, nonatomic) IBOutlet UIImageView *imageV;
+@property (weak, nonatomic) IBOutlet UILabel *nickLable;
+@property (weak, nonatomic) IBOutlet UILabel *desLable;
+@property (weak, nonatomic) IBOutlet UILabel *fromLable;
+@property (weak, nonatomic) IBOutlet UIButton *addBtn;
+
+@end
+
+@implementation AddFriViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self initView];
+}
+
+- (void)initView {
+    self.navgationTitle = @"添加好友";
+    [self addBackBtn];
+    [self.view setBackgroundColor:[UIColor colorWithRed:240.0/255 green:240.0/255 blue:240.0/255 alpha:1]];
+    [self.addBtn setLayerBorderWidth:0 borderColor:nil cornerRadius:5];
+    [self.imageV setLayerBorderWidth:0 borderColor:nil cornerRadius:3];
+    [self.imageV sd_setImageWithURL:[NSURL URLWithString:_model.pic] placeholderImage:[UIImage imageNamed:@"setting_default_icon"]];
+    self.nickLable.text = _model.username;
+    self.desLable.text = [NSString stringWithFormat:@"账号:%@",_model.username];
+}
+
+- (IBAction)addEvent:(id)sender {
+    SendMsgViewController *vc = [[SendMsgViewController alloc]init];
+    vc.model = _model;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+@end

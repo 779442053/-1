@@ -1,0 +1,42 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '9.0'
+target 'EasyIM' do
+    
+# Pods for EasyIM
+ pod 'AFNetworking', '~>3.1.0'
+ pod 'SDAutoLayout', '~> 2.1.7'
+ pod 'SDWebImage','~> 3.7.2'
+ pod 'MJRefresh', '~> 3.1.12'
+ pod 'IQKeyboardManager', '~> 4.0.8'
+ #解析
+ pod 'YYModel', '~> 1.0.4'
+ pod 'XMLDictionary', '~> 1.4.1'
+ 
+ #pod 'SDCycleScrollView'
+ pod 'MJExtension'
+ pod 'HTHorizontalSelectionList', '~> 0.7.4'
+ pod 'ZFPlayer'
+ 
+ #约束布局
+ pod 'Masonry'
+ 
+ #Socket
+ pod 'CocoaAsyncSocket'
+ 
+ #可以展示各种数据类型
+ pod 'KILabel', '~> 1.0.1'
+ 
+ #展示图片
+ pod 'MWPhotoBrowser', '~> 2.1.2'
+ 
+ #数据库
+ pod 'FMDB'
+ 
+ #菜单下拉更多
+ pod 'YBPopupMenu', '~> 1.1.2'
+
+ #腾讯Bugly 测试sdk
+ pod 'Bugly'
+ 
+end
+

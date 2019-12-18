@@ -1,0 +1,101 @@
+//
+//  MMCoreBaseViewController.m
+//  EasyIM
+//
+//  Created by momo on 2019/5/11.
+//  Copyright © 2019年 Looker. All rights reserved.
+//
+
+#import "MMCoreBaseViewController.h"
+
+@interface MMCoreBaseViewController () <UIGestureRecognizerDelegate>
+
+@end
+
+@implementation MMCoreBaseViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    //    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+}
+
+/**
+ 获取是否需要隐藏导航栏
+ 
+ @return 是否需要隐藏导航栏
+ */
+- (BOOL)getNeedHiddenNavigationBar {
+    return NO;
+}
+
+/**
+ 获取状态栏是否为黑色
+ 
+ @return 状态栏是否为黑色
+ */
+- (BOOL)getBlackStatusBar {
+    return NO;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:[self getNeedHiddenNavigationBar] animated:animated];
+    
+    //需要在Info.plist配置文件中，增加键：View controller-based status bar appearance，并设置为NO；
+    if ([self getBlackStatusBar]) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+    } else {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+    }
+    
+    
+    
+}
+
+/**
+ 获取返回标题
+ 
+ @return 返回标题
+ */
+- (NSString *)getBackTitle {
+    return @"";
+}
+
+/**
+ 设置返回标题并跳转至下一界面
+ 
+ @param viewController 下一界面
+ @param animated 是否动画
+ */
+- (void)coreBaseVCPushViewController:(MMCoreBaseViewController *)viewController animated:(BOOL)animated {
+    
+    [self coreBaseVCPushViewController:viewController animated:animated moreConditions:nil];
+}
+
+/**
+ 设置返回标题并跳转至下一界面
+ 
+ @param viewController 下一界面
+ @param animated 是否动画
+ @param moreConditions 更多判断条件
+ */
+- (void)coreBaseVCPushViewController:(MMCoreBaseViewController *)viewController animated:(BOOL)animated moreConditions:(void(^)())moreConditions {
+    
+    [self.view endEditing:YES];
+    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithTitle:[viewController getBackTitle] style:UIBarButtonItemStylePlain target:nil action:nil];
+    if (self.tabBarController) {
+        self.tabBarController.navigationItem.backBarButtonItem = barButtonItem;
+    } else {
+        self.navigationItem.backBarButtonItem = barButtonItem;
+    }
+    
+    if (moreConditions) {
+        moreConditions();
+        return;
+    }
+    
+    [self.navigationController pushViewController:viewController animated:animated];
+}
+
+@end

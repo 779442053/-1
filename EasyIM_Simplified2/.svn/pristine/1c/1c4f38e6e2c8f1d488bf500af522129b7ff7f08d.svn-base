@@ -1,0 +1,651 @@
+/*
+ Localizable.strings
+ DG
+ 
+ Created by Samnang on 16/10/11.
+ Copyright © 2016年 Samnang. All rights reserved.
+ */
+"username"="အသံုးျပဳသူနာမည္";
+"password"="စကာား၀ွက္";
+"loading"="လုပ္ေဆာင္ေနျခင္း...";
+"banker_"="ဘဏ္ကာ：";
+"player_"="ပေလယာ：";
+"tie_"="သေရ：";
+"shuffle"="ကလားဖန္ထိုး";
+"banker_ask"="ဘဏ္ကာ_ေမးျခင္း";
+"player_ask"="ပေလယာ_ေမးျခင္း";
+"dragon_ask"="နဂါး_ေမးျခင္း";
+"tiger_ask"="က်ား_ေမးျခင္း";
+"banker"="ဘဏ္ကာ";
+"player"="ပေလယာ";
+"tie"="သေရ";
+"tie22"="သေရ22";
+"bull_"="ကၽြဲရိုင္း";
+"not_bull"="ကၽြဲရိုင္း_မဟုတ္ပါ";
+"five_bull"="ကၽြဲရိုင္း_ငါးေကာင္";
+"dragon"="နဂါး";
+"tiger"="က်ား";
+"sure"="ေသခ်ာသည္";
+"cancel"="ပယ္ဖ်က္ရန္";
+"big"="အႀကီး";
+"small"="အေသး";
+"odd"="မ";
+"even"="စံု";
+"red"="အနီ";
+"black"="အနက္";
+"zero"="သုည";
+"bao"="တရုတ္ေပါင္မုန္႔";
+"gaoqing"="HD";
+"biaoqing"="SD";
+"good_way"= "GoodRoad";
+"hot_num"="ေဟာ့_နံပါတ္";
+"username_"="အသံုးျပဳသူနာမည္:";
+"balance_"="လက္က်န္ေငြ:";
+"this_bet_"="ဤေလာင္းေၾကး：";
+"this_win_"="ဤအရာ_အႏိုင္：";
+"open_video"="ဖြင့္ရန္_ဗြီဒီယို";
+"close_video"="ပိတ္ရန္_ဗြီဒီယို";
+"VideoOff"="ဗီြဒီယိုပိတ္";
+"lines_"="လိုင္းမ်ား :";
+"qingxidu"="ရွင္းလင္းခ်က္:";
+"VideoChange"="ဗီြဒီယိုေျပာင္းလဲျခင္း...";
+"Videoloading"="ဗီြဒီယိုဖြင့္ေနျခင္း...";
+"on_line"="လိုင္း_ဖြင့္ရန္：";
+"start_bet"="စတင္ေလာင္းရန္";
+"stop__bet"="ေလာင္းျခင္း_ရပ္ရန္";
+"bet_suc"="ေလာင္းျခင္း_ေအာင္ျမင္သည္:";
+"bet_suc_one"="ေလာင္းျခင္း_ေအာင္ျမင္သည္";
+"link_close"="လင့္ခ္_ပိတ္ရန္";
+"version_checking"="ဗားရွင္း_စစ္ျခင္း";
+"over_big_limit"="အႀကီးကန္႔သတ္ခ်က္ေက်ာ္လြန္";
+"give_tip"="တစ္ပ္_ေပးျခင္း";
+"tip_ps"="သင္ေပးလိုေသာတစ္ပ္ပမာဏေရြးရန္ညာဘက္ကိုႏွိပ္ပါ";
+"down_loading"="ေဒါင္းလုဒ္လုပ္ေနျခင္း 。。。。";
+"change_nick"="နာမည္လႊဲ_ေျပာင္းရန္";
+"input_nick"="နာမည္လႊဲ_ထည့္ရန္";
+"nick_limit"="နာမည္လႊဲ_ကန္႔သတ္ခ်က္…  ";
+"nick_wrong"="နာမည္လႊဲမွားယြင္း";
+"exited"="ထြက္ခြာခဲ့ျပီး";
+"send_red_packet"="အထုပ္နီပို႔ရန္";
+"red_packet_num"="အထုပ္နီအေရအတြက္";
+"input_num"="အေရအတြက္ထည့္ပါ";
+"ge"="အရြယ္အစား";
+"sum_money"="စုစုေပါင္းေငြ";
+"input_money"="ေငြထည့္သြင္းပါ";
+"yuan"="က်ပ္";
+"person_get_money"="ေငြရရွိသူ";
+"get_red_packet"="စာအိတ္နီရရွိရန္";
+"count_last_500"="ေနာက္ဆံုး 150 ေရတြက္ျခင္း";
+"save_money"="ေငြစုရန္";
+"give_money"="ေငြေပးရန္";
+"money_num"="ေငြပမာဏ(က်ပ္)";
+"update_content"="ပါ၀င္မႈမ်ားအသစ္တင္ရန္：";
+"down_load"="ေဒါင္းလုဒ္";
+"checkVersion"="ဗားရွင္းစစ္ပါ";
+"checkFaild"="စစ္ေဆးမႈမေအာင္ျမင္";
+"barrage"="အတားအဆီး";
+"input_your_content"="သင့္ရဲ့ပါ၀င္မႈမ်ားထည့္သြင္းရန္";
+"send"="ပို႔ရန္";
+"wait_good_way"="နည္းလမ္းေကာင္းေစာင့္ပါ";
+"big_small"="ႀကီး_ေသး";
+"even_odd"="စံု_မ";
+"sum_num"="စုစုေပါင္း_အေရအတြက္";
+"wei"="လွည့္ျခင္း";
+"toupai"="ပထမကဒ္";
+"player1"="ပေလယာ 1";
+"player2"="ပေလယာ 2";
+"player3"="ပေလယာ 3";
+
+//<!--热词--="
+"hot_words1"="ေဟာ့_စကားလံုးမ်ား1";
+"hot_words2"="ေဟာ့_စကားလံုးမ်ား1";
+"hot_words3"="ေဟာ့_စကားလံုးမ်ား1";
+"hot_words4"="ေဟာ့_စကားလံုးမ်ား1";
+"hot_words5"="ေဟာ့_စကားလံုးမ်ား1";
+"hot_words6"="ေဟာ့_စကားလံုးမ်ား1";
+"hot_words7"="ေဟာ့_စကားလံုးမ်ား1";
+
+
+
+//<!--LoginActivity--="
+"warn"="သတိေပးျခင္း";
+"login"="၀င္ရန္";
+"otherLogin"="ဤအေကာင့္အျခားေနရာတြင္၀င္ေရာက္ေနပါတယ္";
+"logining"="၀င္ေနျခင္း";
+"login_suc"="၀င္ေရာက္မႈေအာင္ျမင္";
+"free_play"="အခမဲ့ကစားရန္";
+"copy_right"="မူပိုင္ခြင့္ရရွိျပီး © 2016 ";
+"input_gesture"="အမူအရာခိုင္းေစမႈထည့္ရန္";
+"alert_gesture"="အမူအရာခိုင္းေစမႈႏိုးၾကားျခင္း";
+"input_gesture_again"="အမူအရာခိုင္းေစမႈထပ္ထည့္ရန္";
+"gesture_suc"="အမူအရာခိုင္းေစမႈေအာင္ျမင္";
+"failed_set_gesture"="အမူအရာခိုင္းေစမႈမေအာင္ျမင္";
+"gesture_erro"="အမူအရာခိုင္းေစမႈအမွား";
+"set_gesture"="အမူအရာခိုင္းေစမႈျပဳလုပ္ရန္";
+"input_username"="အသံုးျပဳသူနာမည္ထည့္ရန္";
+"input_password"="စကား၀ွက္ထည့္ရန္";
+"input_suffix"="ေနာက္ဆက္စာလံုးထည့္ရန္";
+"member_init_fail"="မန္ဘာရွာေဖြမႈမေအာင္ျမင္";
+"skip"="ေက်ာ္ရန္ >>";
+"not_display"="မျပသပါ";
+"scan_suc"="စကဲန္ေအာင္ျမင္";
+"scan_fial"="စကဲန္မေအာင္ျမင္";
+"not_read_permission"="ခြင့္ျပဳခ်က္မရွိပါ";
+"scan_login_gestrue"="စကဲန္_၀င္ေရာက္ျခင္း_အမူအရာခိုင္းေစမႈ";
+"connect_fail"="ခ်ိတ္ဆက္မႈမေအာင္ျမင္";
+"not_surport"="မေထာက္ပံ့ပါ";
+"four_not_bet"="ေလးပြဲမေလာင္းရေသးပါ";
+"five_not_bet"="ငါးပြဲမေလာင္းရေသးပါ";
+"scanQRcode"="QR ကုဒ္စကဲန္ဖတ္ရန္";
+
+//<!--MainActivity--="
+"home"="အိမ္";
+"flag_boddy"="အံ့ၾသဖြယ္သေဘၤာအတြင္းခန္း";
+"mipai_boddy"="အံ့ၾသဖြယ္ဖဲကစားခန္း";
+"info"="အခ်က္အလက္";
+"fast_star"="လွ်င္ျမန္ေသာၾကယ္";
+//<!--mainHomeFragment--="
+"news"="သတင္းမ်ား";
+"live_video"="တိုက္ရိုက္ဗီြဒီယို";
+
+//<!--videoFragment--="
+"live_video_loading"="တိုက္ရိုက္ဗီြဒီယိုဖြင့္ေနျခင္း...";
+"net_dis"="ကြန္ယက္ခ်ိတ္ဆက္မႈျပတ္ေတာက္ျခင္း";
+//<!--mainFlagFragment--="
+"baccarat"="ဘက္ကာရက္";
+"roullete"="ရူလက္တီ";
+"Rouletcylinder"="ရူလက္စလင္ဒါ";
+"RouletOrphans"="ရူလက္အေသး";
+"RouletVoisin"="အနီးကပ္ရူလက္";
+"RouletZero"="သုညရိုလက္";
+
+"dt"="နဂါးက်ား";
+"bull"="ကၽြဲရိုင္း";
+"sicbo"="ဆစ္ဘိုအံစာ";
+"mipai"="ေခ်ာင္းၾကည့္ဘက္ကာရက္";
+"comming_soon"="မၾကာမီလာမည္";
+"jisu"="အလွ်င္ဘက္ကာရက္";
+//<!--mainInfo--="
+"currency"="ေငြေၾကး:";
+"available_bet_today"="ယေန႔ရနိုင္ေသာေလာင္းေၾကး:";
+"win_loss_today"="ယေန႔ ႏိုင္_ရံႈး:";
+"winning"="ႏိုင္ျခင္း:";
+"bet_limit"="ေလာင္းေၾကးကန္႔သတ္ခ်က္";
+//<!--mainMenu--="
+"bet_report"="ေလာင္းေၾကးအစီရင္ခံ";
+"transfer"="လႊဲေျပာင္းရန္";
+"change_password"="စကား၀ွက္ေျပာင္းရန္";
+"game_rule"="ဂိမ္းစည္းမ်ဥ္း";
+"language"="ဘာသာစကား";
+"set_limits"="ကန္႔သတ္ခ်က္ျပဳလုပ္ရန္";
+"set_game"="ဂိမ္းစီစဥ္ရန္";
+"exit_game"="ဂိမ္းမွထြက္ရန္";
+"pass_change_suc"="စကား၀ွက္ေျပာင္းလဲမႈေအာင္ျမင္";
+"nick_change_suc"="ဘာသာစကားေျပာင္းမႈေအာင္ျမင္";
+
+//<!--betReport--="
+"not_more_data"="အခ်က္အလက္မရွိေတာ့ပါ";
+"today_report"="ယေန႔အစီရင္ခံခ်က္";
+"yesterday_report"="မေန႔ကအစီရင္ခံခ်က္";
+"week_report"="အပတ္စဥ္အစီရင္ခံခ်က္";
+"game_name"="ဂိမ္းနာမည္";
+"bet_time"="ေလာင္းသည့္အခ်ိန္(GMT+8)";
+"cal_time"="အခြေချအချိန်(GMT+8)";
+"bet_num"="ေလာင္းသည့္နံပါတ္";
+"available_bet"="ရရွိႏိုင္ေသာေလာင္းေၾကး";
+"result"="ရလဒ္";
+"win_loss"="ႏိုင္_ရံႈး";
+"haveWin"="အောင်မြင်";
+"sum"="စုစုေပါင္း";
+"unsettled"="မတည္ျမဲေသး";
+"net_busy"="ကြန္ယက္မအားပါ";
+"undo"="မျပဳလုပ္ရန္";
+//<!--transfer--="
+"kind"="အမ်ိဳးအစား";
+"operate_time"="လုပ္ေဆာင္သည့္အခ်ိန္";
+"operate_failed"="လုပ္ေဆာင္ခ်က္မေအာင္ျမင္";
+
+"before_num"="အရင္နံပါတ္";
+"income"="၀င္ေငြ";
+"last_num"="ေနာက္ဆံုးနံပါတ္";
+"come_in"="၀င္လာျခင္း";
+"come_out"="ထြက္သြားျခင္း";
+"red_packet"="စာအိတ္နီ";
+"tip"="တစ္ပ္";
+//<!--chagePassword--="
+"input_old"="အေဟာင္းထည့္သြင္းရန္";
+"input_new"="အသစ္ထည့္ရန္";
+"input_again"="ေနာက္တစ္ခါထည့္ရန္";
+"sure_new"="အသစ္ေသခ်ာပါတယ္";
+"pass_length"="စကား၀ွက္အရွည္ 6~14";
+"new_old_not"="အသစ္နဲ႔အေဟာင္းမတူ";
+"new_not"="အသစ္မတူပါ";
+"format_erro"="ဖြဲ႔စည္းမႈမွားယြင္း";
+//<!--setting--="
+"seting"="ခ်ိန္ညွိျခင္း";
+"chip_set"="ခ်စ္ျပားခ်ိန္ညွိရန္";
+"head_set"="ထိပ္ပိုင္းခ်ိန္ညိွမႈ";
+"other_set"="အျခားခ်ိန္ညွိမႈ";
+"favorite_chip"="ပိုႏွစ္သက္ေသာခ်စ္ပ္";
+"set_chip_suc"="ခ်စ္ပ္ခ်ိန္ညွိမႈေအာင္ျမင္";
+"select_chips"="ခ်စ္ပ္ေရြးခ်ယ္ပါ";
+"set_limit_suc"="ကန္႔သတ္မႈခ်ိန္ညွိျခင္းေအာင္ျမင္";
+"set_head_suc"="ထိပ္ပိုင္းခ်ိန္ညွိမႈေအာင္ျမင္";
+"back_music"="ေနာက္ခံတီးလံုး";
+"voice"="အသံ";
+"video_switch"="ဗီြဒီယိုခလုတ္";
+"barrageSet"="အတားအဆီးခ်ိန္ညွိမႈ";
+"on"="ဖြင့္";
+"off"="ပိတ္";
+"set_other_suc"="အျခားအရာမ်ားခ်ိန္ညွိမႈေအာင္ျမင္";
+"close_content"="ပါ၀င္မႈမ်ားပိတ္ရန္";
+//红包小费提示
+"congradulation"="ဂုဏ္ယူပါတယ္!";
+"getedRedmoney"="အတားအဆီး";
+"thankBoss"="ေက်းဇူးေဘာ့စ္";
+"giveTips"="တစ္ပ္ေပးရန္";
+"beginTOsendRed"="စာအိတ္နီပို႔ရန္စတင္ပါ";
+
+
+//<!--erroCode--="
+"code__1"="ကုဒ္__1";
+"tokenerror"="တိုကင္မွားယြင္းမႈ";
+"re_login"="ျပန္၀င္ေရာက္ရန္";
+
+"system_erro"="စနစ္မွားယြင္းမႈ";
+"commanderror"="ခိုင္းေစမႈမွားယြင္း";
+"paramserror"="ကန္႔သတ္ခ်က္မွား";
+"listparamserror"="ကန္႔သတ္ခ်က္အမွားစာရင္း ";
+"ip_erro"="IP မွားယြင္းမႈ";
+"data_erro"="ေဒတာမွားယြင္းမႈ";
+"close_table"="စားပြဲပိတ္ရန္";
+"gamestartedeal"="ဂိမ္းစတင္ပါျပီ";
+"gamenobill"="ဂိမ္းဘီလ္မရွိပါ";
+"lobby_close"="ေလာ္ဘီပိတ္ပါျပီ";
+"nobalance"="လက္က်န္ေငြမရွိပါ";
+"nolimit"="ကန္႔သတ္ခ်က္မရွိပါ";
+"over_limit"="ကန္႔သတ္ခ်က္ေက်ာ္လြန္";
+"over_pool"="ေလာင္းေၾကးေက်ာ္လြန္";
+"bet_failed"="ေလာင္းေၾကးမေအာင္ျမင္";
+"profit_limit"="အျမတ္ကန္႔သတ္ခ်က္";
+"account_logout"="အေကာင့္မွထြက္ရန္";
+"account_no_texist"="အေကာင့္မရွိပါ";
+"account_exist"="အေကာင့္ရွိျပီး";
+"password_erro"="အကား၀ွက္အမွား";
+"password_format_erro"="စကား၀ွက္ဖြဲ႔စည္းမႈအမွား";
+"password_same"="စကား၀ွက္တူေနပါတယ္";
+"nofreetry_account"="အစမ္းကစားမရသည့္အေကာင့္";
+"account_stop"="အေကာင့္ရပ္ျခင္း";
+"account_cant_bet"="အေကာင့္မေလာင္းႏိုင္ပါ";
+"logouted"="အေကာင့္မွထြက္ခဲ့ျပီး";
+"login_again"="ထပ္မံ၀င္ပါ";
+"system_update"="စနစ္အသစ္ျပဳလုပ္ျခင္း";
+"system_maintenance"="စနစ္ျပဳျပင္မႈလုပ္ေနျခင္း";
+"norp"="စာအိတ္နီအားလံုးေပးခဲ့ျပီး";
+"cant_getrp_again"="စာအိတ္နီထပ္မရႏိုင္ေတာ့ပါ";
+"cant_getrp"="စာအိတ္နီမရႏိုင္ပါ";
+"cant_getrp_bet"="စာအိတ္နီေလာင္းေၾကးမရႏိုင္ပါ";
+"fill_table"="စားပြဲျဖည့္ရန္";
+"un_know_erro"="အမည္မသိအမွား";
+"not_login"="မ၀င္ေရာက္ရေသး";
+"not_mipai"="ဖဲကစားခန္းမဟုတ္ပါ";
+"not_permission"="ခြင့္ျပဳခ်က္မရွိပါ";
+"user_pause"="အသံုးျပဳသူခနရပ္ျခင္း";
+"user_stop"="အသံုးျပဳသူရပ္တန္႔ျခင္း";
+"not_find_agent"="ေအးဂ်င့္မေတြ႔ပါ";
+"pass_user_erro"="စကား၀ွက္အသံုးျပဳသူမွားယြင္း";
+"network_delay"="ကြန္ယက္ေႏွးျခင္း";
+"requestTimeout"="ေတာင္းဆိုမႈအခ်ိန္ျပည့္";
+
+"chat_fast"="အျမန္ခ်က္တင္";
+"cant_use"="အသံုးမျပဳႏုိင္ပါ";
+"cant_revise"="မျပင္ဆင္ႏိုင္ပါ";
+"cant_chat_"="ခ်က္တင္မလုပ္ႏိုင္ပါ";
+"free_playing"="အခမဲ့ကစားျခင္း";
+"cant_small_big"="အႀကီးအေသးေလာင္းမရပါ ";
+"cant_DT_evenOdd"="အႀကီးအေသးေလာင္းမရပါ";
+"not_bet_cant_chat"="မေလာင္းလွ်င္ခ်က္တက္မရပါ";
+"please_mipai"="ေခ်ာင္းၾကည့္ဘက္ကာရက္ကစားပါ";
+"auto_open"="အလိုေလွ်ာက္ဖြင့္ရန္";
+"show_video"="ဗြီဒီယိုျပရန္";
+"hide_video"="ဗြီဒီယိုေဖ်ာက္ရန္";
+"allVideo"="မြင်ကွင်းကျယ်ကိုဗီဒီယို";
+"newActivity"="နောက်ဆုံးပေါ်ဖြစ်ရပ်များ";
+
+
+"app_name"="အပလီေကးရွင္းနာမည္";
+"check_red_report"="အနီအစီရင္ခံခ်က္စစ္ေဆးရန္";
+"login_banlance"="၀င္ေရာက္ျခင္းလက္က်န္ေငြ";
+"give_tip_suc"="တစ္ပ္ေပးျခင္းေအာင္ျမင္";
+"gesture_enter_suc"="အမူအရာခိုင္းေစမႈထည့္သြင္းျခင္းေအာင္ျမင္";
+
+
+"btn_camera"="ကင္မရာ";
+"setting"="ခ်ိန္ညွိမႈ";
+"prompt_we_need_camera"="အျမန္ကင္မရာလိုပါတယ္";
+"prompt_request_camara"="အျမန္ကင္မရာေတာင္းဆိုျခင္း";
+"prompt_already_get_permission"="အျမန္ခြင့္ျပဳခ်က္ရရွိျပီး";
+"prompt_been_denied"="အျမန္_ျငင္းပယ္ခဲ့ျပီး";
+"prompt_request_file"="အျမန္ေတာင္းဆိုခ်က္ဖိုင္";
+"prompt_already_get_file_permission"="အျမန္_ဖိုင္ခြင့္ျပဳခ်က္ရျပီး";
+"prompt_file_been_denied"="အျမန္_ဖိုင္ျငင္းပယ္ခဲ့ျပီး";
+"update_balance"="လက္က်န္ေငြၾကည့္ရန္";
+
+"loading"="ေဆာင္ရြက္ေနျခင္း";
+"MJfresh"="အသစ္ယူရန္";
+"MJfreshing"="အသစ္ယူေနျခင္း";
+"lastPage"="ေနာက္ဆံုးစာမ်က္ႏွာ";
+"nextpage"="ေနာက္စာမ်က္နွာ";
+
+////图片国际化
+"main_qijian_bg"="main_qijian_bg_en";      //梦幻旗舰厅
+"main_mipai_bg"="main_mipai_bg_en";        //梦幻竞咪厅
+"promotion_1"="App/image/banner/banner1-en";
+"hot_icon"="hot_icon_en";
+"dashang"="dashang_en";
+"PlayerRight"="PlayerRight_en";
+"bankerRight"="bankerRight_en";
+
+//下注区域图片
+"bet_baccarat"="bet_baccarat_en";
+"bet_baccarat_jm"="bet_baccarat_jm_en";
+"bet_dragontiger"="bet_dragontiger_en";
+"bet_bull"="bet_bull_en";
+"betfeild_sicbo"="betfeild_sicbo_en";
+"roulette_rect"="roulette_rect";
+"bet_baccarat_bx"="bx_baccarat_en";
+
+"baccarLuzi"="zz_banker_";
+"DTLuzi"="tgen";
+
+//声音国际化   //voidSound  空声音
+"welcomeBacca"="enwelcomeBacca";
+"welcomePeekBac"="enwelcomeBacca";
+"welcDreamDT"="enwelcDreamDT";
+"welcometoRoulette"="voidSound";
+
+"welcomeSicbo"="enwelcomeSicbo";
+"ThanksTips"="thanktips_en";
+
+"baccarat_9"="enbaccarat_9";
+"dragonWin"="endragonWin";
+"tigerwin"="entigerwin";
+
+"touzi_"="ensicbo_";
+"sbpoint_"="sicbo_p";
+"sb_big"="voidSound";
+"sb_small"="voidSound";
+"sb_even"="voidSound";
+"sb_odd"="voidSound";
+
+
+"betSuccess"="enbetSuccess";
+"bet_limitsound"="enbet_limitsound";
+"lucky"="enlucky";
+"pleaseBet"="enpleaseBet";
+"redPackt"="enredPackt";
+"stopBet"="enstopBet";
+"welcomegame"="enwelcomegame";
+"welcomeAgain"="enwelcomeAgain";
+
+//newLoginActivity
+"forget_pass"="စကား၀ွက္ေမ့ေနသည္";
+"scan_in_game"="ဂိမ္းစကဲန္လုပ္ျခင္း";
+"scan_change_pass"="စကဲန္_စကား၀ွက္ေျပာင္း";
+"welcome"="ႀကိဳဆိုပါတယ္";
+"first_login"="ပထမဆံုး၀င္ေရာက္ျခင္း";
+"gesture_pass"="အမူအရာစကား၀ွက္";
+"char_pass"="စကား၀ွက္ေျပာင္းရန္";
+"add_new_user"="အသံုးျပဳသူသစ္ထည့္ရန္";
+"teach1_title"="သင္ၾကားျခင္း1_ေခါင္းစဥ္";
+"teach1_content_one"="သင္ၾကားျခင္း1_ပါ၀င္မႈတစ္ခု";
+"teach2"="သင္ၾကားျခင္း2";
+"teach3"="သင္ၾကားျခင္း3";
+"teach4"="သင္ၾကားျခင္း4";
+"teach5"="သင္ၾကားျခင္း5";
+"teach6_title"="သင္ၾကားျခင္း6_ေခါင္းစဥ္";
+"teach6_content_one"="သင္ၾကားျခင္း6_ပါ၀င္မႈတစ္";
+"not_gesture"="အမူရာခိုင္းေစမႈမဟုတ္ပါ";
+"username_password"="အသံုးျပဳသူနာမည္_စကား၀ွက္";
+"new_first_login"="ပထမဦးစွာဝင်မည်";
+
+//多桌
+"link_baccarat"="ခ်ိန္ဆက္ရန္_ဘက္ကာရက္";
+"jie_suan_zhong"="တြက္ခ်က္ျခင္း";
+"start_xiaZhu"="ေလာင္းေၾကးစတင္ပါ";
+
+"Mtable_bet_cn_en_hk"="Mtable_bet_en";
+"Mtable_bet_no_cn_en_hk"="Mtable_bet_en_no";
+
+"havebet"="have bet";
+"nocomm"="  no\ncomm";
+//离线追注
+"checkTable"="Check table or road choice";
+"beyondBalance"="Bet money can't beyond DetainMoney";
+"timeZero"="Chase Time is 0";
+"timebeyond"="Time,max 24 hours";
+"entervalidBet"="Please enter a valid bet amount";
+"running"="တိုးတက်မှုအတွက်";
+"waitPay"="စောင့်ပေးချေမှု";
+"chaseBalance"="Chase balance:";
+"leftTime"="အချိန်(M):";
+"offTitle"="chase bet";
+"tongjiBtn"="စာရင်းအင်း";
+"baobiaoBtn"="အစီရင်ခံစာပုံစံ";
+"operaterecord"="စစ်ဆင်ရေးမှတ်တမ်း";
+"offLineChase"="ကောင်းသောလမ်း Chase မှတ်စုများ";
+"tableSelect"="T\nA\nB\nL\nE";   //"桌\n臺\n選\n擇";TABLE
+"riskSetting"="R\nI\nS\nK";    //"風\n險\n設\n置";
+"winOrloss"="အမြတ်နဲ့အရှုံး:";  //"盈虧:";
+"betCount"="အမိန့်:"; //"下單筆數";
+"roadChoose"="ကို Select လုပ်ပါ";   //"好路選擇";
+"selectAll"="ALL";
+"perBet"="Per Bets";
+"lossAmount"="ဆိုင္းငံ့ထားေသာေငြ";
+"profitAmount"="အမြတ်အစွန်းပမာဏ";
+"chaseTime"="အချိန်";
+"autoStop"="အလိုအလျောက်ရပ်တန့်";
+"stopChase"="လိုက်ဖမ်းရပ်တန့်";
+"hour"="မိနစ်";
+"reset"="တစျဖနျ";
+
+"return"="ပြန်လာ";
+"tableRate"="ထိုင်ဝမ်စားပွဲပေါ်မှာ\\အချိုးအစား";//"檯桌好路頻率\\勝率";
+"goodRoadRate"="လမ်း\\အချိုးအစား";//"好路頻率\\勝率";
+"roadTimes"="ကြိမ်အရေအတွက်";
+"goodroadWin"="ကိုအနိုင်ပေး";
+"count10000"="စာရင်းအင်း 2000";
+
+"goodtype"="ပုံစံ";
+"roadType1"="လမ္းေကာင္း-1";
+"roadType2"="လမ္းေကာင္း-2";
+"roadType3"="လမ္းေကာင္း-3";
+"roadType4"="လမ္းေကာင္း-4";
+"roadType5"="လမ္းေကာင္း-5";
+"roadType6"="လမ္းေကာင္း-6";
+"roadType7"="လမ္းေကာင္း-7";
+"roadType8"="လမ္းေကာင္း-8";
+
+"nowRoad"="Current Road";
+"betMoney"="Bet money";
+"odds"="odds";
+"betdetail"="Bet detail";
+"beganchase"="set success,begin to chase";
+"stopChase"="stop chasing";
+"testcantchase"="test account can't chase bet";
+
+"beginTime"="အစပြုကိုအချိန်";
+"endTime"="အဆုံးအချိန်";
+"betTimes"="ကြိမ်အရေအတွက်";
+"payOut"="ပေးချေမှု";
+
+
+////报表详情
+"bettype"=">ေလာင္းေၾကးအမ်ိဳးအစား";
+"resultScreen"="ဗီဒီယိုကို";
+"pPair"="PlayerPair";
+"bPair"="BankerPair";
+//免佣
+"banker6"="Banker(no comm)";
+
+//龙虎
+"dragonRed"="dragonRed";
+"dragonBlack"="dragonBlack";
+"tigerRed"="tigerRed";
+"tigerBlack"="tigerBlack";
+"dragonOdd"="dragonOdd";
+"tigerOdd"="tigerOdd";
+"dragonEven"="dragonEven";
+"tigerEven"="tigerEven";
+
+//轮盘
+//"direct"="直注";
+//"separate"="";
+//"street"="";
+//"angle"="";
+//"line"="";
+//"three"="";
+//"four"="";
+"firstRow"="firstRow";
+"sndRow"="sndRow";
+"thrRow"="thrRow";
+"firstCol"="firstCol";
+"sndCol"="sndCol";
+"thrCol"="thrCol";
+"low"="low";
+"high"="high";
+
+//牛牛
+"yukou"="Detain";
+"player1Double"="player1Double";
+"player2Double"="player2Double";
+"player3Double"="player3Double";
+"player1Equal"="player1Equal";
+"player2Equal"="player2Equal";
+"player3Equal"="player3Equal";
+"player1Many"="player1Many";
+"player2Many"="player2Many";
+"player3Many"="player3Many";
+"banker1Double"="banker1Double";
+"banker2Double"="banker2Double";
+"banker3Double"="banker3Double";
+"banker1Equal"="banker1Equal";
+"banker2Equal"="banker2Equal";
+"banker3Equal"="banker3Equal";
+"banker1Many"="banker1Many";
+"banker2Many"="banker2Many";
+"banker3Many"="banker3Many";
+//骰宝
+"allDices"="allDices";
+"threeForces"="threeForces";
+"nineWayGards"="nineWayGards";
+"pairs"="pairs";
+"surroundDices"="WaiDice";
+"points"="points";
+
+//德州
+"Site"="CT Bavet";
+"CasinoHoldem"="CasinoHold'em";
+"Bonus"="bonus";
+"Ante"="ante";
+"Call"="Call";
+"RaiseBet"="bid";
+"RaiseBet_yes"="bid(yes)";
+"RaiseBet_no"="bid(no)";
+"foldPoker"="Fold";
+"NotQualified"="Not qualified";
+"HighCard"="High card";
+"threeCardPair"="Pair";
+"PairCard"="Pair";
+"PairCardA"="Pair A";
+"TwoPairs"="Two Pairs";
+"ThreeOfakind"="Three of a kind";
+"Straight"="Straight";
+"Flush"="Flush";
+"FullHouse"="Full house";
+"FourOfakind"="Four of a kind";
+"StraightFlush"="Straight flush";
+"RoyalFlush"="Royal Flush";
+"PairCardOrHighcard"="Pair or High card";
+"BrandType"="Brand type";
+"BonusOdds"="Bonus odds";
+"BettingOdds"="Betting odds";
+"HandPoker"="Hand";
+"DZOdds"="Odds";
+"bankerHome"="B";
+"playerHome"="P";
+"first_betante"="Please end down the first note";
+"bonus_overAnte"="Bonuses should not be greater than the end of the note";
+"texasWin"="WIN";
+//图片 下注区
+"texasBetImage"="depk_En";
+
+//波比厅添加
+"bobihalg"="အာမခံဘက္ကာရက္";
+"duozhuo_baijiale"="Multi-table baccarat";
+"baoxian_baccarat"="InBaccarat";
+"vip_baccarat"="VIP Baccarat";
+"pBX"="InPlayer";
+"bBX"="InBanker";
+"baoxianbet_player"="Bet Player Insurance";
+"baoxianbet_banker"="Bet Banker Insurance";
+"bx_peilv"="Odds:";
+"bx_payout"="Ins Payout::";
+"bx_confirm"="confirm";
+"bx_selectChip"="Please Choose Chip Bet";
+"bx_alerdPlayer"="Player:";
+"bx_alerdBanker"="Banker:";
+
+//咋金花
+"red_black"="Three Card";
+"betfiled_threecard"="red&black_en";
+"tie_ju"="Tie";
+"bao_zi"="leopard";
+"sanCard"="High card";
+"baozi_shashou"="Leopard killer";
+"Flush_zjh"="Flush";
+"StraightFlush_zjh"="Straight flush";
+"road_black"="black_road_en";
+"road_red"="red_road_en";
+"road_tie"="de6";
+"road_black_luck"="black_lucky";
+"road_red_luck"="red_lucky";
+"road_tie_luck"="de5";
+"luck"="lucky";
+
+//极速骰宝
+"jisu_sicbo"="Speed SicBo";
+"betfeild_sicbojisu"="sb_yili_en";
+
+//博饼
+"bobingtype0"="很遗憾，下次继续";
+"bobingtype1"="一秀";
+"bobingtype2"="二举";
+"bobingtype3"="四进";
+"bobingtype4"="三红";
+"bobingtype5"="对堂";
+"bobingtype6"="四红";
+"bobingtype7"="五子";
+"bobingtype8"="五红";
+"bobingtype9"="六黑";
+"bobingtype10"="六锦";
+"bobingtype11"="六红";
+"bobingtype12"="金花";
+
+
+//////VIP   5  7  8  旁  座  包
+"vipLobby_1"="View";
+"vipLobby_2"="Enter";
+"vipLobby_3"="Mater";
+
+"vipfuncString0" = "Change Shoe?";
+"vipfuncString1" = "Change Dealer";
+"vipfuncString2" = "Check Card";
+
+"openCard"="Open";
+
+//"nowMarster"="当前桌";
+//"haveMater"="已包桌";
+"haveoccupied"="Occupied";
+
+"minBet"="You can place a bet above the balance. Please recharge.";

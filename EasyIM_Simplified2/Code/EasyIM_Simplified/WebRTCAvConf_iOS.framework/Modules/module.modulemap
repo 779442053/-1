@@ -1,0 +1,6 @@
+framework module WebRTCAvConf_iOS {
+  umbrella header "WebRTCAvConf_iOS.h"
+
+  export *
+  module * { export * }
+}

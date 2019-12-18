@@ -1,0 +1,653 @@
+/*
+ Localizable.strings
+ DG
+ 
+ Created by Samnang on 16/10/11.
+ Copyright © 2016年 Samnang. All rights reserved.
+ */
+"username"="Tên người dùng";
+"password"="Mật mã";
+"loading"="Đang nạp...";
+"banker_"="B：";
+"player_"="P：";
+"tie_"="Và：";
+"shuffle"="Xáo trộn...";
+"banker_ask"="AskB";
+"player_ask"="AskP";
+"dragon_ask"="AskD";
+"tiger_ask"="AskT";
+"banker"="B";
+"player"="P";
+"tie"="T";
+"tie22"="Và";
+
+"bull_"="B";
+"not_bull"="N";
+"five_bull"="5P";
+"dragon"="D";
+"tiger"="T";
+"sure"="Xác nhận";
+"cancel"="Hủy";
+"big"="B";
+"small"="S";
+"odd"="O";
+"even"="E";
+"red"="R";
+"black"="B";
+"zero"="Z";
+"bao"="W";
+"gaoqing"="HD";
+"biaoqing"="SD";
+"good_way"="Nhắc nhở";
+"hot_num"="Nhiệt";
+"username_"="Tên người dùng:";
+"balance_"="Cân bằng:";
+"this_bet_"="Tổng số cá cược：";
+"this_win_"="Thắng：";
+"open_video"="Mở video";
+"close_video"="Đóng video";
+"VideoOff"="Video đã bị tắt";
+"lines_"="Line:";
+"qingxidu"="Độ sắc nét:";
+"VideoChange"="Chuyển đổi...";
+"Videoloading"="đang tải video...";
+"on_line"="Số trực tuyến：";
+"start_bet"="bắt đầu cược";
+"stop__bet"="dừng cược";
+"bet_suc"="Thành công cược:";
+"bet_suc_one"="Thành công cược";
+"link_close"="Kết nối máy chủ đã bị đóng";
+"version_checking"="Kiểm tra phiên bản";
+"over_big_limit"="Vượt quá giới hạn";
+"give_tip"="Liệu có nên thưởng cho neo";
+"tip_ps"="PS:Chọn số tiền thưởng";
+"down_loading"="Tải về...";
+"change_nick"="sửa đổi nickname";
+"input_nick"="Vui lòng nhập biệt danh";
+"nick_limit"="nickname chỉ được dùng chữ số, chữ, chữ hán, tối đa 10 ký tự(5 chữ hán)";
+"nick_wrong"="Định dạng đầu vào không chính xác";
+"exited"="Kết nối internet bị ngắt kết nối";
+"send_red_packet"="Phong bì đỏ";
+"red_packet_num"="Số";
+"input_num"="Nhập số";
+"ge"="A";
+"sum_money"="Tổng số tiền";
+"input_money"="Nhập số tiền";
+"yuan"="￥";
+"person_get_money"="Ngẫu nhiên nhận được số tiền";
+"get_red_packet"="Lấy một phong bì màu đỏ";
+"count_last_500"="thống kê500ván gần nhất";
+"save_money"="Tiền đặt cọc";
+"give_money"="Rút tiền";
+"money_num"="Số tiền";
+"update_content"="Cập nhật nội dung：";
+"down_load"="Tải xuống bản cập nhật";
+"checkVersion"="Đã cập nhật phiên bản phát hiện";
+"checkFaild"="Cập nhật phát hiện không thành công";
+"barrage"="Đập";
+"input_your_content"="Vui lòng nhập nội dung";
+"send"="Đang đợi";
+"wait_good_way"="waiting";
+"big_small"="B/S";
+"even_odd"="O/E";
+"sum_num"="Và giá trị";
+"wei"="W";
+"toupai"="Head";
+"player1"="P1";
+"player2"="P2";
+"player3"="P3";
+
+//<!--热词--="
+"hot_words1"="Xin chào tất cả mọi người！";
+"hot_words2"="One more banker";
+"hot_words3"="One more player";
+"hot_words4"="Thật dễ dàng để thắng tiền";
+"hot_words5"="Chúc may mắn";
+"hot_words6"="Tiện đây！";
+"hot_words7"="Đừng đi";
+
+
+//<!--LoginActivity--="
+"otherLogin"="Đăng nhập ở nơi khác";
+
+"warn"="Nhắc nhở";
+"login"="Đăng nhập";
+"logining"="Đăng nhập...";
+"login_suc"="Đăng nhập thành công";
+"free_play"="Demo";
+"copy_right"="版权所有 © 2016 梦幻娱乐城";
+"input_gesture"="Hãy nhập mật khẩu cử chỉ";
+"alert_gesture"="Mật khẩu lớn hơn bốn";
+"input_gesture_again"="Vui lòng nhập lại";
+"gesture_suc"="Thiết lập thành công";
+"failed_set_gesture"="Thiết lập thất bại, vui lòng đặt lại";
+"gesture_erro"="Mật khẩu sai";
+"set_gesture"="Hãy đặt mật khẩu cử chỉ";
+"input_username"="Vui lòng nhập đúng tên người dùng";
+"input_password"="Vui lòng nhập mật khẩu";
+"input_suffix"="Vui lòng nhập phần mở rộng";
+"member_init_fail"="Khởi tạo không thành công";
+"skip"="jump >>";
+"not_display"="Không còn hiển thị nữa";
+"scan_suc"="Đã quét thành công";
+"scan_fial"="Quét không thành công";
+"not_read_permission"="No file read and write permissions, you can not download and install";
+"scan_login_gestrue"="Set the gesture password\nBy scan login";
+"connect_fail"="The server connection failed";
+"not_surport"="Emoticons are not currently supported";
+"four_not_bet"="No bet for four rounds, you will return lobby after five rounds with no bet!";
+"five_not_bet"="You will returned to lobby\nAfter five rounds without betting!";
+"scanQRcode"="Align QR code within frame to scan";
+
+
+
+//<!--MainActivity--="
+"home"="Trang chủ";
+"flag_boddy"="Flagship";
+"mipai_boddy"="Squint";
+"info"="Myinfo";
+"fast_star"="Bắt đầu nhanh";
+//<!--mainHomeFragment--="
+"news"="thông tin mới nhất";
+"live_video"="video trực tiếp";
+//<!--videoFragment--="
+"live_video_loading"="直播视频连接中...";
+"net_dis"="网络断开，请检查网络";
+//<!--mainFlagFragment--="
+"baccarat"="Baccarat";
+"roullete"="con quay";
+"Rouletcylinder"="TIERS";
+"RouletOrphans"="ORPHANS";
+"RouletVoisin"="VOISINS\nDU 0";
+"RouletZero"="JEU 0";
+
+"dt"="long hổ";
+"bull"="đấu bò";
+"sicbo"="xúc xắc";
+"mipai"="Jingmi Baccarat";
+"comming_soon"="sớm trở lại";
+"jisu"="tốc độ Baccarat";
+//<!--mainInfo--="
+"currency"="tiền tệ:";
+"available_bet_today"="今日有效下注:";
+"win_loss_today"="Thắng hay thua:";
+"winning"="Tỷ lệ thắng:";
+"bet_limit"="giới hạn trò chơi:";
+//<!--mainMenu--="
+"bet_report"="lịch sử cược";
+"transfer"="Hồ sơ hạn ngạch";
+"change_password"="Thay đổi mật khẩu";
+"game_rule"="quy tắc game";
+"language"="cài đặt ngôn ngữ";
+"set_limits"="giới hạn trò chơi";
+"set_game"="cài đặt game";
+"exit_game"="Thoát khỏi trò chơi";
+"pass_change_suc"="Đã sửa đổi thành công";
+"nick_change_suc"="Đã sửa đổi thành công";
+
+//<!--betReport--="
+"not_more_data"="Không còn dữ liệu nữa";
+"today_report"="báo cáo hôm nay";
+"yesterday_report"="báo cáo hôm qua";
+"week_report"="báo cáo tuần này";
+"game_name"="Tên trò chơi";
+"bet_time"="Thời gian đặt cược(GMT+8)";
+"cal_time"="Thời gian giải quyết(GMT+8)";
+"bet_num"="Số tiền đặt cược";
+"available_bet"="Cá cược hiệu quả";
+"result"="Kết quả";
+"win_loss"="Thắng hay thua";
+"haveWin"="Won";
+"sum"="Tổng cộng";
+"unsettled"="Chưa giải quyết";
+"net_busy"="Mạng đang bận, vui lòng thử lại";
+"undo"="đã hủy";
+//<!--transfer--="
+"kind"="Danh mục";
+"operate_time"="Thời gian hoạt động";
+"operate_failed"="Các hoạt động không thành công";
+
+"before_num"="Số dư trước khi giao dịch";
+"income"="Thu nhập và chi tiê";
+"last_num"="Cân bằng sau thương mại";
+"come_in"="Biến thành";
+"come_out"="Bật ra";
+"red_packet"="Phong bì đỏ";
+"tip"="Tipping";
+//<!--chagePassword--="
+"input_old"="Vui lòng nhập mật khẩu cũ";
+"input_new"="Vui lòng nhập mật khẩu mới";
+"input_again"="Vui lòng nhập lại";
+"sure_new"="Vui lòng xác nhận mật khẩu mới";
+"pass_length"="Độ dài mật khẩu:6~14";
+"new_old_not"="Mật khẩu mới và mật khẩu cũ không được giống nhau";
+"new_not"="Mật khẩu nhập hai lần không giống nhau";
+"format_erro"="Mật khẩu không được chứa dấu cách";
+//<!--setting--="
+"seting"="Thiết lập";
+"chip_set"="cài đặt Chip";
+"head_set"="Bộ Avatar";
+"other_set"="Các thiết lập khác";
+"favorite_chip"="xin mời chọn 5 Chip thường dùng";
+"set_chip_suc"="Thiết lập thành công";
+"select_chips"="xin mời chọn 5 Chip thường dùng";
+"set_limit_suc"="Thiết lập thành công";
+"set_head_suc"="Thiết lập thành công";
+"back_music"="nhạc nền";
+"voice"="Âm thanh";
+"video_switch"="Video về";
+"barrageSet"="Thiết lập Barrage";
+"on"="Mở";
+"off"="Tắt";
+"set_other_suc"="Thiết lập thành công";
+"close_content"="Bạn có thực sự muốn từ bỏ?";
+//红包小费提示
+"congradulation"="Xin chúc mừng";
+"getedRedmoney"="Lấy một phong bì màu đỏ";
+"thankBoss"="Cảm ơn ông chủ";
+"giveTips"="Thưởng";
+"beginTOsendRed"="Hệ thống bắt đầu có phong bì màu đỏ";
+
+//错误码
+"code__1"="Vui lòng kiểm tra mạng";
+"tokenerror"="Vui lòng đăng nhập lại";
+"re_login"="Vui lòng đăng nhập lại";
+
+"system_erro"="Hệ thống là bất thường";
+"commanderror"="Lỗi thông số";
+"paramserror"="Lỗi thông số";
+"listparamserror"="Lỗi thông số";
+"ip_erro"="IP bị hạn chế";
+"data_erro"="Sai";
+"close_table"="đóng bàn";
+"gamestartedeal"="Không thể đặt cược";
+"gamenobill"="Chưa giải quyết";
+"lobby_close"="Ngắt kết nối, vui lòng kết nối lại";
+"nobalance"="số dư không đủ";
+"nolimit"="cược không giới hạn";
+"over_limit"="Cá cược không thành công";
+"over_pool"="Cá cược không thành công";
+"bet_failed"="Cá cược không thành công";
+"profit_limit"="Hơn người dùng để giành được số tiền tối đa";
+"account_logout"="Đăng xuất người dùng";
+"account_no_texist"="Người dùng không tồn tại";
+"account_exist"="Người dùng đã tồn tại";
+"password_erro"="Mật khẩu sai";
+"password_format_erro"="Mật khẩu sai";
+"password_same"="Cùng một mật khẩu hai lần";
+"nofreetry_account"="Tài khoản dùng thử đã hết";
+"account_stop"="Tài khoản đã bị vô hiệu";
+"account_cant_bet"="Không thể đặt cược";
+"logouted"="Đã ngắt kết nối từ máy chủ";
+"login_again"="Lặp lại đăng nhập";
+"system_update"="Cập nhật hệ thống";
+"system_maintenance"="Bảo trì hệ thống";
+"norp"="hết lì xì";
+"cant_getrp_again"="这hết lì xì";
+"cant_getrp"="Để đặt cược trước tiên";
+"cant_getrp_bet"="số dư cược không đủ";
+"fill_table"="Toàn bộ bảng";
+"un_know_erro"="Sai：";
+"not_login"="Chưa đăng nhập";
+"not_mipai"="Không có quyền";
+"not_permission"="Không có quyền";
+"user_pause"="Tài khoản bị vô hiệu hóa";
+"user_stop"="Tài khoản bị vô hiệu hóa";
+"not_find_agent"="Tên người dùng sai";
+"pass_user_erro"="Mật khẩu sai";
+"network_delay"="Trễ mạng";
+"requestTimeout"="Yêu cầu đã hết thời gian";
+
+"chat_fast"="trò chuyện quá thường xuyên, nghỉ ngơi chút nào!";
+"cant_use"="tài khoản dùng thử không thể nói chuyện";
+"cant_revise"="Không thể thay đổi mật khẩu";
+"cant_chat_"="ạn đã bị cảnh cáo, vui lòng liên hệ dịch vụ khách hàng!";
+"free_playing"="试 玩 中";
+"cant_small_big"="30 vòng sau không thể cược to nhỏ";
+
+"cant_DT_evenOdd"="30 vòng sau không thể cược to nhỏ";
+
+"not_bet_cant_chat"="sau khi đặt cược, lập tức nói chuyện";
+"please_mipai"="mời hé bài";
+"auto_open"="tự động mở bài";
+"show_video"="S\nH\nO\nW";
+"hide_video"="H\nI\nD\nE";
+"allVideo"="Video toàn cảnh";
+"newActivity"="Hoạt động";
+
+
+"app_name"="DreamGame";
+"check_red_report"="Lịch sử";
+"login_banlance"="Đăng nhập Cân bằng";
+"give_tip_suc"="tip thành công";
+"gesture_enter_suc"="Xác minh thành công";
+
+
+"btn_camera"="Máy ảnh";
+"setting"="Thiết lập";
+"prompt_we_need_camera"="More privileges needed so we can provide better service to you.";
+"prompt_request_camara"="We are now requesting the privilege of camera.Go?";
+"prompt_already_get_permission"="Camera privilege granted";
+"prompt_been_denied"="Camera privilege is rejected,can not scan code.";
+
+"prompt_request_file"="We are now requesting the privilege of file rading and writting.Go?";
+"prompt_already_get_file_permission"="File privilege granted";
+"prompt_file_been_denied"="File privilege is rejected,can not download.";
+"update_balance"="Số dư được cập nhật thành công";
+
+"loading"="Đang nạp";
+"MJfresh"="Làm mới";
+"MJfreshing"="Làm mới";
+"lastPage"="Trang trước";
+"nextpage"="Trang tiếp theo";
+
+////图片国际化
+"main_qijian_bg"="main_qijian_bg";      //梦幻旗舰厅
+"main_mipai_bg"="main_mipai_bg";        //梦幻竞咪厅
+"promotion_1"="App/image/banner/banner1-cn";
+"hot_icon"="hot_icon";
+"dashang"="dashang";
+"PlayerRight"="PlayerRight";
+"bankerRight"="bankerRight";
+
+//下注区域图片
+"bet_baccarat"="bet_baccarat";
+"bet_baccarat_jm"="bet_baccarat_jm";
+"bet_dragontiger"="bet_dragontiger";
+"bet_bull"="bet_bull";
+"betfeild_sicbo"="betfeild_sicbo";
+"roulette_rect"="roulette_rect_cn";
+"bet_baccarat_bx"="bx_baccarat_en";
+//路子图片
+"baccarLuzi"="zz";
+"DTLuzi"="tg";
+
+//声音国际化
+"welcomeBacca"="welcomeBacca";
+"welcomePeekBac"="welcomePeekBac";
+"welcomeSicbo"="welcomeSicbo";
+"welcometoRoulette"="welcometoRoulette";
+
+"welcDreamDT"="welcDreamDT";
+"baccarat_9"="baccarat_9";
+"dragonWin"="dragonWin";
+"tigerwin"="tigerwin";
+"ThanksTips"="ThanksTips";
+
+"touzi_"="touzi_";
+"sbpoint_"="sbpoint_";
+
+
+"betSuccess"="betSuccess";
+"bet_limitsound"="bet_limitsound";
+"lucky"="lucky";
+"pleaseBet"="pleaseBet";
+"redPackt"="redPackt";
+"stopBet"="stopBet";
+"welcomegame"="welcomegame";
+"welcomeAgain"="enwelcomeAgain";
+
+
+//newLoginActivity
+"forget_pass"="Quên mật khẩu của bạn";
+"scan_in_game"="Quét hai chiều mã để nhập";
+"scan_change_pass"="Quét thay đổi mã QR";
+"welcome"="Chào mừng";
+"first_login"="Hãy đặt mật khẩu cử chỉ";
+"gesture_pass"="Cử chỉ Mật mã";
+"char_pass"="Mật mã";
+"add_new_user"="Thêm tài khoản";
+"teach1_title"="Welcome new player";
+"teach1_content_one"="01.You need to scan the designated QR code first time to bind your account";
+"teach2"="02.Please use your personal pc to enter DG platform";
+"teach3"="03.Click the phone icon in the lower left corner";
+"teach4"="04.To Start game , please scan QR code to bind account";
+"teach5"="05.Please change a new your pattern password";
+"teach6_title"="Change your pattern password";
+"teach6_content_one"="01.You need to scan the specified QR code in order to change your pattern password";
+"not_gesture"="Pattern password for this account is not set";
+"username_password"="Mật khẩu đăng nhập";
+"new_first_login"="Lần đầu tiên";
+
+//多桌
+"link_baccarat"="Serial Baccarat";
+"jie_suan_zhong"="chưa kết toán";
+"start_xiaZhu"="bắt đầu cược";
+"Mtable_bet_cn_en_hk"="Mtable_bet_cn";
+"Mtable_bet_no_cn_en_hk"="Mtable_bet_cn_no";
+
+"havebet"="已有下注";
+"nocomm"="免佣";
+//免佣图片 比例
+"bankR95en"="bankR95";
+"bankR11en"="bankR11";
+
+"entervalidBet"="xin mời nhập mức đặt cược hợp lệ";
+//离线追注
+"checkTable"="Kiểm tra sự lựa chọn của bạn";
+"beyondBalance"="下xin mời nhập mức đặt cược hợp lệ";
+"timeZero"="nhập thời gian cược theo hợp lệ";
+"timebeyond"="phút, tối đa 1440 phút";
+"running"="đang vận hành";
+"waitPay"="chờ thanh toán";
+"chaseBalance"="số dư theo cược:";
+"leftTime"="Thời gian còn lại(M):";
+"offTitle"="theo cược";
+"tongjiBtn"="Thống kê";
+"baobiaoBtn"="Báo cáo";
+"operaterecord"="Biên bản hoạt động";
+"offLineChase"="theo cược";
+"tableSelect"="T\nA\nB\nL\nE";
+"riskSetting"="R\nI\nS\nK";
+"winOrloss"="Lợi nhuận và lỗ:";
+"betCount"="lần cá cược:";
+"roadChoose"="Chọn";
+"selectAll"="Tất cả";
+"perBet"="Mỗi cược";
+"lossAmount"="số tiền khấu trừ";
+"profitAmount"="Lợi nhuận";
+"chaseTime"="thời gian theo cược";
+"autoStop"="Ngừng theo đuổi";
+"stopChase"="Ngừng theo đuổi";
+"hour"="Biên bản";
+"reset"="Đặt lại";
+"setFailure"="Thiết lập thất bại";
+"return"="Trở lại";
+"tableRate"="tần suất bàn";
+"goodRoadRate"="tần suất";
+"roadTimes"="Số lần";
+"goodroadWin"="tỷ lệ thắng";
+"count10000"="thống kê 2000 ván gần nhất";
+
+"goodtype"="Loại";
+"roadType1"="con đường may mắn-1";
+"roadType2"="con đường may mắn-2";
+"roadType3"="con đường may mắn-3";
+"roadType4"="con đường may mắn-4";
+"roadType5"="con đường may mắn-5";
+"roadType6"="con đường may mắn-6";     //"逢庄连";
+"roadType7"="con đường may mắn-7";
+"roadType8"="con đường may mắn-8";
+
+"nowRoad"="Hiện tại";
+"betMoney"="số dư cược";
+"odds"="Tỷ lệ";
+"betdetail"="chi tiết đặt cược";
+"beganchase"="đã bắt đầu theo cược";
+"stopChase"="Ngừng theo đuổi";
+"testcantchase"="tài khoản dùng thử Không thể theo đuổi";
+
+"beginTime"="thời gian bắt đầu";
+"endTime"="thời gian kết thúc";
+"betTimes"="lần cá cược";
+"payOut"="thanh toán";
+
+////报表详情
+"bettype"="loại hình cược";
+"resultScreen"="phát lại video";
+"pPair"="đôi người chơi";
+"bPair"="đôi nhà cái";
+//免佣
+"banker6"="miễn hoa hồng";
+
+//龙虎
+"dragonRed"="rồng đỏ";
+"dragonBlack"="rồng đen";
+"tigerRed"="hổ đỏ";
+"tigerBlack"="hổ đen";
+"dragonOdd"="rồng đơn";
+"tigerOdd"="hổ đơn";
+"dragonEven"="rồng đôi";
+"tigerEven"="hổ đôi";
+
+//轮盘
+//"direct"="直注";
+//"separate"="";
+//"street"="";
+//"angle"="";
+//"line"="";
+//"three"="";
+//"four"="";
+"firstRow"="hàng 1";
+"sndRow"="hàng 2";
+"thrRow"="hàng 3";
+"firstCol"="Cột 1";
+"sndCol"="Cột 2";
+"thrCol"="Cột 3";
+"low"="tiểu";
+"high"="đại";
+
+//牛牛
+"yukou"="Giữ lại";
+"player1Double"="P 1(nhân đôi)";
+"player2Double"="P 2(nhân đôi)";
+"player3Double"="P 3(nhân đôi)";
+"player1Equal"="P 1(bằng lần)";
+"player2Equal"="P 2(bằng lần)";
+"player3Equal"="P 3(bằng lần)";
+"player1Many"="P 1(nhân nhiều lần)";
+"player2Many"="P 2(nhân nhiều lần)";
+"player3Many"="P 3(nhân nhiều lần)";
+"banker1Double"="B 1(nhân đôi)";
+"banker2Double"="B 2(nhân đôi)";
+"banker3Double"="B 3(nhân đôi)";
+"banker1Equal"="B 1(bằng lần)";
+"banker2Equal"="B 2(bằng lần)";
+"banker3Equal"="B 3(bằng lần)";
+"banker1Many"="B 1(nhân nhiều lần)";
+"banker2Many"="B 2(nhân nhiều lần)";
+"banker3Many"="B 3(nhân nhiều lần)";
+//骰宝
+"allDices"="tất cả xúc xắc";
+"threeForces"="tam quân";
+"nineWayGards"="bài ngắn";
+"pairs"="bài dài";
+"surroundDices"="xúc xắc";
+"points"="điểm số";
+
+//德州
+"Site"="khu vực sảnh bar quán quân";
+"CasinoHoldem"="Casino poker";
+"Bonus"="phần thưởng";
+"Ante"="đặt cược thấp nhất";
+"Call"="theo cược";
+"RaiseBet"="Nâng cao";
+"RaiseBet_yes"="theo cược(Y)";
+"RaiseBet_no"="theo cược(N)";
+"foldPoker"="bỏ cược";
+"NotQualified"="không hợp quy";
+"HighCard"="mậu thầu";
+"threeCardPair"="đôi";
+"PairCard"="đôi";
+"PairCardA"="đôiA";
+"TwoPairs"="hai đôi";
+"ThreeOfakind"="sám cô";
+"Straight"="sảnh";
+"Flush"="thùng";
+"FullHouse"="cù lũ";
+"FourOfakind"="tứ quý";
+"StraightFlush"="sảnh thùng";
+"RoyalFlush"="thùng phá sảnh";
+"PairCardOrHighcard"="mậu thầu";
+"BrandType"="Loại";
+"BonusOdds"="Tỷ lệ thưởng";
+"BettingOdds"="Tỷ lệ cá cược";
+"HandPoker"="Tay";
+"DZOdds"="Tỷ lệ";
+"bankerHome"="B";
+"playerHome"="P";
+"first_betante"="vui lòng đặt cược trước";
+"bonus_overAnte"="Tiền thưởng không được lớn hơn cược";
+"texasWin"="Thắng";
+//图片 下注区
+"texasBetImage"="depk_cn";
+
+//波比厅添加
+"bobihalg"="bảo hiểm Baccarat";
+"duozhuo_baijiale"="Multi-table baccarat";
+"baoxian_baccarat"="InBaccarat";
+"vip_baccarat"="VIP Baccarat";
+"pBX"="InPlayer";
+"bBX"="InBanker";
+"baoxianbet_player"="Bet Player Insurance";
+"baoxianbet_banker"="Bet Banker Insurance";
+"bx_peilv"="Odds:";
+"bx_payout"="Ins Payout::";
+"bx_confirm"="confirm";
+"bx_selectChip"="Please Choose Chip Bet";
+"bx_alerdPlayer"="Player:";
+"bx_alerdBanker"="Banker:";
+
+//咋金花
+"red_black"="Three Card";
+"betfiled_threecard"="red&black_en";
+"tie_ju"="Tie";
+"bao_zi"="leopard";
+"sanCard"="High card";
+"baozi_shashou"="Leopard killer";
+"Flush_zjh"="Flush";
+"StraightFlush_zjh"="Straight flush";
+"road_black"="black_road_en";
+"road_red"="red_road_en";
+"road_tie"="de6";
+"road_black_luck"="black_lucky";
+"road_red_luck"="red_lucky";
+"road_tie_luck"="de5";
+"luck"="lucky";
+
+//极速骰宝
+"jisu_sicbo"="Speed SicBo";
+"betfeild_sicbojisu"="sb_yili_en";
+
+//博饼
+"bobingtype0"="很遗憾，下次继续";
+"bobingtype1"="一秀";
+"bobingtype2"="二举";
+"bobingtype3"="四进";
+"bobingtype4"="三红";
+"bobingtype5"="对堂";
+"bobingtype6"="四红";
+"bobingtype7"="五子";
+"bobingtype8"="五红";
+"bobingtype9"="六黑";
+"bobingtype10"="六锦";
+"bobingtype11"="六红";
+"bobingtype12"="金花";
+
+
+//////VIP   5  7  8  旁  座  包
+"vipLobby_1"="View";
+"vipLobby_2"="Enter";
+"vipLobby_3"="Mater";
+
+"vipfuncString0" = "Change Shoe?";
+"vipfuncString1" = "Change Dealer";
+"vipfuncString2" = "Check Card";
+
+"openCard"="Open";
+
+//"nowMarster"="当前桌";
+//"haveMater"="已包桌";
+"haveoccupied"="Occupied";
+
+"minBet"="You can place a bet above the balance. Please recharge.";

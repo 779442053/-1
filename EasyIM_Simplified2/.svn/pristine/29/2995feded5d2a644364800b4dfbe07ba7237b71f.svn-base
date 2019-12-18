@@ -1,0 +1,59 @@
+//
+//  MMBaseViewController.h
+//  EasyIM
+//
+//  Created by momo on 2019/5/11.
+//  Copyright © 2019年 Looker. All rights reserved.
+//
+
+
+//
+//基类：主要功能
+//1.设置页面跳转拦截条件。
+//2.返回是否登录并跳转。
+//3.根据项目添加基类方法。
+//
+
+#import "MMCoreBaseViewController.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface MMBaseViewController : MMCoreBaseViewController
+
+@property (nonatomic, strong) NSString *navgationTitle;
+
+/**
+ 获取是否需要登录
+ 
+ @return 是否需要登录
+ */
+- (BOOL)getNeedLogin;
+
+/**
+ 是否登陆(无状态)
+ 
+ @return YES是 NO否
+ */
+- (BOOL)LoginStatus;
+
+/**
+ 是否登录
+ 
+ @return YES是 NO否
+ */
+- (BOOL)isLogin;
+
+- (void)baseVCPushViewController:(MMBaseViewController *)viewController animated:(BOOL)animated;
+
+- (BOOL)isIphoneX;
+
+- (void)addBackBtn;
+- (void)addRightBtnWithTitle:(NSString *)title;
+- (void)addRightBtnWithImage:(UIImage *)image;
+- (void)addRightBtnCallback:(void(^ _Nonnull)(UIButton *_btn))btnCallback;
+- (void)backAction;
+- (void)rightAction;
+
+@end
+
+NS_ASSUME_NONNULL_END

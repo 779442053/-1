@@ -1,0 +1,124 @@
+//
+//  YKNetworking.h
+//  hjqinspection
+//
+//  Created by 源库 on 2017/3/27.
+//  Copyright © 2017年 yuanku. All rights reserved.
+//
+
+#import <AFNetworking.h>
+
+#import <YYModel.h>
+#import "YKPostImageModel.h"
+
+#pragma mark ==================== 请求参数类
+@interface RequestParamsModel : NSObject
+
+/**
+ 访问地址
+ */
+@property (nonatomic, strong) NSString *URLString;
+
+/**
+ 用户令牌
+ */
+@property (nonatomic, strong) NSString *token;
+
+/**
+ 参数
+ */
+@property (nonatomic, strong) id parameters;
+
+@end
+
+#pragma mark ==================== 请求方法类
+
+@interface YKNetworking : AFHTTPSessionManager
+
+@property (nonatomic, strong) void(^returnLogBackIn)(void);
+
++ (YKNetworking *)sharedHttpSessionManager;
+
+/**
+ POST提交json获取网络数据
+ 
+ @param URLString 基地址
+ @param parameters json参数
+ @param success 成功返回数据
+ @param failure 失败返回错误信息
+ */
++ (void)JsonPOST:(NSString *)URLString
+      parameters:(id)parameters
+         success:(void (^)(NSDictionary *responseDictionary))success
+         failure:(void (^)(NSError *error))failure;
+
+/**
+ GET获取网络数据
+ 
+ @param URLString 基地址
+ @param parameters GET参数
+ @param success 成功返回数据
+ @param failure 失败返回错误信息
+ */
++ (void)GET:(NSString *)URLString
+ parameters:(id)parameters
+    success:(void (^)(NSURLSessionDataTask *, NSDictionary *))success
+    failure:(void (^)(NSURLSessionDataTask *, NSError *))failure;
+
+/**
+ POST获取网络数据
+ 
+ @param requestParamsModel 请求参数对象
+ @param success 成功返回数据
+ @param failure 失败返回错误信息
+ */
++ (void)POST:(RequestParamsModel *)requestParamsModel
+     success:(void (^)(NSURLSessionDataTask * , NSDictionary * ))success
+     failure:(void (^)(NSURLSessionDataTask * , NSError * ))failure;
+
+/**
+ POST获取网络数据
+ 
+ @param URLString 基地址
+ @param parameters POST参数
+ @param success 成功返回数据
+ @param failure 失败返回错误信息
+ */
++ (void)POST:(NSString *)URLString
+  parameters:(id)parameters
+     success:(void (^)(NSURLSessionDataTask *, NSDictionary *))success
+     failure:(void (^)(NSURLSessionDataTask *, NSError *))failure;
+
+/**
+ POST获取网络数据
+ 
+ @param URLString 基地址
+ @param token 用户令牌
+ @param parameters POST参数
+ @param success 成功返回数据
+ @param failure 失败返回错误信息
+ */
++ (void)POST:(NSString *)URLString
+       token:(NSString *)token
+  parameters:(id)parameters
+     success:(void (^)(NSURLSessionDataTask * , NSDictionary * ))success
+     failure:(void (^)(NSURLSessionDataTask * , NSError * ))failure;
+
+/**
+ POST获取网络数据
+ 
+ @param URLString 基地址
+ @param headers header参数
+ @param parameters POST参数
+ @param uploadProgress 进度
+ @param success 成功返回数据
+ @param failure 失败返回错误信息
+ */
++ (void)POST:(NSString *)URLString
+     headers:(NSDictionary *)headers
+  parameters:(id)parameters
+    progress:(void (^)(NSProgress * ))uploadProgress
+     success:(void (^)(NSURLSessionDataTask * , NSDictionary * ))success
+     failure:(void (^)(NSURLSessionDataTask *, NSError *))failure;
+
+@end

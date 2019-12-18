@@ -1,0 +1,368 @@
+///
+//  GlobalVariable.h
+//  speedauction
+//
+//  Created by yuanku on 15/9/17.
+//  Copyright (c) 2015年 Company. All rights reserved.
+//
+
+#ifndef speedauction_GlobalVariable_h
+#define speedauction_GlobalVariable_h
+
+
+
+////屏蔽路径下的数据自动备份到icould
+#define AddSkipBackupAttributeToItemAtPath(filePathString) \
+{ \
+NSURL* URL= [NSURL fileURLWithPath: filePathString]; \
+if([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]){ \
+[URL setResourceValue: [NSNumber numberWithBool: YES] forKey: NSURLIsExcludedFromBackupKey error: nil]; \
+} \
+}
+
+
+
+
+/**
+ *  宏定义
+ *  常用参数全部写在这里
+ */
+
+/**
+ *  宏定义
+ *  常用参数全部写在这里
+ */
+#define G_HTTP_URL [YKUserInfoManager userInfo].webapi.length ? [YKUserInfoManager userInfo].webapi : @"http://103.240.142.115:1900/"
+
+//话题 朋友圈base地址
+#define TOP_CIRCLE_URL @"http://admin2.joyvc.com/"
+
+//最新接口地址
+#define K_APP_HOST_ADMIN3 @"http://imapi.51fy.co/"
+
+#define G_HTTP_URL_DEVICERENT [NSString stringWithFormat:@"%@%@",G_HTTP_URL,@"/static/machinerent/index_rent.html?id="]
+#define G_HTTP_URL_DEVICELEASEOUT [NSString stringWithFormat:@"%@%@",G_HTTP_URL,@"/static/machinerent/index_letout.html?id="]
+#define G_HTTP_URL_JOBWANTED [NSString stringWithFormat:@"%@%@",G_HTTP_URL,@"/static/machinerent/index_boss.html?id="]
+#define G_HTTP_URL_RECRUIT [NSString stringWithFormat:@"%@%@",G_HTTP_URL,@"/static/machinerent/index_staff.html?id="]
+
+#define G_UIIMAGEVIEW_CONTENTMODE_DEFAULT  UIViewContentModeScaleAspectFill
+
+//=======================UI绘制=============================
+//视频比例
+#define G_IMAGE_VIDEO (9/16.)
+
+//=======================长度=============================
+//section 间距
+#define G_SECTION_SPACING 5
+
+#define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+
+#define IS_IOS_11  ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.f)
+
+
+#define G_SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
+//屏幕高
+#define G_SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
+
+#define G_UI_WIDTH (G_SCREEN_WIDTH - 2 * G_UI_START_X)
+//宽度比例适配
+#define G_GET_SCALE_LENTH(a)  a/720.0f*G_SCREEN_WIDTH*2.0
+//高度比例适配
+#define G_GET_SCALE_HEIGHT(a)  a/1280.0f*G_SCREEN_HEIGHT*2.0
+
+
+
+#define IsWifi @"wificandownload"
+///是否在审核期间
+#define ISAUDIT [[NSUserDefaults standardUserDefaults] boolForKey:IsPublish]
+#define IsPublish @"IsPublish"
+#define NSSystemBundle          [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] integerValue]
+#define IsAppStorePass          @"IsAppStorePass"
+#define KversionUpdateAlretIsNotShow          @"KversionUpdateAlretIsNotShow"
+#define CGSystemVersion         [[[UIDevice currentDevice] systemVersion] floatValue]
+
+// 对字符串做特殊的宏，即保证返回的值不为空
+#define ISNIL(x) ((x) == nil ? @"" : (x))
+#define ISNILDefault(x, y) ((x) == nil ? y : (x))
+#define ISNULL(x) ((x) == nil || [(x) isEqualToString:@"NULL"] || [(x) isEqualToString:@"null"] ? @"" : (x))
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: -
+////////////////////////////////////////////////////////////////////////////////
+
+#define kDefaultPic [UIImage imageNamed:@"icon_album_picture_fail_big"]
+#define kDefaultAvatarPic [UIImage imageNamed:@"avatarNon"]
+
+///判断设备类型是否iPhoneX
+#define ISIphoneX  (IS_IOS_11 && IS_IPHONE && (MIN([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) >= 375 && MAX([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) >= 812))
+
+///导航栏高度
+#define kNavBarHeight (ISIphoneX ? 88.f : 64.f)
+
+///底部标签栏高度
+#define kTabBarHeight (ISIphoneX ? 83.f : 49.f)
+
+/** iPhoneX底部 Home 区域 */
+#define K_APP_IPHONX_BUTTOM 34.0
+
+/** iPhoneX顶部 导航 区域 */
+#define K_APP_IPHONX_TOP 44.0
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - 颜色
+////////////////////////////////////////////////////////////////////////////////
+#define G_COLOR_NAVIGATION_007bf3 [UIColor colorWithHexString:@"#01A1EF"]
+#define G_COLOR_ff4c4c [UIColor colorWithHexString:@"ff4c4c"]
+#define G_COLOR_GRAY_LINE_e1e1e1 [UIColor colorWithHexString:@"e1e1e1"]
+#define G_COLOR_GRAY_BACKGROUND_f2f2f7 [UIColor colorWithHexString:@"f2f2f7"];
+
+//主题色
+#define G_COLOR_WHITE_ffffff [UIColor whiteColor]//白
+#define G_COLOR_BLACK_333333 [UIColor colorWithHexString:@"333333"]//黑
+#define G_COLOR_GRAY_666666 [UIColor colorWithHexString:@"666666"]//深灰
+#define G_COLOR_GRAY_999999 [UIColor colorWithHexString:@"999999"]//浅灰
+#define G_COLOR_GRAY_dddddd [UIColor colorWithHexString:@"dddddd"]//浅灰
+#define G_COLOR_GRAY_eeeeee [UIColor colorWithHexString:@"eeeeee"]//浅灰
+
+
+#define G_3B3B3B_COLOR [UIColor colorWithHexString:@"3b3b3b"]//黑色字体
+
+#define G_ADADAD_COLOR [UIColor colorWithHexString:@"adadad"]//浅灰字体
+
+#define G_EEF0F3_COLOR [UIColor colorWithHexString:@"eef0f3"]//线颜色
+
+#define AdminController   @"AdminController"
+#define UnAdminController @"UnAdminController"
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - 字体
+////////////////////////////////////////////////////////////////////////////////
+#define G_FONT_TEXT_11 G_FONT_TEXT(11)
+#define G_FONT_TEXT_13 G_FONT_TEXT(13)
+#define G_FONT_TEXT_15 G_FONT_TEXT(15)
+#define G_FONT_TEXT(a) [UIFont systemFontOfSize:a]
+#define G_FONT_TEXT_12 G_FONT_TEXT(12)
+#define G_FONT_TEXT_14 G_FONT_TEXT(14)
+#define G_FONT_TEXT_16 G_FONT_TEXT(16)
+#define G_FONT_TEXT_18 G_FONT_TEXT(18)
+#define FONT(f) [UIFont fontWithName:@"MicrosoftYaHei" size:f]
+
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - 网络请求公共设置
+////////////////////////////////////////////////////////////////////////////////
+/** 请求Api */
+#define K_APP_REQUEST_API @"webim/api"
+#define K_APP_REQUEST_API_2 @"api/user/"
+#define K_APP_REQUEST_API_3 @"api/friend/"
+
+/** 请求结果(ret=succ 成功) */
+#define K_APP_REQUEST_OK(rs)([(rs) isEqualToString:@"succ"])
+
+/** Http请求返回码(状态) */
+#define K_APP_REQUEST_CODE @"ret"
+
+/** 请求返回结果 */
+#define K_APP_REQUEST_DATA @"JoyIM"
+
+/** 请求返回提示信息 */
+#define K_APP_REQUEST_MSG @"desc"
+
+/** 会话Id失效 */
+#define K_APP_REQUEST_AUTHID(dicObj)([(dicObj[@"desc"]) containsString:@"无效"])
+
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - 登录信息
+////////////////////////////////////////////////////////////////////////////////
+#define K_APP_LOGIN_USER @"login_user_name"
+#define K_APP_LOGIN_PWD @"login_user_pwd"
+#define YKUSERMANAGER_USERINFO @"YKUserInfo"
+
+#define K_DEFAULT_USER_PIC [UIImage imageNamed:@"setting_default_icon"]
+
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - Bugly测试配置信息
+////////////////////////////////////////////////////////////////////////////////
+#define K_APP_BUGLY_APP_ID @"61c93afcea"
+#define K_APP_BUGLY_APP_KEY @"ef43acb0-ad28-4907-9163-09183e935d13"
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - 二维码前缀
+////////////////////////////////////////////////////////////////////////////////
+#define K_APP_QRCODE_USER @"imuser"
+#define K_APP_QRCODE_GROUP @"imgroup"
+#define K_APP_QRCODE_MEETING @"immeeting"
+
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - 验证码
+////////////////////////////////////////////////////////////////////////////////
+/** 验证码发送间隔(单位：秒) */
+#define K_APP_CODE_TIMER_COUNT 60
+
+/** 验证码长度 */
+#define K_APP_CODE_LENGTH 4
+
+/** 密码长度 */
+#define K_APP_PWD_LENGTH 15
+
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - 头都菜单配置信息
+////////////////////////////////////////////////////////////////////////////////
+//头部选中菜单颜色、默认颜色
+#define K_HEAD_MENU_SELECT_COLOR [UIColor colorWithHexString:@"#12B7F5"]
+#define K_HEAD_MENU_DEFAULT_COLOR [UIColor colorWithHexString:@"#000000"]
+
+//头部菜单字体
+#define K_HEAD_MENU_FONT_SIZE 14
+
+//缩放级别
+#define K_HEAD_MENU_SCALE 1.15
+
+//下划线颜色
+#define K_HEAD_MENU_LINE_COLOR [UIColor colorWithHexString:@"#12B7F5"]
+
+//下划线高度
+#define K_HEAD_MENU_LINE_HEIGHT 2
+
+//菜单底部线高度
+#define K_HEAD_BOTTOM_LINE_HEIGHT 1
+
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - 聊天室
+////////////////////////////////////////////////////////////////////////////////
+/** 进入聊天室 */
+#define K_JOIN_ChAT_ROOM @"user_join_chat_room"
+/** 退出聊天室 */
+#define K_EXIT_ChAT_ROOM @"user_exit_chat_room"
+/** 获取聊天室其他人发的消息 */
+#define K_GET_MSG_ChAT_ROOM @"get_msg_chat_room"
+
+#define K_CHAT_ROMM_ID @"ChatRoomID"
+#define K_CHAT_USER_ID @"userid"
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - fir.im 版本检测
+////////////////////////////////////////////////////////////////////////////////
+#define K_APP_FIR_IM_URL @"https://api.fir.im/apps/latest/5d5e356b23389f1248bd3064"
+
+//fir.im token
+#define K_APP_FIR_IM_TOKEN @"c8e3b5b088c7ab9aa73807b518ec9c29"
+#define K_APP_REQUEST_PLATFORM @"IOS"
+
+
+////////////////////////////////////////////////////////////////////////////////
+//MARK: - GCDSocketTCPCMD 枚举
+////////////////////////////////////////////////////////////////////////////////
+typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
+    /** heartBeat 心跳包 */
+    GCDSocketTCPCmdTypeHeartBeat = 0,
+    
+    /** updateuserstate 下线通知 */
+    GCDSocketTCPCmdTypeUpdateuserstate,
+    
+    /** friendStatus 好友上线通知 */
+    GCDSocketTCPCmdTypeFriendStatus,
+   
+    /** inviteFrd2Group 邀请好友入群 */
+    GCDSocketTCPCmdTypeInviteFrd2Group,
+    
+    /** hasBulletin 好友通知 */
+    GCDSocketTCPCmdTypeHasBulletin,
+
+    /**
+     * 视频呼叫返回状态(对方等待通知界面)
+     * callUser  1v1音视频呼叫
+     * CallGroup 1vM群组音视频呼叫
+     */
+    GCDSocketTCPCmdTypeCallUser,
+    GCDSocketTCPCmdTypeCallGroup,
+    
+    /** login 获取登陆消息 */
+    GCDSocketTCPCmdTypeLogin,
+    
+    /** sendMsg 发送消息回调 */
+    GCDSocketTCPCmdTypeSendMsg,
+    
+    /** fetchMsg 读取消息 */
+    GCDSocketTCPCmdTypeFetchMsg,
+    
+    /** HangUpCall 挂断 */
+    GCDSocketTCPCmdTypeHangUpCall,
+    
+    /** 接受音视频邀请(AcceptCall 1v1、AcceptGroupCall 1vM) */
+    GCDSocketTCPCmdTypeAcceptCall,
+    GCDSocketTCPCmdTypeAcceptGroupCall,
+    
+    /** 拒绝视频邀请(RejectCall 1v1、RejectGroupCall 1vM) */
+    GCDSocketTCPCmdTypeRejectCall,
+    GCDSocketTCPCmdTypeRejectGroupCall,
+       
+    /** fetchGroupMsg 读取群消息 */
+    GCDSocketTCPCmdTypeFetchGroupMsg,
+
+    /** checkUserOnline 检查用户是否在线 */
+    GCDSocketTCPCmdTypeCheckUserOnline,
+    
+    /** groupMsg 发群消息回调 */
+    GCDSocketTCPCmdTypeGroupMsg,
+    
+    /** addFriend 加好友回调 */
+    GCDSocketTCPCmdTypeAddFriend,
+    
+    /** deleteGroup 解散群回调 */
+    GCDSocketTCPCmdTypeDeleteGroup,
+
+    /** exitGroup 退出群回调 */
+    GCDSocketTCPCmdTypeExitGroup,
+    
+    /** joinChatRoom 加入聊天室 */
+    GCDSocketTCPCmdTypeJoinChatRoom,
+    
+    /** exitChatRoom 离开聊天室 */
+    GCDSocketTCPCmdTypeExitChatRoom,
+    
+    /** sendChatRoomMsg 聊天室发送消息/礼物/红包 */
+    GCDSocketTCPCmdTypeSendChatRoomMsg,
+    
+    /** logout 退出登录 */
+    GCDSocketTCPCmdTypeLogout
+};
+
+#define cGCDSocketTCPCmdTypeGet @[@"heartBeat",\
+@"updateuserstate",\
+@"friendStatus",\
+@"inviteFrd2Group",\
+@"hasBulletin",\
+@"callUser",\
+@"CallGroup",\
+@"login",\
+@"sendMsg",\
+@"fetchMsg",\
+@"HangUpCall",\
+@"AcceptCall",\
+@"AcceptGroupCall",\
+@"RejectCall",\
+@"RejectGroupCall",\
+@"fetchGroupMsg",\
+@"checkUserOnline",\
+@"groupMsg",\
+@"addFriend",\
+@"deleteGroup",\
+@"exitGroup",\
+@"joinChatRoom",\
+@"exitChatRoom",\
+@"sendChatRoomMsg",\
+@"logout"]
+
+/** 枚举 to 字串 */
+#define cGCDSocketTCPCmdTypeString(type) ([cGCDSocketTCPCmdTypeGet objectAtIndex:type])
+
+/** 字串 to 枚举 */
+#define cGCDSocketTCPCmdTypeEnum(string) ([cGCDSocketTCPCmdTypeGet indexOfObject:string])
+
+#endif

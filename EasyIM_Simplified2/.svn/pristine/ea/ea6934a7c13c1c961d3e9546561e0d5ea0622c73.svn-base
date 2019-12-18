@@ -1,0 +1,85 @@
+//
+//  MMPwdModifyViewController.m
+//  EasyIM
+//
+//  Created by momo on 2019/7/24.
+//  Copyright © 2019 Looker. All rights reserved.
+//
+
+#import "MMPwdModifyViewController.h"
+
+#import "AppDelegate.h"
+#import "LoginVC.h"
+
+@interface MMPwdModifyViewController ()
+
+@property (weak, nonatomic) IBOutlet UITextField *oldField;
+@property (weak, nonatomic) IBOutlet UITextField *changeField;
+@property (weak, nonatomic) IBOutlet UITextField *sChangeField;
+
+@end
+
+@implementation MMPwdModifyViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self setupNav];
+}
+
+//MARK: - Nav
+
+- (void)setupNav
+{
+    self.navgationTitle = @"密码修改";
+    [self addBackBtn];
+    [self addRightBtnWithTitle:@"保存"];
+    
+}
+
+//MARK: - Action 保存
+
+- (void)rightAction
+{
+    [self.view endEditing:YES];
+    
+    NSString *msg = @"";
+    if (self.oldField.text.length == 0) {
+        msg = @"请输入旧密码";
+        [MMProgressHUD showHUD:msg];
+        return;
+    }else if(![self.changeField.text checkUsername:16]){
+        [MMProgressHUD showHUD:@"旧密码为6-16为长度字母或数字组成"];
+        return;
+    }else if (self.changeField.text.length < 6 || self.changeField.text.length >16) {
+        msg = @"请输入正确的长度";
+        [MMProgressHUD showHUD:msg];
+        return;
+    }else if (self.sChangeField.text.length == 0) {
+        msg = @"请确认新密码";
+        [MMProgressHUD showHUD:msg];
+        return;
+    } else if (![self.changeField.text isEqualToString:self.sChangeField.text]) {
+        msg = @"两次输入的密码不一致请重新输入";
+        [MMProgressHUD showHUD:msg];
+        return;
+    }
+    
+    [MMRequestManager modifyPasswordWithUserId:[YKUserInfoManager userInfo].userId password:self.sChangeField.text aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
+        if (!error) {
+            [MMProgressHUD showHUD:@"密码修改成功"];
+            [self performSelector:@selector(delayAction) withObject:nil afterDelay:2.0f];
+        }else{
+            [MMProgressHUD showHUD:MMDescriptionForError(error)];
+        }
+    }];
+    
+}
+
+- (void)delayAction
+{
+    AppDelegate *appDelegate =  [AppDelegate appDelegate];
+    appDelegate.window.rootViewController = [LoginVC new];
+}
+
+@end

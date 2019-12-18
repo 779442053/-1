@@ -1,0 +1,83 @@
+//
+//  VerificationViewController.m
+//  EasyIM
+//
+//  Created by 魏冰杰 on 2019/8/28.
+//  Copyright © 2019年 Looker. All rights reserved.
+//
+
+#import "VerificationViewController.h"
+#import "FriDetailViewController.h"
+
+@interface VerificationViewController ()<AddFriendAgreeDelegate2>
+@property (weak, nonatomic) IBOutlet UIImageView *imageV;
+@property (weak, nonatomic) IBOutlet UILabel *nickLable;
+@property (weak, nonatomic) IBOutlet UILabel *desLable;
+@property (weak, nonatomic) IBOutlet UILabel *verifiMsgLable;
+@property (weak, nonatomic) IBOutlet UIButton *verificationBtn;
+@property (weak, nonatomic) IBOutlet UIButton *blacklistBtn;
+
+@end
+
+@implementation VerificationViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self initView];
+}
+
+- (void)initView {
+    [self addBackBtn];
+    self.navgationTitle = @"详细资料";
+    [self.view setBackgroundColor:[UIColor colorWithRed:240.0/255 green:240.0/255 blue:240.0/255 alpha:1]];
+    [self.verificationBtn setLayerBorderWidth:0 borderColor:nil cornerRadius:5];
+    [self.blacklistBtn setLayerBorderWidth:0.5 borderColor:G_COLOR_GRAY_LINE_e1e1e1 cornerRadius:5];
+    [self.imageV setLayerBorderWidth:0 borderColor:nil cornerRadius:3];
+    
+    [self.imageV sd_setImageWithURL:[NSURL URLWithString:_model.fromPhoto] placeholderImage:[UIImage imageNamed:@"setting_default_icon"]];
+    self.nickLable.text = _model.fromNick.length ? _model.fromNick: _model.fromName;
+    self.desLable.text = [NSString stringWithFormat:@"账号:%@",_model.fromName];
+    self.verifiMsgLable.text = [NSString stringWithFormat:@"我是 %@",self.nickLable.text];
+}
+
+// 通过验证
+- (IBAction)verificationEvent:(id)sender {
+    [self commonRequest:_model cmd:@"acceptFriend" msg:@"对方接受你的好友请求"];
+}
+
+//加入黑名单
+- (IBAction)blacklistEvent:(id)sender {
+
+    [self commonRequest:_model cmd:@"rejectFriend" msg:@"对方拒绝你的好友请求"];
+}
+
+- (void)commonRequest:(NewFriendModel *)model cmd:(NSString *)cmd msg:(NSString *)msg
+{
+    
+    [MMRequestManager aNoticFriendsWithCmd:cmd tagUserId:model.fromID time:model.time msg:msg aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
+        
+        MMLog(@"%@",dic);
+        
+        if (!error) {
+
+            if ([cmd isEqualToString:@"acceptFriend"]) {
+                model.bulletinType = @(1).description;
+                    FriDetailViewController *vc = [[FriDetailViewController alloc]init];
+                vc.Nmodel = _model;
+                    [self.navigationController pushViewController:vc animated:YES];
+
+            }else if ([cmd isEqualToString:@"rejectFriend"]){
+                model.bulletinType = @(2).description;
+
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            }
+            [MMProgressHUD showHUD:dic[@"desc"]];
+        }else{
+            [MMProgressHUD showHUD: MMDescriptionForError(error)];
+        }
+    }];
+    
+}
+
+
+@end

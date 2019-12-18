@@ -1,0 +1,648 @@
+/*
+ Localizable.strings
+ DG
+ 
+ Created by Samnang on 16/10/11.
+ Copyright © 2016年 Samnang. All rights reserved.
+ */
+"username"="Pengguna";
+"password"="kata sandi";
+"loading"="Pemuatan...";
+"banker_"="B:";
+"player_"="P:";
+"tie_"="T:";
+"shuffle"="kocokan";
+"banker_ask"="AskB";
+"player_ask"="AskP";
+"dragon_ask"="AskD";
+"tiger_ask"="AskT";
+"banker"="B";
+"player"="P";
+"tie"="T";
+"tie22"="Tie";
+"bull_"="B";
+"not_bull"="N";
+"five_bull"="5P";
+"dragon"="D";
+"tiger"="T";
+"sure"="Confirm";
+"cancel"="Cancel";
+"big"="B";
+"small"="S";
+"odd"="O";
+"even"="E";
+"red"="R";
+"black"="B";
+"zero"="Z";
+"bao"="W";
+"gaoqing"="HD";
+"biaoqing"="SD";
+"good_way"="Baik";
+"hot_num"="HOT";
+"username_"="Pengguna:";
+"balance_"="Rekening:";
+"this_bet_"="Total Bet:";
+"this_win_"="Total win:";
+"open_video"="Open Video";
+"close_video"="Sembunyikan Video";
+"VideoOff"="Video is Off";
+"lines_"="Baris:";
+"qingxidu"="Kejelasan:";
+"VideoChange"="Video Changing...";
+"Videoloading"="Video is loading";
+"on_line"="Online：";
+"start_bet"="Mulai taruhan";
+"stop__bet"="berhenti taruhan";
+"bet_suc"="taruhan:";
+"bet_suc_one"="taruhan";
+"link_close"="koneksi server ditutup";
+"version_checking"="memeriksa versi";
+"over_big_limit"="Selama taruhan batas";
+"give_tip"="tips untuk anchor";
+"tip_ps"="PS:Klik chip rightside pilih masalah jumlah";
+"down_loading"="Mengunduh...";
+"change_nick"="perubahan nickname";
+"input_nick"="masukkan julukan baru";
+"nick_limit"="Nickname can only contain ten letters at most ";
+"nick_wrong"="Input format error";
+"exited"="Net Error";
+"send_red_packet"="Send Red Envelopes";
+"red_packet_num"="Red Envelopes Number";
+"input_num"="input a number";
+"ge"="unit";
+"sum_money"="Total Amount";
+"input_money"="Input Amount";
+"yuan"="￥";
+"person_get_money"="You will receive random amount of money";
+"get_red_packet"="Snatch red envelopes";
+"count_last_500"="Statistic of latest 150 round";
+"save_money"="deposito";
+"give_money"="penarikan";
+"money_num"="Amount（￥）";
+"update_content"="Update Content：";
+"down_load"="Download";
+"checkVersion"="Check New Version";
+"checkFaild"="Check Failure";
+"barrage"="Barrage";
+"input_your_content"="masukan konten Anda";
+"send"="Send";
+"wait_good_way"="Good Road Loading";
+"big_small"="BS";
+"even_odd"="EO";
+"sum_num"="SUM";
+"wei"="W";
+"toupai"="Head";
+"player1"="P1";
+"player2"="P2";
+"player3"="P3";
+
+//<!--热词--="
+"hot_words1"="Hello everyone";
+"hot_words2"="One more banker";
+"hot_words3"="One more player";
+"hot_words4"="So easy to win";
+"hot_words5"="Good Luck";
+"hot_words6"="See you tomorrow";
+"hot_words7"="Let's game to end";
+
+
+//<!--LoginActivity--="
+"warn"="Warn";
+"login"="Login";
+"otherLogin"="Account is login in other place";
+"logining"="Logging in";
+"login_suc"="berhasil login";
+"free_play"="bermain bebas";
+"copy_right"="All Rights Reserved © 2016 DreamGaming Casino";
+"input_gesture"="masukan isyarat";
+"alert_gesture"="sandi isyarat lebih besar dari empat";
+"input_gesture_again"="Please enter the gesture password again";
+"gesture_suc"="Gesture password has been set";
+"failed_set_gesture"="Gesture password settings fail\nPlease re-set";
+"gesture_erro"="Gesture password error";
+"set_gesture"="Set gesture password";
+"input_username"="please enter user name";
+"input_password"="please enter password";
+"input_suffix"="please enter a suffix";
+"member_init_fail"="Member initialization failed, please sign in again";
+"skip"="Skip >>";
+"not_display"="Do not show next time";
+"scan_suc"="Scan successful";
+"scan_fial"="Scan failed";
+"not_read_permission"="No file read and write permissions, you can not download and install";
+"scan_login_gestrue"="Set the gesture password\nBy scan login";
+"connect_fail"="The server connection failed";
+"not_surport"="Emoticons are not currently supported";
+"four_not_bet"="No bet for four rounds, you will return lobby after five rounds with no bet!";
+"five_not_bet"="You will returned to lobby\nAfter five rounds without betting!";
+"scanQRcode"="Align QR code within frame to scan";
+
+//<!--MainActivity--="
+"home"="Home";
+"flag_boddy"="Flagship";
+"mipai_boddy"="Squint";
+"info"="MyInfo";
+"fast_star"="Quick Start";
+//<!--mainHomeFragment--="
+"news"="Latest News";
+"live_video"="Live Video";
+//<!--videoFragment--="
+"live_video_loading"="Live Video Loading...";
+"net_dis"="Disconnected from the network,check the network,please";
+//<!--mainFlagFragment--="
+"baccarat"="Bakarat";
+"roullete"="Roulette";
+"Rouletcylinder"="TIERS";
+"RouletOrphans"="ORPHANS";
+"RouletVoisin"="VOISINS DU 0";
+"RouletZero"="JEU 0";
+
+"dt"="DragonTiger";
+"bull"="Bull";
+"sicbo"="SicBo";
+"mipai"="BID Bakarat";
+"jisu"="Speed Bakarat";
+"comming_soon"="Coming soon,stay tuned";
+//<!--mainInfo--="
+"currency"="mata uang:";
+"available_bet_today"="Taruhan valid:";
+"win_loss_today"="gratifikasi:";
+"winning"="persentase kemenangan:";
+"bet_limit"="Limit:";
+//<!--mainMenu--="
+"bet_report"="laporan taruhan";
+"transfer"="Transfer";
+"change_password"="Kata Sandi";
+"game_rule"="Aturan Game";
+"language"="Bahasa";
+"set_limits"="Set Batas";
+"set_game"="Pengaturan";
+"exit_game"="Keluar";
+"pass_change_suc"="Ubah sukses";
+"nick_change_suc"="Ubah sukses";
+
+//<!--betReport--="
+"not_more_data"="No more data";
+"today_report"="Today";
+"yesterday_report"="Yesterday";
+"week_report"="7 Days";
+"game_name"="TableName";
+"bet_time"="BetTime(GMT+8)";
+"cal_time"="Calculate(GMT+8)";
+"bet_num"="BetAmount";
+"available_bet"="Effective";
+"result"="Result";
+"win_loss"="WinOrLoss";
+"haveWin"="menang";
+"sum"="Total";
+"unsettled"="Unsettled";
+"net_busy"="Network busy,please try again";
+"undo"="Revocation";
+//<!--transfer--="
+"kind"="Type";
+"operate_time"="OperatingTime";
+"operate_failed"="Operating Failed";
+
+"before_num"="BeforeBalance";
+"income"="Payments";
+"last_num"="AfterBalance";
+"come_in"="TransfersIn";
+"come_out"="TransfersOut";
+"red_packet"="RedPackets";
+"tip"="Tip";
+//<!--chagePassword--="
+"input_old"="masukan password lama";
+"input_new"="password baru masukan";
+"input_again"="masukan password lagi";
+"sure_new"="Silahkan konfirmasi password baru anda";
+"pass_length"="Sandi tidak lebih 6-14 karakter";
+"new_old_not"="Baru dan lama passsword tidak sama";
+"new_not"="2 password baru tidak sama";
+"format_erro"="tidak ada spasi password";
+//<!--setting--="
+"seting"="Pengaturan";
+"chip_set"="Keping";
+"head_set"="Avatars";
+"other_set"="Lain";
+"favorite_chip"="Silakan pilih 5 dari chip favorit Anda";
+"set_chip_suc"="Pengaturan sukses";
+"select_chips"="Hanya memilih lima Chip";
+"set_limit_suc"="Game limit updated successfully";
+"set_head_suc"="Success";
+"back_music"="Background music";
+"voice"="Suara";
+"video_switch"="Video";
+"barrageSet"="BarrageSetting";
+"on"="On";
+"off"="Off";
+"set_other_suc"="Keberhasilan";
+"close_content"="Anda benar-benar ingin meninggalkan saya?";
+//红包小费提示
+"congradulation"="Selamat";
+"getedRedmoney"="ambil amplop merah";
+"thankBoss"="Terima kasih bos";
+"giveTips"="Sebuah hadiah";
+"beginTOsendRed"="Perhatikan: Mulai amplop merah";
+
+//<!--erroCode--="
+"code__1"="Login failed";
+"tokenerror"="Authentication error\nplease re-login";
+"re_login"="please re-login";
+"system_erro"="System Abnormal";
+"system_maintenance"="System maintenance";
+
+"commanderror"="Command Error";
+"paramserror"="Parameter Error";
+"listparamserror"="List Parameter Error";
+"ip_erro"="IP is limited,can not login";
+"data_erro"="Data error";
+"close_table"="Game Off Table";
+"gamestartedeal"="Opening poker,can not bet";
+"gamenobill"="Game unsettled";
+"lobby_close"="Disconnect,please reconnect";
+"nobalance"="Insufficient balance";
+"nolimit"="Not Limit,Can not enter";
+"over_limit"="Over Limit,Bet Failed";
+"over_pool"="Over Table Limit,Bet Failed";
+"bet_failed"="Bet Failed";
+"profit_limit"="Exceed the maximum win limit";
+"account_logout"="The user logs out";
+"account_no_texist"="User does not exist";
+"account_exist"="User already exists";
+"password_erro"="Wrong password";
+"password_format_erro"="Wrong password\'s format";
+"password_same"="The same password twice";
+"nofreetry_account"="Free account has run out";
+"account_stop"="Account\'s state is stop";
+"account_cant_bet"="Account can not bet";
+"logouted"="Disconnect from the server link";
+"login_again"="Repeat Login";
+"system_update"="System update";
+"norp"="Red packet has been robbed finished";
+"cant_getrp_again"="The red packet has grabbed";
+"cant_getrp"="First bet to grab a red packet";
+"cant_getrp_bet"="Can not snatch cach gift\n without reaching minimum bet points";
+"fill_table"="Table Full";
+"un_know_erro"="An error occurred,error code";
+"not_login"="Not signed";
+"not_mipai"="No bid rights";
+"not_permission"="Permission denied";
+"user_pause"="Account\'s state is pause";
+"user_stop"="Account\'s state is stop";
+"not_find_agent"="Wrong username";
+"pass_user_erro"="Wrong password";
+"network_delay"="Network Delay";
+"requestTimeout"="Request TimeOut";
+
+"chat_fast"="Speak too often,take a break";
+"cant_use"="Free accounts can not chat";
+"cant_revise"="Free accounts can't Modify";
+"cant_chat_"="You have been banned to post";
+"free_playing"="Free Playing";
+"cant_small_big"="No more bet on big/small after 30 rounds";
+"cant_DT_evenOdd"="No more bet on Odd/Even/Red/Black after 30 rounds";
+
+"not_bet_cant_chat"="you can chat after bet";
+"please_mipai"="Please peek card ";
+"auto_open"="Auto open ";
+"show_video"="S\nH\nO\nW";
+"hide_video"="H\nI\nD\nE";
+"allVideo"="Panorama video";
+"newActivity"="acara terbaru";
+
+
+"app_name"="DreamGame";
+"check_red_report"="Cach gift history report";
+"login_banlance"="Balance";
+"give_tip_suc"="Tip successful";
+"gesture_enter_suc"="Gesture Right";
+
+
+"btn_camera"="Camera";
+"setting"="Setting";
+"prompt_we_need_camera"="More privileges needed so we can provide better service to you.";
+"prompt_request_camara"="We are now requesting the privilege of camera.Go?";
+"prompt_already_get_permission"="Camera privilege granted";
+"prompt_been_denied"="Camera privilege is rejected,can not scan code.";
+
+"prompt_request_file"="We are now requesting the privilege of file rading and writting.Go?";
+"prompt_already_get_file_permission"="File privilege granted";
+"prompt_file_been_denied"="File privilege is rejected,can not download.";
+
+"update_balance"="Balance updated";
+
+"loading"="Loding";
+"MJfresh"="Refresh";
+"MJfreshing"="Refreshing";
+"lastPage"="Last";
+"nextpage"="Next";
+
+////图片国际化
+"main_qijian_bg"="main_qijian_bg_en";      //梦幻旗舰厅
+"main_mipai_bg"="main_mipai_bg_en";        //梦幻竞咪厅
+"promotion_1"="App/image/banner/banner1-en";
+"hot_icon"="hot_icon_en";
+"dashang"="dashang_en";
+"PlayerRight"="PlayerRight_en";
+"bankerRight"="bankerRight_en";
+
+//下注区域图片
+"bet_baccarat"="bet_baccarat_en";
+"bet_baccarat_jm"="bet_baccarat_jm_en";
+"bet_dragontiger"="bet_dragontiger_en";
+"bet_bull"="bet_bull_en";
+"betfeild_sicbo"="betfeild_sicbo_en";
+"roulette_rect"="roulette_rect";
+"bet_baccarat_bx"="bx_baccarat_en";
+
+"baccarLuzi"="zz_banker_";
+"DTLuzi"="tgen";
+
+//声音国际化   //voidSound  空声音
+"welcomeBacca"="enwelcomeBacca";
+"welcomePeekBac"="enwelcomeBacca";
+"welcDreamDT"="enwelcDreamDT";
+"welcometoRoulette"="voidSound";
+"welcomeSicbo"="enwelcomeSicbo";
+"ThanksTips"="thanktips_en";
+
+"baccarat_9"="enbaccarat_9";
+"dragonWin"="endragonWin";
+"tigerwin"="entigerwin";
+
+"touzi_"="ensicbo_";
+"sbpoint_"="sicbo_p";
+"sb_big"="voidSound";
+"sb_small"="voidSound";
+"sb_even"="voidSound";
+"sb_odd"="voidSound";
+
+
+"betSuccess"="enbetSuccess";
+"bet_limitsound"="enbet_limitsound";
+"lucky"="enlucky";
+"pleaseBet"="enpleaseBet";
+"redPackt"="enredPackt";
+"stopBet"="enstopBet";
+"welcomegame"="enwelcomegame";
+"welcomeAgain"="enwelcomeAgain";
+
+
+//newLoginActivity
+"forget_pass"="Lupa kata sandi";
+"scan_in_game"="Memindai kode QR untuk masuk pertandingan";
+"scan_change_pass"="Memindai kode QR untuk mengubah password";
+"welcome"="Welcome";
+"first_login"="Silahkan mengatur password ketika login untuk pertama kalinya";
+"gesture_pass"="Pola";
+"char_pass"="Kode PIN";
+"add_new_user"="+Akun Baru Ditambahkan";
+"teach1_title"="Welcome new player";
+"teach1_content_one"="01.Anda perlu memindai ditunjuk kode QR pertama pertama kalinya untuk mengikat akun Anda";
+"teach2"="02.Silakan gunakan pc pribadi Anda untuk masuk ke peron DG";
+"teach3"="03.Klik ikon telepon di sudut kiri bawah";
+"teach4"="04.Memulai permainan, silakan memindai kode QR untuk mengikat akun";
+"teach5"="05.Ubah baru sandi pola Anda";
+"teach6_title"="Ubah password pola Anda";
+"teach6_content_one"="01.Anda perlu memindai ditentukan QR code untuk mengubah password pola Anda";
+"not_gesture"="sandi pola untuk akun ini tidak diatur";
+"username_password"="kata sandi";
+"new_first_login"="pertama Login";
+
+//多桌
+"link_baccarat"="rantai bakarat";
+"jie_suan_zhong"="pemukiman";
+"start_xiaZhu"="mulai bertaruh";
+"Mtable_bet_cn_en_hk"="Mtable_bet_en";
+"Mtable_bet_no_cn_en_hk"="Mtable_bet_en_no";
+
+"havebet"="have bet";
+"nocomm"="  no\ncomm";
+//离线追注
+"checkTable"="Check table or road choice";
+"beyondBalance"="Bet money can't beyond DetainMoney";
+"timeZero"="Chase Time is 0";
+"timebeyond"="Time,max 24 hours";
+"entervalidBet"="Please enter a valid bet amount";
+"running"="menjalankan";
+"waitPay"="tunggu payout";
+"chaseBalance"="Chase balance::";
+"leftTime"="waktu yang tersisa(M):";
+"offTitle"="chase bet";
+"tongjiBtn"="statistika";
+"baobiaoBtn"="laporan bentuk";
+"operaterecord"="operasi";
+"offLineChase"="Baccarat mengejar Catatan jalan yang baik";
+"tableSelect"="T\nA\nB\nL\nE";   //"桌\n臺\n選\n擇";TABLE
+"riskSetting"="R\nI\nS\nK";    //"風\n險\n設\n置";
+"winOrloss"="Laba rugi:";  //"盈虧:";
+"betCount"="jumlah taruhan:"; //"下單筆數";
+"roadChoose"="Pilih cara yang baik";   //"好路選擇";
+"selectAll"="ALL";
+"perBet"="setiap jumlah";
+"lossAmount"="DetainMoney";
+"profitAmount"="keuntungan";
+"chaseTime"="Catatan mengejar waktu";
+"autoStop"="otomatis berhenti";
+"stopChase"="Berhenti mengejar Catatan";
+"hour"="menit";
+"reset"="menghapus";
+
+"return"="kembali";
+"tableRate"="meja Taiwan\\wins";//"檯桌好路頻率\\勝率";
+"goodRoadRate"="cara yang baik\\wins";//"好路頻率\\勝率";
+"roadTimes"="jumlah kali";
+"goodroadWin"="kemungkinan";
+"count10000"="statistika 2000";
+
+"goodtype"="jenis";
+"roadType1"="Baik-1";
+"roadType2"="Baik-2";
+"roadType3"="Baik-3";
+"roadType4"="Baik-4";
+"roadType5"="Baik-5";
+"roadType6"="Baik-6";
+"roadType7"="Baik-7";
+"roadType8"="Baik-8";
+
+"nowRoad"="Current Road";
+"betMoney"="Bet money";
+"odds"="odds";
+"betdetail"="Bet detail";
+"beganchase"="set success,begin to chase";
+"stopChase"="stop chasing";
+"testcantchase"="test account can't chase bet";
+
+"beginTime"="Waktu Mulai";
+"endTime"="akhir Waktu";
+"betTimes"="jumlah taruhan";
+"payOut"="pembayaran";
+
+////报表详情
+"bettype"="Bet Type";
+"resultScreen"="pemutaran video";
+"pPair"="PlayerPair";
+"bPair"="BankerPair";
+//免佣
+"banker6"="Banker(no comm)";
+
+//龙虎
+"dragonRed"="dragonRed";
+"dragonBlack"="dragonBlack";
+"tigerRed"="tigerRed";
+"tigerBlack"="tigerBlack";
+"dragonOdd"="dragonOdd";
+"tigerOdd"="tigerOdd";
+"dragonEven"="dragonEven";
+"tigerEven"="tigerEven";
+
+//轮盘
+//"direct"="直注";
+//"separate"="";
+//"street"="";
+//"angle"="";
+//"line"="";
+//"three"="";
+//"four"="";
+"firstRow"="firstRow";
+"sndRow"="sndRow";
+"thrRow"="thrRow";
+"firstCol"="firstCol";
+"sndCol"="sndCol";
+"thrCol"="thrCol";
+"low"="low";
+"high"="high";
+
+//牛牛
+"yukou"="Detain";
+"player1Double"="player1Double";
+"player2Double"="player2Double";
+"player3Double"="player3Double";
+"player1Equal"="player1Equal";
+"player2Equal"="player2Equal";
+"player3Equal"="player3Equal";
+"player1Many"="player1Many";
+"player2Many"="player2Many";
+"player3Many"="player3Many";
+"banker1Double"="banker1Double";
+"banker2Double"="banker2Double";
+"banker3Double"="banker3Double";
+"banker1Equal"="banker1Equal";
+"banker2Equal"="banker2Equal";
+"banker3Equal"="banker3Equal";
+"banker1Many"="banker1Many";
+"banker2Many"="banker2Many";
+"banker3Many"="banker3Many";
+//骰宝
+"allDices"="allDices";
+"threeForces"="threeForces";
+"nineWayGards"="nineWayGards";
+"pairs"="pairs";
+"surroundDices"="WaiDice";
+"points"="points";
+//德州
+"Site"="CT Bavet";
+"CasinoHoldem"="CasinoHold'em";
+"Bonus"="bonus";
+"Ante"="ante";
+"Call"="Call";
+"RaiseBet"="bid";
+"RaiseBet_yes"="bid(yes)";
+"RaiseBet_no"="bid(no)";
+"foldPoker"="Fold";
+"NotQualified"="Not qualified";
+"HighCard"="High card";
+"threeCardPair"="Pair";
+"PairCard"="Pair";
+"PairCardA"="Pair A";
+"TwoPairs"="Two Pairs";
+"ThreeOfakind"="Three of a kind";
+"Straight"="Straight";
+"Flush"="Flush";
+"FullHouse"="Full house";
+"FourOfakind"="Four of a kind";
+"StraightFlush"="Straight flush";
+"RoyalFlush"="Royal Flush";
+"PairCardOrHighcard"="Pair or High card";
+"BrandType"="Brand type";
+"BonusOdds"="Bonus odds";
+"BettingOdds"="Betting odds";
+"HandPoker"="Hand";
+"DZOdds"="Odds";
+"bankerHome"="B";
+"playerHome"="P";
+"first_betante"="Please end down the first note";
+"bonus_overAnte"="Bonuses should not be greater than the end of the note";
+"texasWin"="WIN";
+//图片 下注区
+"texasBetImage"="depk_En";
+
+//波比厅添加
+"bobihalg"="Mahkota Bobby Hall";
+"duozhuo_baijiale"="Multi-table baccarat";
+"baoxian_baccarat"="InBaccarat";
+"vip_baccarat"="VIP Baccarat";
+"pBX"="InPlayer";
+"bBX"="InBanker";
+"baoxianbet_player"="Bet Player Insurance";
+"baoxianbet_banker"="Bet Banker Insurance";
+"bx_peilv"="Odds:";
+"bx_payout"="Ins Payout::";
+"bx_confirm"="confirm";
+"bx_selectChip"="Please Choose Chip Bet";
+"bx_alerdPlayer"="Player:";
+"bx_alerdBanker"="Banker:";
+
+//咋金花
+"red_black"="Three Card";
+"betfiled_threecard"="red&black_en";
+"tie_ju"="Tie";
+"bao_zi"="leopard";
+"sanCard"="High card";
+"baozi_shashou"="Leopard killer";
+"Flush_zjh"="Flush";
+"StraightFlush_zjh"="Straight flush";
+"road_black"="black_road_en";
+"road_red"="red_road_en";
+"road_tie"="de6";
+"road_black_luck"="black_lucky";
+"road_red_luck"="red_lucky";
+"road_tie_luck"="de5";
+"luck"="lucky";
+
+//极速骰宝
+"jisu_sicbo"="Speed SicBo";
+"betfeild_sicbojisu"="sb_yili_en";
+
+//博饼
+"bobingtype0"="很遗憾，下次继续";
+"bobingtype1"="一秀";
+"bobingtype2"="二举";
+"bobingtype3"="四进";
+"bobingtype4"="三红";
+"bobingtype5"="对堂";
+"bobingtype6"="四红";
+"bobingtype7"="五子";
+"bobingtype8"="五红";
+"bobingtype9"="六黑";
+"bobingtype10"="六锦";
+"bobingtype11"="六红";
+"bobingtype12"="金花";
+
+
+//////VIP   5  7  8  旁  座  包
+"vipLobby_1"="View";
+"vipLobby_2"="Enter";
+"vipLobby_3"="Mater";
+
+"vipfuncString0" = "Change Shoe?";
+"vipfuncString1" = "Change Dealer";
+"vipfuncString2" = "Check Card";
+
+"openCard"="Open";
+
+//"nowMarster"="当前桌";
+//"haveMater"="已包桌";
+"haveoccupied"="Occupied";
+
+"minBet"="You can place a bet above the balance. Please recharge.";

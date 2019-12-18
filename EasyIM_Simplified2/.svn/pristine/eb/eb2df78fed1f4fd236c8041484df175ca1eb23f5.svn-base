@@ -1,0 +1,287 @@
+//
+//  FriendInfoViewController.m
+//  EasyIM
+//
+//  Created by 栾士伟 on 2019/4/14.
+//  Copyright © 2019年 Looker. All rights reserved.
+//
+
+#import "FriendInfoViewController.h"
+#import "UserInfoNavView.h"
+#import "BaseUIView.h"
+#import "EditFriendRemarkController.h"
+
+@interface FriendInfoViewController ()<UITableViewDelegate,UITableViewDataSource,MMRightActionDeltegate>
+
+@property (nonatomic, strong) UITableView              *tableView;
+@property (nonatomic, strong) YKUserInfo               *userInfoDic;
+@property (nonatomic, strong) UserInfoNavView          *infoView;      //表头
+
+@end
+
+@implementation FriendInfoViewController
+
+#pragma mark - Getter
+
+- (UITableView *)tableView
+{
+    if (!_tableView) {
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+        _tableView.showsVerticalScrollIndicator = NO;
+        _tableView.backgroundColor = MMColor(242, 242, 242);
+        
+        _tableView.tableHeaderView = self.infoView;
+        
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+    }
+    return _tableView;
+}
+
+
+- (UserInfoNavView *)infoView{
+    if (!_infoView) {
+        _infoView = [[UserInfoNavView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200)];
+        
+        _infoView.deletgate = (id<MMRightActionDeltegate>)self;
+        _infoView.navController = self.navigationController;
+        _infoView.backgroundColor = [UIColor whiteColor];
+        _infoView.isHideRightBtn = NO;
+    }
+    
+    return _infoView;
+}
+
+
+//MARK: - override
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.navgationTitle = @"好友资料";
+
+    [self.view addSubview:self.tableView];
+
+    [self getUserInfo];
+    [self.tableView reloadData];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+    //设置导航栏背景图片为一个空的image，这样就透明了
+    [self.navigationController.navigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+    //去掉透明后导航栏下边的黑边
+    [self.navigationController.navigationBar setShadowImage:[[UIImage alloc] init]];
+    
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    
+    [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setShadowImage:nil];
+    
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
+
+//MARK: - MMRightActionDeltegate(编辑备注)
+-(void)rightAction:(UIButton *)sender{
+    EditFriendRemarkController *editRemarkVC = [[EditFriendRemarkController alloc] init];
+    editRemarkVC.strRemarkId = self.userInfoDic.userId;
+    editRemarkVC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:editRemarkVC animated:YES];
+}
+
+
+#pragma mark - UITableViewDelegate
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (section == 0) {
+        return 2;
+    }
+    return 1;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 3;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 2) {
+        return 70.0f;
+    }
+    return 45.0f;
+}
+
+#pragma mark - UITableViewDataSource
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    NSString *identiferCell = @"friendcell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identiferCell];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identiferCell];
+    }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    if (indexPath.section == 0) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        
+        if (indexPath.row == 0) {
+            cell.imageView.image =  [UIImage imageNamed:@"user_account"];
+            NSString *strAccount = [self.userInfoDic.nickName length] ? self.userInfoDic.nickName : self.userInfoDic.userName;
+            cell.textLabel.text = [strAccount stringByRemovingPercentEncoding];
+        }else {
+            cell.imageView.image =  [UIImage imageNamed:@"user_phone"];
+            cell.textLabel.text = [self.userInfoDic.mobile length] ? self.userInfoDic.mobile:@"";
+        }
+    }else if (indexPath.section == 1) {
+        cell.imageView.image =  [UIImage imageNamed:@"user_message"];
+        cell.textLabel.text = @"发消息";
+    }else {
+        cell.imageView.image =  [UIImage imageNamed:@"user_photos"];
+        cell.textLabel.text = @"相册";
+    }
+    
+    cell.textLabel.font = [UIFont systemFontOfSize:15];
+    
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    
+    if (section < 2) {
+        return 5.0f;
+    }
+    if (section == 2 && _isFriend) {
+        return 60.0f;
+    }
+    return 0.0f;
+    
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    
+    if (section == 2 && _isFriend) {
+        UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 60)];
+        UIButton *deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        deleteBtn.frame = CGRectMake(0,15, SCREEN_WIDTH, 45);
+        [deleteBtn setTitle:@"删除好友" forState:UIControlStateNormal];
+        [deleteBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        deleteBtn.backgroundColor = [UIColor whiteColor];
+        [deleteBtn addTarget:self action:@selector(deletefriend) forControlEvents:UIControlEventTouchUpInside];
+        [footView addSubview:deleteBtn];
+        return footView;
+    }
+    return nil;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    //MARK:发送消息
+    if (indexPath.section == 1) {
+        NSInteger index = [[self.navigationController childViewControllers] count] - 2;
+        index = index < 0 ? 0 : index;
+        
+        UIViewController *tmpVC = [self.navigationController childViewControllers][index];
+        if ([tmpVC isKindOfClass:[MMChatViewController classForCoder]]) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        else{
+            
+            if (self.userInfoDic && self.userInfoDic.userId.checkTextEmpty) {
+                [self.navigationController popToRootViewControllerAnimated:YES];
+                
+                ContactsModel *model = [[ContactsModel alloc] init];
+                model.photoUrl = self.userInfoDic.photoUrl;
+                model.userId = self.userId;
+                model.cmd = @"sendMsg";
+                model.userName = self.userInfoDic.nickName.length ? self.userInfoDic.nickName : self.userInfoDic.userName;
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:CHAT_PUSHVIEWCONTROLLER object:model];
+            }
+            else{
+                [MMProgressHUD showHUD:@"用户信息不存在"];
+            }
+        }
+    }
+    //MARK:相册
+    else if(indexPath.section == 2){
+        [MMProgressHUD showHUD:@"朋友圈"];
+    }
+}
+
+
+//MARK: - 删除好友
+- (void)deletefriend {
+    //删除好友
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"确定要删除该好友吗？" preferredStyle:UIAlertControllerStyleAlert];
+    [self presentViewController:alert animated:YES completion:nil];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [self toDeletefriend];
+        
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"再想想" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [alert dismissViewControllerAnimated:YES completion:nil];
+    }]];
+    
+}
+
+//删除好友
+- (void)toDeletefriend {
+    
+    [MMProgressHUD showHUD];
+    [MMRequestManager delFriendWithFriendId:self.userId aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
+        [MMProgressHUD hideHUD];
+        if (!error) {
+            [MMProgressHUD showHUD: dic[@"desc"]];
+            
+            if ([dic[@"ret"] isEqualToString:@"succ"]) {
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            }
+        }else{
+            [MMProgressHUD showHUD: MMDescriptionForError(error)];
+        }
+    }];
+    
+}
+
+
+//MARK: - 获取用户详细信息
+- (void)getUserInfo {
+    
+    __weak typeof(self) weakSelf = self;
+    __block typeof(self) blockSelf = self;
+    
+    [MBProgressHUD showMessage:@"" toView:self.view];
+    
+    [MMRequestManager getUserInfoWithUserId:self.userId
+                                aCompletion:^(YKUserInfo * _Nonnull model, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:weakSelf.view];
+        });
+        
+        if (model) {
+            blockSelf.userInfoDic = model;
+            blockSelf.infoView.userName = self.userInfoDic.nickName.length ? self.userInfoDic.nickName : self.userInfoDic.userName;
+            blockSelf.infoView.userImage = self.userInfoDic.photoUrl;
+            
+            [weakSelf.tableView reloadData];
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD showError:MMDescriptionForError(error)];
+            });
+        }
+    }];
+    
+}
+
+@end

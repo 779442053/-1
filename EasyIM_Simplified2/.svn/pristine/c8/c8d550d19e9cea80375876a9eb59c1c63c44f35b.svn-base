@@ -1,0 +1,30 @@
+//
+//  MMProfileViewController.h
+//  EasyIM
+//
+//  Created by momo on 2019/5/23.
+//  Copyright © 2019年 Looker. All rights reserved.
+//
+
+#import "MMBaseViewController.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+
+@interface MMProfileModel : NSObject
+
+//左边title
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *placeholder;
+@property (nonatomic, copy) NSString *contentStr;
+
+@end
+
+/**
+ 个人简介
+ */
+@interface MMProfileViewController : MMBaseViewController
+
+@end
+
+NS_ASSUME_NONNULL_END
