@@ -1,6 +1,0 @@
-framework module DGSDK {
-  umbrella header "DGSDK.h"
-
-  export *
-  module * { export * }
-}
