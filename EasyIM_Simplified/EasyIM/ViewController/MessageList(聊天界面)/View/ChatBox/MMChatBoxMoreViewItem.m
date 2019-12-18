@@ -57,7 +57,6 @@
 {
     [self.button addTarget:target action:action forControlEvents:controlEvents];
 }
-
 - (void) setTag:(NSInteger)tag
 {
     [super setTag:tag];

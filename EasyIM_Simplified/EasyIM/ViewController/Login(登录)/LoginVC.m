@@ -9,7 +9,7 @@
 #import "RegisterViewController.h"
 #import "KinTabBarController.h"
 #import "AppDelegate.h"
-#import "MMSystemHelp.h"
+
 #import "MMVedioCallManager.h"
 #import "ANCustomTextField.h"
 #import "FindPwdViewController.h"
@@ -200,9 +200,10 @@
         [MMProgressHUD showHUD:errorMsg];
         return;
     }
+    //[[MMSystemHelp deviceVersion] stringByAppendingString:@"-iOS"]
     NSDictionary *dict = @{
        @"loginType":@"2",
-       @"deviceDesc":[[MMSystemHelp deviceVersion] stringByAppendingString:@"-iOS"],
+       @"deviceDesc":[UIDevice currentDevice].name,
        @"username":_accountField.text,
        @"domain":@"9000",
        @"userPsw":[YHUtils md5HexDigest:_passField.text]

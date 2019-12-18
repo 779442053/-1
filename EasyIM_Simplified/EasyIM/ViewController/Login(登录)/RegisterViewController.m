@@ -106,7 +106,7 @@ static CGFloat const txt_height = 44;
         return;
     }
     //发送验证码
-    NSString *strUrl = [NSString stringWithFormat:@"http://154.8.172.16:5001/API/SendSMSCode"];
+    //NSString *strUrl = [NSString stringWithFormat:@"http://154.8.172.16:5001/API/SendSMSCode"];
     NSDictionary *dicParams = @{ @"Phone":strPhoneCode};
     [[self.ViewModel.CodeCommand execute:dicParams] subscribeNext:^(id  _Nullable x) {
         if ([x[@"code"] intValue] == 0) {

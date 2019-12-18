@@ -57,7 +57,6 @@
     }
     return self;
 }
-
 - (NSString *)getTitle
 {
     if (self.remarkName.length) {
@@ -69,15 +68,10 @@
     return self.toUserName;
 }
 
-
 @end
 
-
-
 static MMConversationHelper *shared = nil;
-
 @implementation MMConversationHelper
-
 - (instancetype)init
 {
     self = [super init];
@@ -87,21 +81,16 @@ static MMConversationHelper *shared = nil;
     
     return self;
 }
-
 + (instancetype)shared
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shared = [[MMConversationHelper alloc] init];
     });
-    
     return shared;
 }
-
-
 + (MMConversationModel *)modelFromContact:(ContactsModel *)aContact
 {
-    
     MMConversationModel *model = [[MMConversationModel alloc]
                                   initWithToUid:aContact.userId
                                   toUserName:aContact.userName
@@ -111,7 +100,6 @@ static MMConversationHelper *shared = nil;
                                   cmd:aContact.cmd];
     return model;
 }
-
 + (MMConversationModel *)modelFromGroup:(MMGroupModel *)aGroup
 {
     MMConversationModel *model = [[MMConversationModel alloc]

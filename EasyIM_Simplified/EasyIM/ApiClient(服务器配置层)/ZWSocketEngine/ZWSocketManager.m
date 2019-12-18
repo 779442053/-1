@@ -25,7 +25,8 @@
 @property(nonatomic,assign)SGSocketConnectState connectState;
 
 @property(nonatomic,copy)SocketConnectResponseBlock connectBlock;
-
+//消息发送成功回调
+@property(nonatomic,copy)SocketDidReadBlock DidReadBlock;
 /** 音视频邀请声音播放对象 */
 @property (nonatomic, strong) AVAudioPlayer *avAudioPlayer;
 @end
@@ -95,12 +96,32 @@ typedef struct {
     [[ZWSocketManager shareInstance].socket writeData:mData withTimeout:-1 tag:SocketrequestTag];
 }
 + (void)SendMessageWithMessage:(MMMessage*)message complation:(SocketDidReadBlock)complation;{
-    //消息,分为群聊,单聊,语音呼叫,视频呼叫
+    //消息,分为群聊,单聊,语音呼叫,视频呼叫 文件,图片,联系人,位置
+    [ZWSocketManager shareInstance].DidReadBlock = complation;
+    //消息类型不一样,主要是slice 不一样.所以,只需要修改 slice  就可以啦
+    NSMutableDictionary * presliceDic = [[NSMutableDictionary alloc]init];
+    if (message.messageType == MMMessageType_Text) {//文字
+        presliceDic[@"type"] = message.slice.type;
+        presliceDic[@"content"] = message.slice.content;
+    }else if (message.messageType == MMMessageType_Voice){//短录音
+        presliceDic[@"type"] = message.slice.type;
+        presliceDic[@"content"] = message.slice.content;//先上传,获取url
+        presliceDic[@"duration"] = [NSString stringWithFormat:@"%ld",message.slice.duration];
+    }else if (message.messageType == MMMessageType_Image){//图片
+        presliceDic[@"type"] = message.slice.type;
+        presliceDic[@"content"] = message.slice.content;//先上传,获取url
+        presliceDic[@"width"] = [NSString stringWithFormat:@"%f",message.slice.width];
+        presliceDic[@"height"] = [NSString stringWithFormat:@"%f",message.slice.height];
+    }else if (message.messageType == MMMessageType_Video){//短视频
+        presliceDic[@"type"] = message.slice.type;
+        presliceDic[@"content"] = message.slice.content;//先上传,获取url
+    }else if (message.messageType == MMMessageType_Doc){//文件
+        presliceDic[@"type"] = message.slice.type;
+        presliceDic[@"content"] = message.slice.content;//先上传,获取url
+        presliceDic[@"length"] = message.slice.length;
+    }
     NSDictionary *sliceDic = @{
-       @"slice":@{
-           @"type":message.slice.type,
-           @"content":message.slice.content
-       }
+       @"slice":presliceDic
     };
     NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
     if ([message.type isEqualToString:@"chat"]) {//单聊
@@ -130,7 +151,6 @@ typedef struct {
     NSMutableData *mData = [NSMutableData dataWithData:headData];
     [mData appendData:bodyData];//
     [[ZWSocketManager shareInstance].socket writeData:mData withTimeout:-1 tag:SocketrequestTag];
-    
 }
 #pragma mark GCDAsyncSocketDelegate
 /**
@@ -162,10 +182,9 @@ typedef struct {
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)error{
    //  和服务器z断开连接
     if (error) {
-        ZWWLog(@"连接失败 - 错误为：%@",error);
+        //ZWWLog(@"连接失败 - 错误为：%@",error);
          [ZWMessage error:@"连接失败!!" title:[NSString stringWithFormat:@"Socket连接错误-----%@",error]];
         _instance.connectState = SGSocketConnectState_ConnectFail;
-        
         ///连接失败回调
         if (self.connectBlock) {
             self.connectBlock(error);
@@ -210,7 +229,6 @@ typedef struct {
         if ([jsonDic.allKeys containsObject:@"__name"]) {
             [jsonDic removeObjectForKey:@"__name"];
         }
-        SocketDidReadBlock MessagedidReadBlock;
         NSInteger type = ZWGCDSocketTCPCmdTypeEnum(strCMD);
         switch (type) {
             case GCDSocketTCPCmdTypeHeartBeat:
@@ -276,7 +294,17 @@ typedef struct {
             //MARK:2.发送消息回调
             case GCDSocketTCPCmdTypeSendMsg:
             {//消息发送成功==改变消息展示状态//告诉前面,该消息状态改变
-                 //MessagedidReadBlock(nil,jsonDic);
+                //ZWWLog(@"聊天发送消息发送成功,修改消息状态,发送成功,就存储在本地")
+                if ([jsonDic[@"result"] isEqualToString:@"1"]) {
+                    if (self.DidReadBlock) {
+                        ZWWLog(@"发送成功 1")
+                        self.DidReadBlock(nil,jsonDic);
+                    }
+                }else{
+                   if (self.DidReadBlock) {
+                        self.DidReadBlock(jsonDic[@"err"],nil);
+                    }
+                }
             }
                 break;
             //MARK:3.读取消息 对方读取了我的消息

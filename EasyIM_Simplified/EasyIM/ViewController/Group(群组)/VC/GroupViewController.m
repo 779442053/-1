@@ -121,7 +121,7 @@ static NSString *const identifier = @"ContactTableViewCell";
     // 马上进入刷新状态
     [self.tableView.mj_header beginRefreshing];
 }
-#pragma mark - 网络请求
+#pragma mark 获取我的群聊
 - (void)fetchGroupList
 {
     [[self.ViewModel.requestCommand execute:nil] subscribeNext:^(id  _Nullable x) {

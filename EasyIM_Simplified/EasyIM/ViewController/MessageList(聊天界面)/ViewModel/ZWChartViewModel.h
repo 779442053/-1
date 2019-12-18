@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ZWChartViewModel : ZWBaseViewModel
 @property (nonatomic, strong) RACCommand *GetChartLishDataCommand;
 @property (nonatomic, strong) RACCommand *GetGroupChartLishDataCommand;
+@property(nonatomic,strong) RACCommand *requestCommand;
+@property(nonatomic,strong) RACCommand *requestMoreCommand;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -114,7 +114,7 @@
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
-    ZWWLog(@"键盘即将消失==%@",notification)
+    //ZWWLog(@"键盘即将消失==%@",notification)
     self.keyboardFrame = CGRectZero;
     if (_delegate && [_delegate respondsToSelector:@selector(chatBoxViewController:didChangeChatBoxHeight:)]) {
         [_delegate chatBoxViewController:self didChangeChatBoxHeight:HEIGHT_TABBAR];

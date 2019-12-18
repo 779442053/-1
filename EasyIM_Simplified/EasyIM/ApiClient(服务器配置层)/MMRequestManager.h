@@ -104,82 +104,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- 获取好友列表
- 
- @param pIndex 页索引(第一页为0)
- @param pSize 页大小
- @param callBack 回调闭包
- */
-+ (void)fetchFriendListForIndex:(NSInteger)pIndex
-                        andSize:(NSInteger)pSize
-                        andBack:(void(^)(NSArray<ContactsModel *> *_Nullable friendList,NSError *_Nullable error))callBack;
-
-
-
-
-/**
  获取群列表
 
  @param callBack 结果返回
  */
 + (void)queryGroupCallBack:(void(^)(NSArray <MMGroupModel *>*groupList,NSError *error))callBack;
-
-/**
- 发送文字
-
- @param aMessage 消息体
- @param aCompletionBlock 状态改变返回消息模型
- */
-+ (void)aSendTextMessageWithModel:(MMMessage *)aMessage
-                    completion:(void(^) (NSError *error))aCompletionBlock;
-
-
-/**
- 获取上传URL地址
-
- @param aCompletionBlock 返回NSDictionary值
- */
-+ (void)fetchUpLoadFileUrlCompletion:(void(^)(NSDictionary *dict,NSError *error))aCompletionBlock;
-
-
-/**
- 上传文件
-
- @param filePath 文件地址
- @param fileUrl 上传的文件URL
- @param aCompletionBlock 返回NSDictionary值
- */
-+ (void)upLoadFileWithFilePath:(NSString *)filePath
-                     fileUrl:(NSString *)fileUrl
-                    completion:(void(^)(NSData *data,NSError *error))aCompletionBlock;
-
-/**
- 发送图片
- 
- @param aMessage 消息体
- @param aCompletionBlock 状态改变返回消息模型
- */
-+ (void)aSendPicMessageWithModel:(MMMessage *)aMessage
-                       completion:(void(^) (NSError *error))aCompletionBlock;
-
-
-/**
- 发送文件
-
- @param aMessage 消息体
- @param aCompletionBlock 状态改变返回消息模型
- */
-+ (void)aSendFileMessageWithModel:(MMMessage *)aMessage
-                       completion:(void(^) (NSError *error))aCompletionBlock;
-
-/**
- 发送语音
- 
- @param aMessage 消息体
- @param aCompletionBlock 状态改变返回消息模型
- */
-+ (void)aSendVoiceMessageWithModel:(MMMessage *)aMessage
-                       completion:(void(^) (NSError *error))aCompletionBlock;
 
 
 /**
@@ -217,15 +146,7 @@ NS_ASSUME_NONNULL_BEGIN
                          msg:(NSString *)msg
                  aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock;
 
-/**
- 注册
 
- @param userName 用户账户
- @param pwd 用户密码
- @param aCompletionBlock 结果发回
- */
-+ (void)registerUserWithUserName:(NSString *)userName pwd:(NSString *)pwd
-                     aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock;
 
 
 /**
@@ -244,41 +165,6 @@ NS_ASSUME_NONNULL_BEGIN
                         photo:(NSString *)photo
                      userlist:(NSString *)userlist
                   aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock;
-
-
-/**
- 编辑联系人接口(备注)
-
- @param taguserid 对方Id
- @param remark 备注名
- @param aCompletionBlock 结果返回
- */
-+ (void)remarkFriendWithtagUserId:(NSString *)taguserid
-                           remark:(NSString *)remark
-                      aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock;
-
-/**
- 修改个人头像
-
- @param userId 用户id
- @param photoUrl 图片地址
- @param aCompletionBlock 结果返回
- */
-+ (void)updateUserPhotoWithUserId:(NSString *)userId
-                         photoUrl:(NSString *)photoUrl
-                      aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock;
-
-
-/**
- 修改个人签名
-
- @param userId 用户id
- @param theme 签名
- @param aCompletionBlock 结果返回
- */
-+ (void)setUserThemeWithUserId:(NSString *)userId
-                         theme:(NSString *)theme
-                   aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock;
 
 
 

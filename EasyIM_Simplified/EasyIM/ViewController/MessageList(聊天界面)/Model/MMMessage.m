@@ -23,14 +23,12 @@
                    messageBody:( MMChatContentModel *)body{
     
     if (self = [super init]) {
-        
         NSString *sessionId =  [ZWUserModel currentUser].sessionID;
-        
         _toID = toUser;
         _toUserName = toUserName;
         _fromUserName = fromUserName;
         _fromID = fromUser;
-        _type = chatType;//单聊,群聊,视频,语音
+        _type = chatType;//单聊,群聊,视频,语音,文件,联系人,位置
         _sessionID = sessionId;
         //张威威  在这里,配置messid  因为进到聊天界面,会创建当前message 对象,保证唯一性和全局性
         _msgID = [self messageIDWithFromid:fromUser ToId:toUser];

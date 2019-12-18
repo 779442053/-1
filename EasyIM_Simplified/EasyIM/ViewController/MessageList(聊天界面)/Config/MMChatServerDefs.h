@@ -34,6 +34,7 @@ typedef enum {
     MMMessageType_Video,                 // 短视频
     MMMessageType_Doc,                   // 文档
     MMMessageType_Location,              // 位置
+    MMMessageType_linkman,//联系人
     MMMessageType_TextURL,               // 文本＋链接
     MMMessageType_ImageURL,              // 图片＋链接
     MMMessageType_URL,                   // 纯链接

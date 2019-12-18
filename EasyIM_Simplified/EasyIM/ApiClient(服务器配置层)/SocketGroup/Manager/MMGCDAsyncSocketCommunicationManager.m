@@ -18,7 +18,7 @@
 //Tools
 #import "AFNetworkReachabilityManager.h"
 #import "MMClient.h"
-#import "MMSystemHelp.h"
+
 
 //XmlParse
 #import "XMLDictionary.h"
@@ -97,7 +97,6 @@
                             completion:(nullable SocketDidReadBlock)callback
 {
     if (self.socketManager.connectStatus == -1) {
-        ZWWLog(@"socket 未连通");
         if (callback) {
             callback([MMErrorManager errorWithErrorCode:2003],
                      nil);
@@ -110,27 +109,19 @@
     }
     [self.socketManager socketWriteData:body];
 }
-#pragma mark - GCDAsyncSocketDelegate
-//Socket连接成功回调
+
 - (void)socket:(GCDAsyncSocket *)socket didConnectToHost:(NSString *)host port:(uint16_t)port
 {
-    ZWWLog(@"socket连接成功回调");
-    [ZWMessage success:[NSString stringWithFormat:@"连接成功 Host = %@ \n port= %hu",host,port] title:@"socket连接成功"];
-    ZWWLog(@"socket:%p didConnectToHost:%@ port:%hu", socket, host, port);
     [self.socketManager socketBeginReadData];
 }
 //Socket连接失败回调
 - (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)err
 {
-    ZWWLog(@"socket连接失败回调,尝试重新连接");
-    ZWWLog(@"socketDidDisconnect:%p withError: %@", socket, err);
-    [ZWMessage error:err.description title:@"socket 连接失败,正在尝试重新连接"];
     [self.socketManager socketDidDisconectBeginSendReconnect:_beatBody];
 }
 //Socket成功发送数据后返回数据
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
-    ZWWLog(@"收到数据包=%@",data)
     [self.dataArr addObject:data];
     [self.socketManager socketBeginReadData];
     [self.dataArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -139,7 +130,6 @@
         [self.dataArr removeObject:obj];
     }];
 }
-//MARK: - private method
 - (void)differenceOfLocalTimeAndServerTime:(long long)serverTime
 {
     if (serverTime == 0) {
@@ -148,24 +138,8 @@
     }
     NSTimeInterval localTimeInterval = [NSDate date].timeIntervalSince1970 * 1000;
     self.interval = serverTime - localTimeInterval;
-    //ZWWLog(@"连接间隔=%f",self.interval)
 }
-- (void)didConnectionAuthAppraisal:(NSString *)sessionID
-{
-    if ([self.socketDelegate respondsToSelector:@selector(socketDidConnect)]) {
-        [self.socketDelegate socketDidConnect];
-    }
-    //心跳连接
-    NSDictionary *dict = @{
-                           @"type":@"req",
-                           @"sessionID":sessionID,
-                           @"cmd":@"heartBeat",
-                           @"loginType":@"410",
-                           @"deviceDesc":[[MMSystemHelp deviceVersion] stringByAppendingString:@"-iOS"],
-                           };
-    _beatBody = [NSString stringWithFormat:@"<JoyIM>%@</JoyIM>",dict.innerXML];
-    [self.socketManager socketDidConnectBeginSendBeat:_beatBody];
-}
+
 - (void)startMonitoringNetwork
 {
     AFNetworkReachabilityManager *networkManager = [AFNetworkReachabilityManager sharedManager];
@@ -270,8 +244,8 @@
                 if ([jsonDic[@"result"] isEqualToString:@"1"]) {
                     didReadBlock = self.requestDic[@(MMRequestType_login).description];
                     if (didReadBlock) {
-                        [self didConnectionAuthAppraisal:jsonDic[@"sessionID"]];
-                        didReadBlock(error, jsonDic);
+//                        [self didConnectionAuthAppraisal:jsonDic[@"sessionID"]];
+//                        didReadBlock(error, jsonDic);
                     }
                 //1.2 处理在别的设备登入你的账号时
                 }else{

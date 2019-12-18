@@ -17,7 +17,6 @@
 		181649CA230E67F4009A9A66 /* MMAboutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 181649C7230E67F4009A9A66 /* MMAboutCell.m */; };
 		181649CD230E763F009A9A66 /* SecurityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 181649CC230E763F009A9A66 /* SecurityViewController.m */; };
 		181649D4230E9961009A9A66 /* MMPwdModifyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 181649D1230E9961009A9A66 /* MMPwdModifyViewController.m */; };
-		1830C7B62310574F00B89795 /* ChatGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1830C7B52310574F00B89795 /* ChatGroupViewController.m */; };
 		184DAB0C2303A2E30055119A /* Province.plist in Resources */ = {isa = PBXBuildFile; fileRef = 184DAB0B2303A2E30055119A /* Province.plist */; };
 		185097CE230A737900325FFC /* MMChatLinkManCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 185097CD230A737900325FFC /* MMChatLinkManCell.m */; };
 		185C80D322CEE6D900134FC2 /* video_chat_tip_receiver.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 185C80D222CEE6D900134FC2 /* video_chat_tip_receiver.m4a */; };
@@ -78,6 +77,7 @@
 		289328B82394D91400EBF0C8 /* ZWChartViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 289328B72394D91400EBF0C8 /* ZWChartViewModel.m */; };
 		289328BC2394DDEE00EBF0C8 /* ZWNotionName.m in Sources */ = {isa = PBXBuildFile; fileRef = 289328BA2394DDEE00EBF0C8 /* ZWNotionName.m */; };
 		289328C02394F7BE00EBF0C8 /* ZWGroudDetailViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 289328BF2394F7BE00EBF0C8 /* ZWGroudDetailViewModel.m */; };
+		28A61E8F23AA1269003EC390 /* ZWChatHandlerViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A61E8E23AA1269003EC390 /* ZWChatHandlerViewModel.m */; };
 		28A75BCC238D0A9A00281EF8 /* ZWChatViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A75BCB238D0A9A00281EF8 /* ZWChatViewModel.m */; };
 		28A75BD0238D0EDF00281EF8 /* NSObject+ZWSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A75BCF238D0EDF00281EF8 /* NSObject+ZWSwizzling.m */; };
 		28A75BD3238D0FE800281EF8 /* ZWSurePlaceholderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A75BD2238D0FE800281EF8 /* ZWSurePlaceholderView.m */; };
@@ -267,12 +267,10 @@
 		FA022DDD2286925400E25218 /* NSObject+MMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = FA022DDC2286925400E25218 /* NSObject+MMAlert.m */; };
 		FA022DE62286BC8100E25218 /* MMConversationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FA022DE52286BC8100E25218 /* MMConversationHelper.m */; };
 		FA022DE92286C72500E25218 /* MMClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA022DE82286C72500E25218 /* MMClient.m */; };
-		FA02F99522981F5E00927E4F /* MMThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA02F99422981F5E00927E4F /* MMThemeViewController.m */; };
 		FA05C76122A2AC9B001E7B89 /* MMAddMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA05C76022A2AC9B001E7B89 /* MMAddMemberViewController.m */; };
 		FA05C76422A3F8BE001E7B89 /* MMEditGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA05C76322A3F8BE001E7B89 /* MMEditGroupViewController.m */; };
 		FA05C76822A3FE91001E7B89 /* MMEditGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA05C76622A3FE91001E7B89 /* MMEditGroupCell.m */; };
 		FA05C76922A3FE91001E7B89 /* MMEditGroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA05C76722A3FE91001E7B89 /* MMEditGroupCell.xib */; };
-		FA05C78322A7BEF4001E7B89 /* MMSystemHelp.m in Sources */ = {isa = PBXBuildFile; fileRef = FA05C78222A7BEF3001E7B89 /* MMSystemHelp.m */; };
 		FA0DEEBD226D7D49002A6E6A /* MMChatHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0DEEBC226D7D49002A6E6A /* MMChatHandler.m */; };
 		FA0DEEC4226D7FDB002A6E6A /* MMAudioView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0DEEC3226D7FDB002A6E6A /* MMAudioView.m */; };
 		FA0DEEC7226D8244002A6E6A /* MMVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0DEEC6226D8244002A6E6A /* MMVideoView.m */; };
@@ -499,8 +497,6 @@
 		181649CC230E763F009A9A66 /* SecurityViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecurityViewController.m; sourceTree = "<group>"; };
 		181649D1230E9961009A9A66 /* MMPwdModifyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPwdModifyViewController.m; sourceTree = "<group>"; };
 		181649D3230E9961009A9A66 /* MMPwdModifyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPwdModifyViewController.h; sourceTree = "<group>"; };
-		1830C7B42310574F00B89795 /* ChatGroupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupViewController.h; sourceTree = "<group>"; };
-		1830C7B52310574F00B89795 /* ChatGroupViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatGroupViewController.m; sourceTree = "<group>"; };
 		184DAB0B2303A2E30055119A /* Province.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Province.plist; sourceTree = "<group>"; };
 		185097CC230A737900325FFC /* MMChatLinkManCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMChatLinkManCell.h; sourceTree = "<group>"; };
 		185097CD230A737900325FFC /* MMChatLinkManCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMChatLinkManCell.m; sourceTree = "<group>"; };
@@ -618,6 +614,8 @@
 		289328BB2394DDEE00EBF0C8 /* ZWNotionName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZWNotionName.h; sourceTree = "<group>"; };
 		289328BE2394F7BE00EBF0C8 /* ZWGroudDetailViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWGroudDetailViewModel.h; sourceTree = "<group>"; };
 		289328BF2394F7BE00EBF0C8 /* ZWGroudDetailViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWGroudDetailViewModel.m; sourceTree = "<group>"; };
+		28A61E8D23AA1269003EC390 /* ZWChatHandlerViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWChatHandlerViewModel.h; sourceTree = "<group>"; };
+		28A61E8E23AA1269003EC390 /* ZWChatHandlerViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWChatHandlerViewModel.m; sourceTree = "<group>"; };
 		28A75BC7238CF5F600281EF8 /* 描述文件.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "描述文件.h"; sourceTree = "<group>"; };
 		28A75BCA238D0A9A00281EF8 /* ZWChatViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWChatViewModel.h; sourceTree = "<group>"; };
 		28A75BCB238D0A9A00281EF8 /* ZWChatViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWChatViewModel.m; sourceTree = "<group>"; };
@@ -924,8 +922,6 @@
 		FA022DE52286BC8100E25218 /* MMConversationHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMConversationHelper.m; sourceTree = "<group>"; };
 		FA022DE72286C72500E25218 /* MMClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMClient.h; sourceTree = "<group>"; };
 		FA022DE82286C72500E25218 /* MMClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMClient.m; sourceTree = "<group>"; };
-		FA02F99322981F5E00927E4F /* MMThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMThemeViewController.h; sourceTree = "<group>"; };
-		FA02F99422981F5E00927E4F /* MMThemeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMThemeViewController.m; sourceTree = "<group>"; };
 		FA05C75F22A2AC9B001E7B89 /* MMAddMemberViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAddMemberViewController.h; sourceTree = "<group>"; };
 		FA05C76022A2AC9B001E7B89 /* MMAddMemberViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMAddMemberViewController.m; sourceTree = "<group>"; };
 		FA05C76222A3F8BE001E7B89 /* MMEditGroupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEditGroupViewController.h; sourceTree = "<group>"; };
@@ -933,8 +929,6 @@
 		FA05C76522A3FE91001E7B89 /* MMEditGroupCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEditGroupCell.h; sourceTree = "<group>"; };
 		FA05C76622A3FE91001E7B89 /* MMEditGroupCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEditGroupCell.m; sourceTree = "<group>"; };
 		FA05C76722A3FE91001E7B89 /* MMEditGroupCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMEditGroupCell.xib; sourceTree = "<group>"; };
-		FA05C78122A7BEF3001E7B89 /* MMSystemHelp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSystemHelp.h; sourceTree = "<group>"; };
-		FA05C78222A7BEF3001E7B89 /* MMSystemHelp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMSystemHelp.m; sourceTree = "<group>"; };
 		FA0DEEBB226D7D49002A6E6A /* MMChatHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMChatHandler.h; sourceTree = "<group>"; };
 		FA0DEEBC226D7D49002A6E6A /* MMChatHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMChatHandler.m; sourceTree = "<group>"; };
 		FA0DEEC2226D7FDB002A6E6A /* MMAudioView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAudioView.h; sourceTree = "<group>"; };
@@ -1693,8 +1687,6 @@
 		28A75BC9238D0A2000281EF8 /* VC */ = {
 			isa = PBXGroup;
 			children = (
-				1830C7B42310574F00B89795 /* ChatGroupViewController.h */,
-				1830C7B52310574F00B89795 /* ChatGroupViewController.m */,
 				188727DF230BD00A00B34FE6 /* ChatViewController.h */,
 				188727E0230BD00A00B34FE6 /* ChatViewController.m */,
 				286A8A532398AC0B00B2A069 /* ZWAddFriendViewController.h */,
@@ -2832,8 +2824,6 @@
 				FA022DC92286690800E25218 /* MMContactsViewController.m */,
 				FAC527532295364500884E46 /* MMFriendAppViewController.h */,
 				FAC527542295364500884E46 /* MMFriendAppViewController.m */,
-				FA02F99322981F5E00927E4F /* MMThemeViewController.h */,
-				FA02F99422981F5E00927E4F /* MMThemeViewController.m */,
 				FA319D79225E19AB009E8B44 /* SearchFriendsViewController.h */,
 				FA319D7A225E19AB009E8B44 /* SearchFriendsViewController.m */,
 				18FD5C9B2310C85600C10BCD /* AddressBookViewController.h */,
@@ -3034,8 +3024,8 @@
 				FA273891228963390024DBEC /* MMChatDBManager.m */,
 				FA0DEEBB226D7D49002A6E6A /* MMChatHandler.h */,
 				FA0DEEBC226D7D49002A6E6A /* MMChatHandler.m */,
-				FA05C78122A7BEF3001E7B89 /* MMSystemHelp.h */,
-				FA05C78222A7BEF3001E7B89 /* MMSystemHelp.m */,
+				28A61E8D23AA1269003EC390 /* ZWChatHandlerViewModel.h */,
+				28A61E8E23AA1269003EC390 /* ZWChatHandlerViewModel.m */,
 				FA022DD72286914700E25218 /* Category */,
 			);
 			path = Helper;
@@ -3443,7 +3433,6 @@
 				FA319D7E225F1823009E8B44 /* SearchFriendModel.m in Sources */,
 				188727F3230BD5DA00B34FE6 /* MeViewController.m in Sources */,
 				FA615A2422D76B62003C148A /* MMForward_GroupViewController.m in Sources */,
-				FA05C78322A7BEF4001E7B89 /* MMSystemHelp.m in Sources */,
 				C49B35A32382B724008D38E1 /* NSMutableArray+ZWMutableARR.m in Sources */,
 				8689EC7C21E63C320024A6A0 /* UITableView+SCIndexView.m in Sources */,
 				8625B64D21EB7CD20050C023 /* UIGestureRecognizer+YYAdd.m in Sources */,
@@ -3497,6 +3486,7 @@
 				28DDC0192396437C0079A19C /* ZWMeViewModel.m in Sources */,
 				C49B35942382B6FB008D38E1 /* Foundation+Log.m in Sources */,
 				FA2765A5226D4DB40098D515 /* MMUserModel.m in Sources */,
+				28A61E8F23AA1269003EC390 /* ZWChatHandlerViewModel.m in Sources */,
 				18DD55C8230C374B00C17D54 /* GameViewController.m in Sources */,
 				8689EC6B21E63B830024A6A0 /* JSONModelArray.m in Sources */,
 				FAC2FBE7232639D600FF8C10 /* MMNextAddBankCell.m in Sources */,
@@ -3646,7 +3636,6 @@
 				8689EBA721E3A8D00024A6A0 /* XFetchCodeButton.m in Sources */,
 				8689EBA121E3A8D00024A6A0 /* BottomTitleButton.m in Sources */,
 				FA2E156A22EAC48000147385 /* MFNestTableView.m in Sources */,
-				FA02F99522981F5E00927E4F /* MMThemeViewController.m in Sources */,
 				C49B358E2382B6E8008D38E1 /* NSURL+ChineseUrl.m in Sources */,
 				C49B35AB2382B8E4008D38E1 /* AppDelegate+ZWAppDelegate.m in Sources */,
 				8689EC6921E63B830024A6A0 /* JSONModel.m in Sources */,
@@ -3673,7 +3662,6 @@
 				FA2E156822EAC48000147385 /* MFSegmentViewCell.m in Sources */,
 				28233D5B238664D60085D18B /* ZWMessage.m in Sources */,
 				289328C02394F7BE00EBF0C8 /* ZWGroudDetailViewModel.m in Sources */,
-				1830C7B62310574F00B89795 /* ChatGroupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

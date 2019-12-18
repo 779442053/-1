@@ -8,9 +8,6 @@
 
 #import "MMChatHandler.h"
 
-#import "MMConnectConfig.h"
-#import "MMGCDAsyncSocketCommunicationManager.h"
-
 #import "ZWSocketManager.h"
 
 #import "NSDate+Extension.h"
@@ -20,18 +17,14 @@
 
 #import "MMMessageConst.h"
 
+#import "ZWChatHandlerViewModel.h"
 @interface MMChatHandler ()
 
 //所有的代理
 @property (nonatomic, strong) NSMutableArray *delegates;
-
-
-@property (nonatomic, strong) MMConnectConfig *connectConfig;
-
-
+@property (nonatomic, strong) ZWChatHandlerViewModel *ViewModel;
+@property (nonatomic, copy) NSString *upLoadUrl;
 @end
-
-static NSString *upLoadUrl = @"";//记录当前的上传地址
 
 @implementation MMChatHandler
 #pragma mark - 初始化聊天handler单例
@@ -85,6 +78,8 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
     
     //3.发送请求
     [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {//这个data  就是刚刚我发出去的消息模型
+        ZWWLog(@"受到发送消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
+        //开始k将这条消息写入本地数据库
         [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
             aCompletionBlock(message);
         }];
@@ -130,18 +125,17 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
                                                        cmd:cmd
                                                      cType:cType
                                                messageBody:model];
-    message.messageType = MMMessageType_Text;
+    message.messageType = MMMessageType_linkman;
     message.deliveryState = MMMessageDeliveryState_Delivering;
     message.conversation = toUser;
     message.fromPhoto = photoUrl;
-    
-    //3.发送请求
-    [MMRequestManager aSendTextMessageWithModel:message completion:^(NSError * _Nonnull error) {
+    [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {//这个data  就是刚刚我发出去的消息模型
+        ZWWLog(@"受到发送联系人消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
+        //开始k将这条消息写入本地数据库
         [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
             aCompletionBlock(message);
         }];
     }];
-    
     return message;
     
 }
@@ -185,17 +179,15 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
 
 /**
  保存消息和会话
- 
  @param message 消息模型
  */
 - (void)saveMessageAndConversationToDBWithMessage:(MMMessage *)message {
-    
     message.localtime = [[NSDate date] timeStamp];
     message.timestamp = [[NSDate date] timeStamp];
-    
-    
     // 发送给自己的消息不插入数据库，等到接收到自己的消息后再插入数据库
-    if (![message.fromID isEqualToString:message.toID]) {
+    NSString *fromID = [NSString stringWithFormat:@"%@",message.fromID];
+    NSString *toID = [NSString stringWithFormat:@"%@",message.toID];
+    if (![fromID isEqualToString:toID]) {
         // 消息插入数据库
         [[MMChatDBManager shareManager] addMessage:message];
     }
@@ -254,7 +246,9 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
             }];
         }else{
             messageBody.content = url;
-            [MMRequestManager aSendPicMessageWithModel:message completion:^(NSError * _Nonnull error) {
+            [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {//这个data  就是刚刚我发出去的消息模型
+                ZWWLog(@"受到发送图片消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
+                //开始k将这条消息写入本地数据库
                 [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
                     aCompletionBlock(message);
                 }];
@@ -263,69 +257,45 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
     }];
     return message;
 }
-
+//上传图片 得到地址
 - (void)getUrl:(NSString *)filePath completion:(void(^)(NSString *url))aCompletionBlock
 {
-    
     //获取可上传的地址,如果上传的地址存在则直接请求上传,如不过不存在就先请求上传的地址
-    if (upLoadUrl.length) {
-        
+    if (self.upLoadUrl.length) {
         [self uploadWithFilePath:filePath completion:^(NSString *url) {
             aCompletionBlock(url);
         }];
         
     }else{
-        
-        [MMRequestManager fetchUpLoadFileUrlCompletion:^(NSDictionary * _Nonnull dict, NSError * _Nonnull error) {
-            if (!error) {
-                if (K_APP_REQUEST_OK(dict[@"ret"])) {
-                    NSString *uploadApi1 = dict[@"uploadApi1"];
-                    NSString *uploadApi2 = dict[@"uploadApi2"];
-                    NSString *uploadApi3 = dict[@"uploadApi3"];
-#warning 这里的上传地址改了参数且去掉端口8003才能上传
-                    upLoadUrl = [uploadApi1 containsString:@"http://"] ? uploadApi1 : ([uploadApi2 containsString:@"http://"] ? uploadApi2 : uploadApi3);
-                    upLoadUrl = [upLoadUrl stringByReplacingOccurrencesOfString:@":8003" withString:@""];
-                    [self uploadWithFilePath:filePath
-                                  completion:^(NSString *url) {
-                        aCompletionBlock(url);
-                    }];
-                }else{
-                    MMLog(@"获取文件地址失败");
-                }
-            }
-        }];
-        
-    }
-    
-}
-
-- (void)uploadWithFilePath:(NSString *)filePath completion:(void(^)(NSString *url))aCompletionBlock
-{
-    [MMRequestManager upLoadFileWithFilePath:filePath fileUrl:upLoadUrl completion:^(NSData * _Nonnull data, NSError * _Nonnull error) {
-        
-        if (!error) {
-            NSString *nameStr =  [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
-            NSData *jsonData = [nameStr dataUsingEncoding:NSUTF8StringEncoding];
-            NSDictionary *dataDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableLeaves error:nil];
-            
-            MMLog(@"文件内容:=====================%@",dataDic);
-            NSString *urlMessage = @"";
-            if ([dataDic[@"code"] isEqualToString:@"1"] ) {
-                urlMessage = dataDic[@"message"];//获取到网上的地址
-                aCompletionBlock(urlMessage);
+        //先上传服务器 http   拿到url  走tcp  请求
+        [[self.ViewModel.GetuploadFileUrlCommand execute:nil] subscribeNext:^(id  _Nullable x) {
+            if ([x[@"code"] intValue] == 0) {
+                NSString *urlMessage = x[@"res"];//获取到网上的地址
+                self.upLoadUrl = urlMessage;
+                [self uploadWithFilePath:filePath completion:^(NSString *url) {
+                    aCompletionBlock(url);
+                }];
             }else{
-                MMLog(@"文件上传失败");
-                aCompletionBlock(urlMessage);
                 [self showAlertWithMessage:@"上传文件失败"];
             }
-        }
-        else{
-            aCompletionBlock(@"");
+        }];
+    }
+}
+//获取上传的文件,图片的地址
+- (void)uploadWithFilePath:(NSString *)filePath completion:(void(^)(NSString *url))aCompletionBlock
+{
+    UIImage *image = [UIImage imageWithContentsOfFile:filePath];
+    NSData *data = UIImageJPEGRepresentation(image, 0.8);
+    [[self.ViewModel.uploadFileCommand execute:@{@"image":data,@"res":self.upLoadUrl}] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            NSString *URL = x[@"res"];
+            aCompletionBlock(URL);
+        }else{
+            ZWWLog(@"获取文件地址失败")
         }
     }];
-
 }
-
+//发送文件
 - (MMMessage *)sendFileMessage:(NSString *)fileName
                         toUser:(NSString *)toUser
                     toUserName:(NSString *)toUserName
@@ -333,17 +303,14 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
                            cmd:(NSString *)cmd
                     completion:(void(^)(MMMessage *message))aCompletionBlock
 {
-    
     //1.对内容模型赋值
     NSString *path = [[MMFileTool fileMainPath] stringByAppendingPathComponent:fileName];
     double size = [MMFileTool fileSizeWithPath:path];
-    
     //判断类型
     NSNumber *type = [MMMessageHelper fileType:[fileName pathExtension]];
     if (!type) {
         type = @0;
     }
-    
     MMChatContentModel *messageBody = [[MMChatContentModel alloc] init];
     messageBody.type = TypeFile;
     messageBody.length = [NSString stringWithFormat:@"%.0f",size];
@@ -368,6 +335,7 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
     message.fromPhoto = photoUrl;
     
     //3.发送请求
+    ZWWLog(@"将要上传图片的路径=%@",path)
     [self getUrl:path completion:^(NSString *url) {
         MMLog(@"url ===========%@",url);
         if ([url isEqualToString:@""]) {
@@ -383,7 +351,9 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
             }];
         }else{
             messageBody.content = url;
-            [MMRequestManager aSendFileMessageWithModel:message completion:^(NSError * _Nonnull error) {
+            [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {//这个data  就是刚刚我发出去的消息模型
+                ZWWLog(@"受到发送文件消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
+                //开始k将这条消息写入本地数据库
                 [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
                     aCompletionBlock(message);
                 }];
@@ -393,7 +363,7 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
     return message;
     
 }
-
+/**发送短录音*/
 - (MMMessage *)sendVoiceMessageWithVoicePath:(NSString *)voicePath
                                       toUser:(NSString *)toUser
                                   toUserName:(NSString *)toUserName
@@ -447,7 +417,9 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
             }];
         }else{
             messageBody.content = url;
-            [MMRequestManager aSendVoiceMessageWithModel:message completion:^(NSError * _Nonnull error) {
+            [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {//这个data  就是刚刚我发出去的消息模型
+                ZWWLog(@"受到发送短录音消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
+                //开始k将这条消息写入本地数据库
                 [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
                     aCompletionBlock(message);
                 }];
@@ -460,5 +432,10 @@ static NSString *upLoadUrl = @"";//记录当前的上传地址
     return message;
     
 }
-
+-(ZWChatHandlerViewModel *)ViewModel{
+    if (_ViewModel == nil) {
+        _ViewModel = [[ZWChatHandlerViewModel alloc]init];
+    }
+    return _ViewModel;
+}
 @end

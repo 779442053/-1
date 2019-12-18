@@ -7,12 +7,12 @@
 //
 
 #import "MMForward_GroupViewController.h"
-
+#import "ZWChartViewModel.h"
 @interface MMForward_GroupViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) NSMutableArray *selectDataArr;
-
+@property (nonatomic, strong) ZWChartViewModel *ViewModel;
 @end
 
 @implementation MMForward_GroupViewController
@@ -26,9 +26,12 @@
     
     return self;
 }
-
-
-
+-(ZWChartViewModel *)ViewModel{
+    if (_ViewModel == nil) {
+        _ViewModel = [[ZWChartViewModel alloc]init];
+    }
+    return _ViewModel;
+}
 #pragma mark - Getter&Setter
 
 - (NSMutableArray *)dataSource
@@ -89,7 +92,7 @@
 
 - (void)loadData
 {
-    
+    //[self.ViewModel.GetGroupChartLishDataCommand ];
     WEAKSELF
     [MMRequestManager queryGroupCallBack:^(NSArray<MMGroupModel *> * _Nonnull groupList, NSError * _Nonnull error) {
         if (!error) {

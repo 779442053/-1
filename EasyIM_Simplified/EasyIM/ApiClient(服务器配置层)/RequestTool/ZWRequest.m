@@ -76,7 +76,6 @@
     self.operationManager.requestSerializer.timeoutInterval = 8.f;
     [self.operationManager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
    self.operationManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", @"text/json",@"text/plain", @"text/javascript", nil];
-    //[self.operationManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     NSString *URL = [NSString stringWithFormat:@"%@%@",HTURL,URLString];
     ZWWLog(@"请求地址=%@,请求参数=%@",URL,parameters);
     [self.operationManager POST:URL parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {

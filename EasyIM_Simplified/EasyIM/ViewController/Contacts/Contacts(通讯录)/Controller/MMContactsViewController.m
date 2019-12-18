@@ -19,9 +19,6 @@
 //下拉刷新、上拉加载更多
 #import "MJRefresh.h"
 
-//群聊
-#import "ChatGroupViewController.h"
-
 //手机通讯录
 #import "AddressBookViewController.h"
 
@@ -578,15 +575,6 @@ static MMContactsViewController *_shareInstance = nil;
                     }
                 }
                     break;
-                    
-                //MARK:保存的群聊
-                case 3:
-                {
-                    ChatGroupViewController *vc = [[ChatGroupViewController alloc] init];
-                    [self.navigationController pushViewController:vc animated:YES];
-                }
-                    break;
-                    
                 default:
                     break;
             }

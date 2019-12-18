@@ -7,7 +7,7 @@
 //
 
 #import "MMRequestManager.h"
-#import "MMSystemHelp.h"
+
 #import "ZWUserModel.h"
 #import "ZWDataManager.h"
 @interface MMRequestManager ()
@@ -230,118 +230,7 @@
 }
 
 
-/**
- 获取好友列表
 
- @param pIndex 页索引(第一页为0)
- @param pSize 页大小
- @param callBack 回调闭包
- */
-+ (void)fetchFriendListForIndex:(NSInteger)pIndex
-                        andSize:(NSInteger)pSize
-                        andBack:(void(^)(NSArray<ContactsModel *> *_Nullable friendList,NSError *_Nullable error))callBack
-{
-    
-    NSString *strUrl = [NSString stringWithFormat:@"%@api_im/friend/getfriendlist",K_APP_HOST_ADMIN3];
-    
-    NSDictionary *param = @{
-                            @"userid":[ZWUserModel currentUser]?[ZWUserModel currentUser].userId:@"",//必要  用户ID
-                            @"page":[NSString stringWithFormat:@"%ld",pIndex], //非必要 当前页
-                            @"perpage":[NSString stringWithFormat:@"%ld",pSize] //非必要 每页数量
-                            };
-    
-    [YHUtils POSTWithURLString:strUrl
-                    parameters:param
-                       success:^(id  _Nullable responseObject) {
-                           if (responseObject && [responseObject[@"code"] integerValue] == 1 && responseObject[@"data"]) {
-                               NSArray<ContactsModel *> *arrTemp = [ContactsModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"data"]];
-                               
-                               if (callBack) {
-                                   callBack(arrTemp,nil);
-                               }
-                           }
-                           else{
-                               NSString *domain = @"NSURLErrorDomain";
-                               NSString *desc = @"获取好友失败";
-                               NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : desc };
-                               NSError *error = [NSError errorWithDomain:domain
-                                                                    code:0
-                                                                userInfo:userInfo];
-                               
-                               if (callBack) {
-                                   callBack(nil,error);
-                               }
-                           }
-                       }
-                       failure:^(NSError * _Nullable error) {
-                           NSLog(@"获取好友列表异常！详见：%@",error);
-                           
-                           if (callBack) {
-                               callBack(nil,error);
-                           }
-                       }];
-}
-//+ (void)queryUserNormalWithContactType:(TargetType)targetType
-//                              callBack:(void(^)(NSArray <MMRecentContactsModel *>*friendList,NSError *error))callBack
-//{
-//
-//    //0.初始化声明
-//    NSMutableArray *contactsDataList = [[NSMutableArray alloc] initWithCapacity:0];
-//
-//    //1.构造参数
-//    NSDictionary *param = @{
-//                            @"cmd":@"queryUserNormal",
-//                            @"sessionId":[ZWUserModel currentUser].sessionID,
-//                            @"contactType":@(targetType).description
-//                            };
-//
-//    //2.创建Get请求
-//    [[MMApiClient sharedClient] GET:K_APP_REQUEST_API parameters:param success:^(id  _Nonnull responseObject) {
-//
-//        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-//
-//            //2.1请求成功并且最近联系人不为零
-//            if ([responseObject[@"ret"] isEqualToString:@"succ"] && ![responseObject[@"count"] isEqualToString:@"0"]) {
-//                NSString *xmlStr = [NSString stringWithContentsOfURL:[NSURL URLWithString:responseObject[@"downloadurl"]] encoding:NSUTF8StringEncoding error:nil];
-//                NSMutableDictionary *jsonDic = [NSDictionary dictionaryWithXMLString:xmlStr].mutableCopy;
-//                [jsonDic removeObjectForKey:@"__name"];//去掉解析后带有__name的参数
-//                MMLog(@"我的最近列表%@",jsonDic);
-//
-//                if ([jsonDic[@"item"] isKindOfClass:[NSDictionary class]]) {
-//
-//                    MMRecentContactsModel *model = [MMRecentContactsModel yy_modelWithDictionary:jsonDic[@"item"]];
-//                    [contactsDataList addObject:model];
-//
-//                }else{
-//
-//                    NSMutableArray *tempArr = [[NSMutableArray alloc] init];
-//                    [jsonDic[@"item"] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                        NSDictionary *dict = (NSDictionary *)obj;
-//                        MMRecentContactsModel *model = [MMRecentContactsModel yy_modelWithDictionary:dict];
-//                        [tempArr addObject:model];
-//                    }];
-//
-//                    [contactsDataList addObjectsFromArray:tempArr];
-//                }
-//
-//                callBack(contactsDataList, nil);
-//            }
-//            else{
-////
-////                NSString *domain = @"NSURLErrorDomain";
-////                NSString *desc = @"您还没有联系群哦";
-////                NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : desc };
-////                NSError *error = [NSError errorWithDomain:domain
-////                                                     code:0
-////                                                 userInfo:userInfo];
-//
-//                callBack(nil,nil);
-//            }
-//        }
-//    } failure:^(NSError * _Nonnull error) {
-//        callBack(nil,error);
-//    }];
-//}
 
 + (void)queryGroupCallBack:(void(^)(NSArray <MMGroupModel *>*groupList,NSError *error))callBack
 {
@@ -394,130 +283,6 @@
         callBack(nil,error);
     }];
     
-}
-
-+ (void)aSendTextMessageWithModel:(MMMessage *)aMessage
-                       completion:(void(^) (NSError *error))aCompletionBlock
-{
-    
-    //1.构建自定义配置环境
-    [self createSocketConfig];
-    
-    //2.构建TCP请求参数字符串
-    NSString *body = @"";
-    MMRequestType requestType = MMRequestType_sendMsg;
-    
-    NSDictionary *sliceDic = @{
-                               @"slice":@{
-                                   @"type":aMessage.slice.type,
-                                   @"content":aMessage.slice.content
-                               }
-                            };
-    if ([aMessage.slice.type isEqualToString:@"linkman"]) {
-        sliceDic = @{
-                     @"slice":@{
-                             @"type":aMessage.slice.type,
-                             @"nickName":aMessage.slice.nickName?aMessage.slice.nickName:@"",
-                             @"photo":aMessage.slice.photo?aMessage.slice.photo:@"",
-                             @"userID":aMessage.slice.userID?aMessage.slice.userID:@"",
-                             @"userName":aMessage.slice.userName?aMessage.slice.userName:@""
-                             }
-                     };
-    }
-    
-    if ([aMessage.type isEqualToString:@"chat"]) {
-        
-        NSDictionary *dict = @{
-                               @"type":aMessage.type,
-                               @"cmd":aMessage.cmd,
-                               @"sessionID":aMessage.sessionID,
-                               @"toID":aMessage.toID,
-                               @"toUserName":aMessage.toUserName,
-                               @"msgID":aMessage.msgID,
-                               @"msg":sliceDic,
-                               };
-        body = [NSString stringWithFormat:@"<JoyIM>%@</JoyIM>",dict.innerXML];
-        requestType = MMRequestType_sendMsg;
-    }else if ([aMessage.type isEqualToString:@"groupchat"]){
-        
-        NSDictionary *dict = @{
-                               @"type":aMessage.type,
-                               @"cmd":aMessage.cmd,
-                               @"sessionID":aMessage.sessionID,
-                               @"groupID":aMessage.toID,
-                               @"msgID":aMessage.msgID,
-                               @"msg":sliceDic,
-                               };
-        body = [NSString stringWithFormat:@"<JoyIM>%@</JoyIM>",dict.innerXML];
-        requestType = MMRequestType_sendGroupMsg;
-    }
-    
-    //3.创建请求的Manager
-    [[MMGCDAsyncSocketCommunicationManager sharedInstance] socketWriteDataWithRequestType:requestType requestBody:body completion:^(NSError * _Nullable error, id  _Nullable data) {
-        if ([data isKindOfClass:[NSDictionary class]]) {
-            if ([data[@"result"] integerValue] == 1) {
-                aCompletionBlock(nil);
-            }
-        }else{
-            aCompletionBlock(error);
-        }
-    }];
-}
-
-+ (void)fetchUpLoadFileUrlCompletion:(void(^)(NSDictionary *dict,NSError *error))aCompletionBlock
-{
-    
-    //1.构造参数
-    NSDictionary *fetchUrlDic = @{
-                                  @"timeStamp":[MMDateHelper getNowTime],
-                                  @"sessionID":[ZWUserModel currentUser].sessionID,
-                                  @"userID":[ZWUserModel currentUser].userId,
-                                  @"type":@"req",
-                                  @"xns":@"xns_file",
-                                  @"cmd":@"queryFileUpApiUrl",
-                                  };
-    
-    //2.创建Get请求
-    [[MMApiClient sharedClient] GET:K_APP_REQUEST_API parameters:fetchUrlDic success:^(id  _Nonnull responseObject) {
-        aCompletionBlock(responseObject,nil);
-    } failure:^(NSError * _Nonnull error) {
-        aCompletionBlock(nil,error);
-    }];
-    
-}
-
-+ (void)upLoadFileWithFilePath:(NSString *)filePath
-                       fileUrl:(NSString *)fileUrl
-                    completion:(void(^)(NSData *data,NSError *error))aCompletionBlock
-{
-    
-    //1.构建参数
-    NSDictionary *uploadDic = @{
-                                   @"sessionID":[ZWUserModel currentUser].sessionID,
-                                   @"uid":[ZWUserModel currentUser].userId,
-                                   };
-    NSURL *fileData = [ NSURL fileURLWithPath:filePath];//本地路径转成URL
-    
-    NSMutableDictionary *fileDic = [NSMutableDictionary dictionary];
-    [fileDic setValue:fileData forKey:@"file"];//文件
-    [fileDic setValue:@"uploadfile" forKey:@"name"];//后台约定好的文件名
-    [fileDic setValue:[filePath lastPathComponent] forKey:@"fileName"];//获取名称
-    NSArray *files =@[fileDic].mutableCopy;
-
-    //2.构建上传请求
-    MMApiClient *sharedClient = [MMApiClient sharedClient];
-    sharedClient.responseSerializer = [AFHTTPResponseSerializer serializer];
-
-    [sharedClient UPLOAD_FilePath:fileUrl parameters:uploadDic files:files progress:^(NSProgress * _Nonnull progress) {
-        
-    } success:^(id  _Nonnull responseObject) {
-        aCompletionBlock(responseObject,nil);
-    } failure:^(NSError * _Nonnull error) {
-        NSLog(@"文件上传失败！详见：%@",error);
-        [MMProgressHUD showHUD: error.localizedDescription];
-        
-        aCompletionBlock(nil,error);
-    }];
 }
 
 + (void)aSendPicMessageWithModel:(MMMessage *)aMessage
@@ -697,24 +462,6 @@
     }];
 }
 
-+ (void)registerUserWithUserName:(NSString *)userName pwd:(NSString *)pwd
-                     aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock
-{
-    //1.构造参数
-    NSDictionary *dic = @{
-                          @"username":userName,
-                          @"cmd":@"interfaceAddUser",
-                          @"userpsw":pwd,
-                          @"gender":@"1",
-                          };
-    
-    //2.构造Get请求 === post 请求
-    [[MMApiClient sharedClient] GET:K_APP_REQUEST_API parameters:dic success:^(id  _Nonnull responseObject) {
-        aCompletionBlock(responseObject,nil);
-    } failure:^(NSError * _Nonnull error) {
-        aCompletionBlock(nil, error);
-    }];
-}
 
 + (void)addGroupWithGroupName:(NSString *)groupName
                      bulletin:(NSString *)bulletin
@@ -745,103 +492,9 @@
     }];
 }
 
-+ (void)remarkFriendWithtagUserId:(NSString *)taguserid
-                           remark:(NSString *)remark
-                      aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock
-{
-    
-    //1.构造参数
-    NSDictionary *dic = @{
-                          @"userid":[ZWUserModel currentUser].userId,
-                          @"muserid":taguserid,
-                          @"musername":remark
-                          };
-    NSString *apiUrl = [NSString stringWithFormat:@"%@%@%@",TOP_CIRCLE_URL,K_APP_REQUEST_API_3,@"setmemo"];
-    
-    //2.构造Post 表单请求
-    [[MMApiClient sharedClient] POSTFormData:apiUrl parameters:dic success:^(id  _Nonnull responseObject) {
-        
-        MMLog(@"修改备注请求结果:%@",responseObject);
-        if ([responseObject[@"code"] integerValue] == 1) {
-            aCompletionBlock(responseObject, nil);
-        }else{
-            NSString *domain = @"NSURLErrorDomain";
-            NSString *desc = responseObject[@"data"];
-            NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : desc };
-            NSError *error = [NSError errorWithDomain:domain
-                                                 code:0
-                                             userInfo:userInfo];
-            
-            aCompletionBlock(nil, error);
-        }
-        
-    } failure:^(NSError * _Nonnull error) {
-        aCompletionBlock(nil, error);
-    }];
-    
-    
-}
 
-+ (void)updateUserPhotoWithUserId:(NSString *)userId
-                         photoUrl:(NSString *)photoUrl
-                      aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock
-{
 
-    //1.构造参数
-    NSDictionary *dic = @{
-                          @"cmd":@"updateUserPhoto",
-                          @"sessionid":[ZWUserModel currentUser].sessionID,
-                          @"userId":userId,
-                          @"photoUrl":photoUrl,
-                          };
-    
-    //2.构造Get请求
-    [[MMApiClient sharedClient] GET:K_APP_REQUEST_API
-                         parameters:dic
-                            success:^(id  _Nonnull responseObject) {
-        MMLog(@"%@",responseObject);
-        aCompletionBlock(responseObject, nil);
-    } failure:^(NSError * _Nonnull error) {
-        aCompletionBlock(nil, error);
-    }];
-    
-}
 
-+ (void)setUserThemeWithUserId:(NSString *)userId
-                         theme:(NSString *)theme
-                   aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock
-{
-    
-    //1.构建参数
-    NSDictionary *dic = @{
-                          @"userid":userId,
-                          @"sig":theme
-                          };
-    NSString *apiUrl = [NSString stringWithFormat:@"%@%@%@",TOP_CIRCLE_URL,K_APP_REQUEST_API_2,@"usersig"];
-    
-    //2.构建Post 表单请求
-    [[MMApiClient sharedClient] POSTFormData:apiUrl parameters:dic success:^(id  _Nonnull responseObject) {
-        
-        MMLog(@"修改签名请求结果:%@",responseObject);
-        if ([responseObject[@"code"] integerValue] == 1 && responseObject) {
-            aCompletionBlock(responseObject, nil);
-        }else{
-            NSString *domain = @"NSURLErrorDomain";
-            NSString *desc = responseObject[@"data"];
-            NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : desc };
-            NSError *error = [NSError errorWithDomain:domain
-                                                 code:0
-                                             userInfo:userInfo];
-            
-            aCompletionBlock(nil, error);
-        }
-        
-    } failure:^(NSError * _Nonnull error) {
-        aCompletionBlock(nil, error);
-    }];
-    
-    
-}
 
 
 /**
