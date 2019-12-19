@@ -83,7 +83,6 @@ typedef struct {
 + (void)SendDataWithData:(NSMutableDictionary*)dic{
     ZWWLog(@"发送数据包字典 \n=%@",dic)
     NSInteger SocketrequestTag = ZWGCDSocketTCPCmdTypeEnum(dic[@"cmd"]);
-//    ZWWLog(@"本次的请求===%ld \n 对应字符串 = %@",(long)SocketrequestTag,dic[@"cmd"])
     NSString *body = [NSString stringWithFormat:@"<JoyIM>%@</JoyIM>",dic.innerXML];
     //ZWWLog(@"请求包体=\n %@",body)
     NSData *bodyData = [body dataUsingEncoding:NSUTF8StringEncoding];
@@ -119,6 +118,8 @@ typedef struct {
         presliceDic[@"type"] = message.slice.type;
         presliceDic[@"content"] = message.slice.content;//先上传,获取url
         presliceDic[@"length"] = message.slice.length;
+    }else if (message.messageType == MMMessageType_NTF){
+        
     }
     NSDictionary *sliceDic = @{
        @"slice":presliceDic
@@ -150,6 +151,19 @@ typedef struct {
     NSData *headData = [[NSData alloc] initWithBytes:&head length:4];//包头data
     NSMutableData *mData = [NSMutableData dataWithData:headData];
     [mData appendData:bodyData];//
+    [[ZWSocketManager shareInstance].socket writeData:mData withTimeout:-1 tag:SocketrequestTag];
+}
++ (void)SendDataWithData:(NSMutableDictionary*)parma complation:(SocketDidReadBlock)complation{
+    ZWWLog(@"消息处理=%@",parma)
+    [ZWSocketManager shareInstance].DidReadBlock = complation;
+    NSInteger SocketrequestTag = ZWGCDSocketTCPCmdTypeEnum(parma[@"cmd"]);
+    NSString *body = [NSString stringWithFormat:@"<JoyIM>%@</JoyIM>",parma.innerXML];
+    NSData *bodyData = [body dataUsingEncoding:NSUTF8StringEncoding];
+    NSUInteger size = bodyData.length;//数据包的长度
+    PacketHeader head = {size, 0, 0};//包头结构体
+    NSData *headData = [[NSData alloc] initWithBytes:&head length:4];
+    NSMutableData *mData = [NSMutableData dataWithData:headData];
+    [mData appendData:bodyData];
     [[ZWSocketManager shareInstance].socket writeData:mData withTimeout:-1 tag:SocketrequestTag];
 }
 #pragma mark GCDAsyncSocketDelegate
@@ -229,6 +243,12 @@ typedef struct {
         if ([jsonDic.allKeys containsObject:@"__name"]) {
             [jsonDic removeObjectForKey:@"__name"];
         }
+        NSString *errString = jsonDic[@"err"];
+        NSError *error = [NSError errorWithDomain:NSURLErrorDomain
+                                             code:[jsonDic.allKeys containsObject:@"result"]? [jsonDic[@"result"] integerValue]:-1
+                                         userInfo:@{
+                                                    NSLocalizedDescriptionKey: errString.checkTextEmpty?errString :  ([jsonDic.allKeys containsObject:@"desc"]?jsonDic[@"desc"]:@"未知错误")
+                                                    }];
         NSInteger type = ZWGCDSocketTCPCmdTypeEnum(strCMD);
         switch (type) {
             case GCDSocketTCPCmdTypeHeartBeat:
@@ -302,7 +322,7 @@ typedef struct {
                     }
                 }else{
                    if (self.DidReadBlock) {
-                        self.DidReadBlock(jsonDic[@"err"],nil);
+                        self.DidReadBlock(error,nil);
                     }
                 }
             }
@@ -331,10 +351,7 @@ typedef struct {
                     if (![jsonDic[@"webrtcId"] isEqualToString:[ZWUserModel currentUser].userId]) {
                         [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Refuse object:nil userInfo:jsonDic];
                     }else{
-//                        didReadBlock = self.requestDic[@(MMRequestType_hangUp).description];
-//                        if (didReadBlock) {
-//                            didReadBlock(nil, jsonDic);
-//                        }
+
                     }
                 }
             }
@@ -388,15 +405,22 @@ typedef struct {
             //MARK:8.检查用户是否在线 checkUserOnline
             case GCDSocketTCPCmdTypeCheckUserOnline:
             {
-//                didReadBlock = self.requestDic[@(MMRequestType_checkUserOnline).description];
-//                if (didReadBlock) {
-//                    didReadBlock(error, jsonDic);
-//                }
+
             }
                 break;
             //MARK:9.发群消息回调 groupMsg
             case GCDSocketTCPCmdTypeGroupMsg:
             {
+                if ([jsonDic[@"result"] isEqualToString:@"1"]) {
+                    if (self.DidReadBlock) {
+                        ZWWLog(@"群发发送成功 1")
+                        self.DidReadBlock(nil,jsonDic);
+                    }
+                }else{
+                   if (self.DidReadBlock) {
+                        self.DidReadBlock(error,nil);
+                    }
+                }
 
             }
                 break;
@@ -457,10 +481,27 @@ typedef struct {
             //MARK:n.退出登录 logout
             case GCDSocketTCPCmdTypeLogout:
             {
-                ZWWLog(@"退出登录 logout")
+                ZWWLog(@"退出登录 logout  可以使用block  形式")//
+                //只有在使用一对多的情况下使用通知
                 [[NSNotificationCenter defaultCenter] postNotificationName:appLoginOut object:nil];
             }
                 break;
+            case GCDSocketTCPCmdTyperevokeMsg:
+            {
+                ZWWLog(@"撤回消息成功 = %@",jsonDic)
+                if ([jsonDic[@"result"] intValue] == 1) {
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(nil, jsonDic);
+                    }
+                }else{
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(error, nil);
+                    }
+                }
+                
+            }
+                break;
+                
                 
             default:
                 NSLog(@"未知类型的cmd:%@",strCMD);

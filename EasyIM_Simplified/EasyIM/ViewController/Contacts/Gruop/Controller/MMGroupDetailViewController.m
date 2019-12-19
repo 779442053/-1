@@ -577,23 +577,23 @@ static const CGFloat foot_view_h = 62;
     __weak typeof(self) weakSelf = self;
     [MBProgressHUD showMessage:@"上传中..." toView:self.view];
     
-    [[MMChatHandler shareInstance] getUrl:filePath completion:^(NSString * _Nonnull url) {
-        [MMFileTool removeFileAtPath:filePath];//上传文件失败成功都要删除本地文件
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:weakSelf.view];
-        });
-        
-        if (url.checkTextEmpty) {
-            MMLog(@"图片上传成功！详见：%@",url);
-            [weakSelf setGroupChatBg:url];
-        }else{
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD showError:@"上传失败"];
-            });
-        }
-    }];
+//    [[MMChatHandler shareInstance] getUrl:filePath completion:^(NSString * _Nonnull url) {
+//        [MMFileTool removeFileAtPath:filePath];//上传文件失败成功都要删除本地文件
+//
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [MBProgressHUD hideHUDForView:weakSelf.view];
+//        });
+//
+//        if (url.checkTextEmpty) {
+//            MMLog(@"图片上传成功！详见：%@",url);
+//            [weakSelf setGroupChatBg:url];
+//        }else{
+//
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [MBProgressHUD showError:@"上传失败"];
+//            });
+//        }
+//    }];
     //[E] 图片上传
 }
 

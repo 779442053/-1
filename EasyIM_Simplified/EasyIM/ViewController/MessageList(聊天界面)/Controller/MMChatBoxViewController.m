@@ -20,6 +20,7 @@
 #import "MMDefines.h"
 #import "MMVedioCallEnum.h"
 
+#import "ZWPhotoHelper.h"
 //邀请好友
 #import "MMAddMemberViewController.h"
 
@@ -193,7 +194,6 @@
     }
     return _chatBoxMoreView;
 }
-
 - (UIImagePickerController *)imagePicker
 {
     if (nil == _imagePicker) {
@@ -201,24 +201,39 @@
         _imagePicker.delegate = self;
         _imagePicker.modalPresentationStyle = UIModalPresentationCustom;
         _imagePicker.view.backgroundColor = [UIColor grayColor];
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
         _imagePicker.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor blackColor]};
         _imagePicker.navigationBar.translucent = NO;
-       if (@available(iOS 11.0, *)){[[UIScrollView appearance]   setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];}
-
+        [_imagePicker.navigationBar setBarTintColor:[UIColor colorWithHexString:@"#333237"]];
     }
     return _imagePicker;
 }
-
 #pragma mark - TLChatBoxMoreViewDelegate
-
 - (void) chatBoxMoreView:(MMChatBoxMoreView *)chatBoxMoreView
 didSelectItem:(MMChatBoxItem)itemType
 {
-    
     switch (itemType) {
         //MARK:相册
         case MMChatBoxItemAlbum:
         {
+//            ZWPhotoConfig *config = [[ZWPhotoConfig alloc] init];
+//            config.navBarTintColor = [UIColor colorWithHexString:@"FD4772"];
+//            //config.navBarBgColor = [UIColor colorWithHexString:@"#333237"];
+//            config.navBarBgColor = [UIColor redColor];
+//            config.navBarTitleColor = [UIColor colorWithHexString:@"#FFFFFF"];
+//            config.allowsEditing = YES;
+//            [[ZWPhotoHelper creatWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary config:config] getSourceWithSelectImageBlock:^(id data) {
+//                if ([data isKindOfClass:[UIImage class]]) { // 图片
+//                    UIImage *simpleImg = [UIImage simpleImage:data];
+//                    NSString *filePath = [[MMMediaManager sharedManager] saveImage:simpleImg];
+//                    if (_delegate && [_delegate respondsToSelector:@selector(chatBoxViewController:sendImageMessage:imagePath:)]) {
+//                        [_delegate chatBoxViewController:self sendImageMessage:simpleImg imagePath:filePath];
+//                    }
+//                } else {
+//                    [MMProgressHUD showHUD:@"选取的不是图片,请选择图片" withDelay:1.5];
+//                }
+//            }];
+            
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
                 self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
                 [self presentViewController:self.imagePicker animated:YES completion:^{}];
@@ -254,6 +269,7 @@ didSelectItem:(MMChatBoxItem)itemType
             }
             //MARK:单聊视频
             else{
+                ZWWLog(@"张威威应该想后台获取通信地址,本地唤醒webrtc,进行呼叫")
                 [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio1V1 object:@{CALL_CHATTER:[MMManagerGlobeUntil sharedManager].toUid, CALL_TYPE:@(MMCallTypeVideo),CALL_CALLPARTY:@(MMCallParty_Calling)}];
             }
             
@@ -277,6 +293,8 @@ didSelectItem:(MMChatBoxItem)itemType
             MMDocumentViewController *docVC = [[MMDocumentViewController alloc] init];
             docVC.delegate = self;
             BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:docVC];
+            nav.navigationBar.hidden = NO;
+            nav.modalPresentationStyle = 0;
             [self presentViewController:nav animated:YES completion:nil];
         }
             break;
@@ -289,12 +307,14 @@ didSelectItem:(MMChatBoxItem)itemType
             addMember.groupId = self.groupId;
             addMember.creatorId = self.creatorId;
             addMember.delegate = (id<MMAddMemberViewControllerDelegate>)self;
-            
             [self.navigationController pushViewController:addMember animated:YES];
         }
             break;
         //MARK:位置
         case MMChatBoxItemLocation:
+        {
+            [MMProgressHUD showHUD:@"正在开发中..." withDelay:1.0];
+        }
             break;
         case MMChatBoxItemVideo:
         {
@@ -313,9 +333,7 @@ didSelectItem:(MMChatBoxItem)itemType
         default:
             break;
     }
-    
 }
-
 -(void)groupInvitation:(BOOL)isVideo{
     __weak typeof(self) weakSelf = self;
     [MMRequestManager groupMemberWithtaggroupId:self.groupId
@@ -392,8 +410,6 @@ didSelectItem:(MMChatBoxItem)itemType
                    andUserName:(NSString *)strUserName
                    andNickName:(NSString *)strNickname
                       andPhoto:(NSString *)strPhoto{
-    NSLog(@"发送联系人");
-    
     if (_delegate && [_delegate respondsToSelector:@selector(chatBoxViewController:sendLinkmanMessage:AndUserName:AndNickname:AndPhoto:)]) {
         [_delegate chatBoxViewController:self
                       sendLinkmanMessage:strUserId
@@ -412,10 +428,6 @@ didSelectItem:(MMChatBoxItem)itemType
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
-    //    NSString *mediaType = info[UIImagePickerControllerMediaType];
-    //    if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
-    //        ICLog(@"movie");
-    //    } else {
     UIImage *orgImage = info[UIImagePickerControllerOriginalImage];
     [picker dismissViewControllerAnimated:YES completion:nil];
     // 图片压缩后再上传服务器
@@ -425,7 +437,6 @@ didSelectItem:(MMChatBoxItem)itemType
     if (_delegate && [_delegate respondsToSelector:@selector(chatBoxViewController:sendImageMessage:imagePath:)]) {
         [_delegate chatBoxViewController:self sendImageMessage:simpleImg imagePath:filePath];
     }
-    //    }
 }
 
 

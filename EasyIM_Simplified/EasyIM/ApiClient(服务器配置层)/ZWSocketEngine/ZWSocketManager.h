@@ -62,6 +62,8 @@ typedef void (^SocketDidReadBlock)(NSError *__nullable error, id __nullable data
  聊天,发送消息
  */
 + (void)SendMessageWithMessage:(MMMessage*)message complation:(SocketDidReadBlock)complation;;
+//聊天,除相互发消息以外y所有操作
++ (void)SendDataWithData:(NSMutableDictionary*)parma complation:(SocketDidReadBlock)complation;
 /**
  开启心跳定时器
  */

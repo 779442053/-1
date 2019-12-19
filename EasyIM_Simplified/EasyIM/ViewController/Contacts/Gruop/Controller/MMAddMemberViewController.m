@@ -31,16 +31,12 @@
 {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, ZWStatusAndNavHeight, SCREEN_WIDTH, SCREEN_HEIGHT-ZWStatusAndNavHeight) style:UITableViewStylePlain];
-        
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorColor = G_EEF0F3_COLOR;
-        
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.showsHorizontalScrollIndicator = NO;
-        
         _tableView.backgroundColor = MMColor(242, 242, 242);
         _tableView.tableFooterView = [UIView new];
-        
         _tableView.delegate = self;
         _tableView.dataSource = self;
     }
@@ -55,10 +51,8 @@
         else
            _dataSource = [MMContactsViewController shareInstance].arrData;
     }
-    
     return _dataSource;
 }
-
 - (UIButton *)inviteBtn
 {
     if (!_inviteBtn) {
@@ -303,34 +297,25 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    
     UIView *headSection = [[UIView alloc] init];
     headSection.backgroundColor = MMColor(242, 242, 242);
-    
     UILabel *sectionLbl = [[UILabel alloc] init];
     sectionLbl.text = @"选择成员";
     sectionLbl.frame = CGRectMake(15, 0, 80, 30);
     sectionLbl.font = [UIFont systemFontOfSize:15];
     sectionLbl.textColor = [UIColor blackColor];
-    
     [headSection addSubview:sectionLbl];
-    
     return headSection;
 }
-
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 30.0f;
 }
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 80.0f;
 }
-
-
 #pragma mark - NewGroupViewCellDelegate
-
 // 选中成员
 -(void)selectCellWithSelectText:(NSString *)selectText
                        isSelect:(BOOL)isSelect

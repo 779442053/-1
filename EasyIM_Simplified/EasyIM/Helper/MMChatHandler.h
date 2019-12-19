@@ -88,15 +88,6 @@ NS_ASSUME_NONNULL_BEGIN
                                          cmd:(NSString *)cmd
                                   completion:(void(^)(MMMessage *message))aCompletionBlock;
 
-
-/**
- 获取文件
-
- @param filePath 文件
- @param aCompletionBlock 结果返回
- */
-- (void)getUrl:(NSString *)filePath completion:(void(^)(NSString *url))aCompletionBlock;
-
 /**
  发送联系人消息
  
@@ -114,6 +105,18 @@ NS_ASSUME_NONNULL_BEGIN
                         toUserPhotoUrl:(NSString *_Nullable)photoUrl
                                    cmd:(NSString *_Nonnull)cmd
                             completion:(void(^) (MMMessage *_Nonnull message))aCompletionBlock;
+
+/// 撤回消息
+/// @param Mid 消息ID..把需要撤回的消息传递过来,需要进行本地数据库操作
+/// @param toUserid 接受者id
+/// @param toUserName 接受者名字.如果是群,则不传
+/// @param cmd 命令,根据此命令,判断是群还是单聊
+/// @param aCompletionBlock 返回一个消息对象
+- (MMMessage *)WithdrawMessageWithMessageID:(MMMessage *)Mid
+        toUserID:(NSString *_Nonnull)toUserid
+    toUserName:(NSString *_Nonnull)toUserName
+           cmd:(NSString *_Nonnull)cmd
+    completion:(void(^) (MMMessage *_Nonnull message))aCompletionBlock;
 
 @end
 

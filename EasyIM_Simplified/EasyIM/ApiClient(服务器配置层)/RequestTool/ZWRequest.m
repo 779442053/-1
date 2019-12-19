@@ -180,10 +180,9 @@
        failure:(void (^)(ZWRequest *request, NSError *error))failure
 {
     self.operationQueue=self.operationManager.operationQueue;
-    self.operationManager.responseSerializer = [AFJSONResponseSerializer serializer];//声明返回的结果是json类型
-    self.operationManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    self.operationManager.requestSerializer = [AFJSONRequestSerializer serializer];
-    self.operationManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:RequestContentTypeText,RequestContentTypeJson,RequestContentTypePlain, nil];
+    self.operationManager.responseSerializer = [AFJSONResponseSerializer serializer];
+    self.operationManager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    self.operationManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain",@"text/javascript,multipart/form-data",nil];
     self.operationManager.requestSerializer.timeoutInterval = 8.f;
     [self.operationManager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
     NSString *token = [ZWUserModel currentUser].token;
@@ -191,19 +190,19 @@
     NSString *URL = [NSString stringWithFormat:@"%@%@",HTURL,URLString];
     ZWWLog(@"请求地址=%@,请求参数=%@",URL,parameters);
     [self.operationManager POST:URL parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        [formData appendPartWithFileData:fileData name:name fileName:name mimeType:mimeType];
+        NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
+        NSString *fileName = [NSString stringWithFormat:@"%.0f.%@", timestamp, name];
+        [formData appendPartWithFileData:fileData name:name fileName:fileName mimeType:mimeType];
     } progress:^(NSProgress * _Nonnull uploadProgress) {
          ZWWLog(@"上传进度=%@",uploadProgress);
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
         NSDictionary *data;
-        //NSString* responseJson = [[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
-        //ZWWLog(@"[ZWRequest成功]: %@",responseObject);
-        if (responseObject[@"data"] && [responseObject[@"data"] isKindOfClass:[NSString class]]) {
+        ZWWLog(@"[ZWRequest成功]: %@",responseObject);
+        if (responseObject[@"imgurl"] && [responseObject[@"imgurl"] isKindOfClass:[NSString class]]) {
             data = [self convertjsonStringToDict:responseObject[@"data"]];
         }
         success(self,responseObject,data);
-        ZWWLog(@"============上传成功啦==========")
+        ZWWLog(@"============上传文件成功啦==========")
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
          failure(self,error);
         ZWWLog(@"===上传失败啦===上传失败啦====上传失败啦")

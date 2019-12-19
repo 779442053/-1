@@ -22,7 +22,8 @@ typedef enum {
     MMMessageDeliveryState_Delivering,   // 正在发送
     MMMessageDeliveryState_Delivered,    // 已发送，成功
     MMMessageDeliveryState_Failure,      // 发送失败
-    MMMessageDeliveryState_ServiceFaid   // 发送服务器失败(可能其它错,待扩展)
+    MMMessageDeliveryState_ServiceFaid,   // 发送服务器失败(可能其它错,待扩展)
+    MMMessageDeliveryState_Withdraw   // 撤回
 }MessageDeliveryState;
 
 

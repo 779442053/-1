@@ -171,7 +171,10 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     GCDSocketTCPCmdTypeSendChatRoomMsg,
     
     /** logout 退出登录 */
-    GCDSocketTCPCmdTypeLogout
+    GCDSocketTCPCmdTypeLogout,
+    /** 撤回消息 */
+    GCDSocketTCPCmdTyperevokeMsg
+    
 };
 
 #define ZWGCDSocketTCPCmdTypeGet @[@"heartBeat",\
@@ -198,7 +201,8 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
 @"joinChatRoom",\
 @"exitChatRoom",\
 @"sendChatRoomMsg",\
-@"logout"]
+@"logout",\
+@"revokeMsg"]
 
 /** 枚举 to 字串 */
 #define ZWGCDSocketTCPCmdTypeString(type) ([ZWGCDSocketTCPCmdTypeGet objectAtIndex:type])

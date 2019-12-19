@@ -40,7 +40,6 @@
             }];
         }];
     }];
-    //张威威
     self.GetuploadFileUrlCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
@@ -65,5 +64,54 @@
             }];
         }];
     }];;
+    
+    self.UploadImageToSeverCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(NSDictionary * input) {
+        return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+            @strongify(self)
+            [YJProgressHUD showLoading:@"发送中..."];
+             NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+             NSString *Name;
+             NSData *data;
+            if ([input[@"code"] isEqualToString:@"image"]) {
+                NSString *imagepath = input[@"res"];
+                UIImage * uploadImage = [[MMMediaManager sharedManager] imageWithLocalPath:imagepath];
+                data = UIImageJPEGRepresentation(uploadImage, 0);
+                parma[@"type"] = @"0";
+                parma[@"file"] = data;
+                Name = @"png";
+            }else if ([input[@"code"] isEqualToString:@"arm"]){
+                NSString *voicepath = input[@"res"];
+                ZWWLog(@"luyin = %@",voicepath)
+                data = [NSData dataWithContentsOfFile:voicepath];
+                Name = @"wav";
+                parma[@"type"] = @"1";
+                parma[@"file"] = data;
+            }
+            [self.request upload:@"/api_im/friend/uploadimg" withFileData:data mimeType:@"file" name:Name parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+                [YJProgressHUD hideHUD];
+                if ([responseString[code] intValue] == 0) {
+                    ZWWLog(@"聊天上传文件得到路径 = %@",responseString)
+                    NSString *imageurl;
+                    if (responseString[@"imgurl"]) {
+                        NSArray *arr = responseString[@"imgurl"];
+                        imageurl = arr.firstObject;
+                    }else{
+                        imageurl = @"";
+                    }
+                    [subscriber sendNext:@{@"code":@"0",@"res":imageurl}];
+                }else{
+                    [YJProgressHUD showError:responseString[msg]];
+                    [subscriber sendNext:@{@"code":@"1",@"res":responseString[msg]}];
+                }
+                [subscriber sendCompleted];
+            } failure:^(ZWRequest *request, NSError *error) {
+                [YJProgressHUD showError:ZWerror];
+                [subscriber sendCompleted];
+            }];
+            return [RACDisposable disposableWithBlock:^{
+                
+            }];
+        }];
+    }];
 }
 @end

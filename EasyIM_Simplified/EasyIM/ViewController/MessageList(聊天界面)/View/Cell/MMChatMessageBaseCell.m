@@ -161,6 +161,13 @@
             [self.retryButton setHidden:YES];
         }
             break;
+        case MMMessageDeliveryState_Withdraw:
+        {
+            [self.activityView stopAnimating];
+            [self.activityView setHidden:YES];
+            [self.retryButton setHidden:YES];
+        }
+            break;
         case MMMessageDeliveryState_Failure:
         {
             [self.activityView stopAnimating];

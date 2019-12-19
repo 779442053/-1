@@ -119,6 +119,9 @@ static const CGFloat section_header_h = 60;
     [self.tableView.mj_header beginRefreshing];
     [self updateUnreadMessageRedIconForListAndDB];
     [self registerNotific];
+    //进到当前界面,先获取当前用户是否给我发送了消息.获取离线用户消息.或者群消息
+    
+    
 }
 
 // 更新消息列表未读消息数量, 更新数据库
@@ -129,10 +132,7 @@ static const CGFloat section_header_h = 60;
         [[MMChatDBManager shareManager] updateUnreadCountOfConversation:_conversationModel.toUid unreadCount:0];
     });
 }
--(void)zw_layoutNavigation{
-//    [self.navigationView removeFromSuperview];
-//    [self.navigationBgView removeFromSuperview];
-}
+
 - (void)setupUI
 {
     NSString *title = [_conversationModel getTitle];
@@ -154,7 +154,6 @@ static const CGFloat section_header_h = 60;
     _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         [weakSelf loadDataSource];
     }];
-
 }
 //注册cell
 - (void)registerCell
@@ -166,9 +165,10 @@ static const CGFloat section_header_h = 60;
     [self.tableView registerClass:[MMChatMessageFileCell class] forCellReuseIdentifier:TypeFile];
     /** 联系人 */
     [self.tableView registerClass:[MMChatLinkManCell class] forCellReuseIdentifier:TypeLinkMan];
+    //系统消息, 文字 在中间展示.文字,撤回消息等等
+    [self.tableView registerClass:[MMChatLinkManCell class] forCellReuseIdentifier:TypeLinkMan];
     //定位
 }
-
 // 加载数据
 - (void)loadDataSource
 {
@@ -231,7 +231,7 @@ static const CGFloat section_header_h = 60;
 - (void)loadHisMessage:(NSInteger)limit
 {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH:mm:ss"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *startDateStr = @"";
     NSString *endDateStr = @"";
     if (self.dataSource.count) {
@@ -385,7 +385,6 @@ static const CGFloat section_header_h = 60;
        return section_header_h;
     return 0;
 }
-
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 0.001;
 }
@@ -483,8 +482,6 @@ static const CGFloat section_header_h = 60;
     }];
     
 }
-
-
 //MARK: - 发送联系人
 - (void) chatBoxViewController:(MMChatBoxViewController *_Nullable)chatboxViewController
             sendLinkmanMessage:(NSString *_Nonnull)strUserId
@@ -499,7 +496,6 @@ static const CGFloat section_header_h = 60;
     messageBody.userName = uName;
     messageBody.nickName = nName;
     messageBody.photo = strPurl;
-    
     WEAKSELF
     MMMessage *message = [[MMChatHandler shareInstance]
                           sendLinkmanMessageModel:messageBody
@@ -533,10 +529,8 @@ static const CGFloat section_header_h = 60;
                           toUserPhotoUrl:_conversationModel.photoUrl
                           cmd:_conversationModel.cmd
                           completion:^(MMMessage * _Nonnull message) {
-        //刷新当前发送状态 这里显示的是发送失败或者发送完成状态
         [weakSelf updateSendStatusUIWithMessage:message];
     }];
-    //这里先用返回回来的状态 也就是Loading...
     [self clientManager:nil didReceivedMessage:message];
 }
 
@@ -549,7 +543,6 @@ static const CGFloat section_header_h = 60;
         [self sendImageMessageWithImgPath:imgPath andImage:image];
     }
 }
-
 - (void)sendImageMessageWithImgPath:(NSString *)imgPath andImage:(UIImage *)image
 {
     WEAKSELF
@@ -612,7 +605,6 @@ static const CGFloat section_header_h = 60;
                               //刷新当前发送状态 这里显示的是发送失败或者发送完成状态
                               [weakSelf updateSendStatusUIWithMessage:message];
                           }];
-    //这里先用返回回来的状态 也就是Loading...
     message.slice.filePath = voicePath;
     [self clientManager:nil didReceivedMessage:message];
 }
@@ -874,7 +866,6 @@ static const CGFloat section_header_h = 60;
 //MARK: - 复制删除转发多选
 - (void)showMenuViewController:(UIView *)showInView andIndexPath:(NSIndexPath *)indexPath message:(MMMessage *)message
 {
-    
     if (_copyMenuItem == nil) {
         _copyMenuItem = [[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(copyMessage:)];
     }
@@ -887,32 +878,21 @@ static const CGFloat section_header_h = 60;
     if (_moreMenuItem == nil) {
         _moreMenuItem = [[UIMenuItem alloc] initWithTitle:@"多选" action:@selector(moreMessage:)];
     }
-    
     NSMutableArray<UIMenuItem *> *_arrMenu = [NSMutableArray arrayWithObjects:_copyMenuItem,_forwardMenuItem,_deleteMenuItem, _moreMenuItem,nil];
-    
     if (message.isSender) {
-        
         NSInteger currentTime = [MMMessageHelper currentMessageTime];
         NSInteger interval    = currentTime - message.localtime;
-        
         //三分钟内可撤回
         if ((interval/1000) <= 3*60 && message.deliveryState == MMMessageDeliveryState_Delivered) {
             if (_recallMenuItem == nil) {
                 _recallMenuItem = [[UIMenuItem alloc] initWithTitle:@"撤回" action:@selector(recallMessage:)];
             }
-            
             [_arrMenu addObject:_recallMenuItem];
         }
     }
-    
     UIMenuController *menu = [UIMenuController sharedMenuController];
-    
-    //设置选项
     [menu setMenuItems:_arrMenu];
-    
-    //菜单箭头方向
     menu.arrowDirection = UIMenuControllerArrowDefault;
-    
     [menu setTargetRect:showInView.frame inView:showInView.superview];
     [menu setMenuVisible:YES animated:YES];
 }
@@ -932,14 +912,12 @@ static const CGFloat section_header_h = 60;
     }
 }
 
-
 //MARK: - 删除
 - (void)deleteMessage:(UIMenuItem *)deleteMenuItem
 {
     if (self.dataSource && _longIndexPath && [self.dataSource count] > _longIndexPath.row) {
         // 这里还应该把本地的消息附件删除
         MMMessageFrame *messageF = [self.dataSource objectAtIndex:_longIndexPath.row];
-        
         NSDictionary *dicParams = @{
                                     @"cmd":@"delMsgHis",
                                     @"sessionId":[ZWUserModel currentUser] ? [ZWUserModel currentUser].sessionID:@"",
@@ -971,26 +949,38 @@ static const CGFloat section_header_h = 60;
                                 }];
     }
 }
-
-
-//MARK: - 消息撤回
+// - 消息撤回
 - (void)recallMessage:(UIMenuItem *)recallMenuItem
 {
     if (self.dataSource && [self.dataSource count] > _longIndexPath.row) {
-        // 这里应该发送消息撤回的网络请求
         MMMessageFrame * messageF = [self.dataSource objectAtIndex:_longIndexPath.row];
+        //拿到当前消息id.走tcp 进行消息撤回操作.成功之后.刷新UI即可
+        WEAKSELF
+        NSString *toUserID = messageF.aMessage.toID;
+        NSString *toUserName;
+        NSString *cmd = @"groupRevokeMsg";
+        if (messageF.aMessage.cType != MMConversationType_Group) {
+            toUserName = messageF.aMessage.toUserName;
+            cmd = @"revokeMsg";
+        }
+        MMMessage *message = [[MMChatHandler shareInstance] WithdrawMessageWithMessageID:messageF.aMessage toUserID:toUserID toUserName:toUserName cmd:cmd completion:^(MMMessage * _Nonnull message) {
+            //此时,已经撤回成功啦.可以展示在界面上面啦
+            //保存在本地数据库.
+            //服务器成功之后删除本地数据库呗撤回的消息
+            //被删除的message
+            //MMMessage *delemessage = messageF.aMessage;
+            //存储,实在handle 里面
+            [weakSelf updateSendStatusUIWithMessage:message];
+        }];
+        [weakSelf clientManager:nil didReceivedMessage:message];
+        //删除本地
         [self.dataSource removeObject:messageF];
-        
         self.textView.text = messageF.aMessage.slice.content;
-        
+        //更新UI
         [self.tableView reloadData];
-//        MMMessageFrame *msgF = [MMMessageHelper createMessageFrame:TypeSystem content:@"你撤回了一条消息" path:nil from:@"gxz" to:self.group.gId fileKey:nil isSender:YES receivedSenderByYourself:NO];
-//        [self.dataSource insertObject:msgF atIndex:_longIndexPath.row];
-//        [self.tableView reloadData];
     }
    
 }
-
 
 - (void)statusChanged:(MMMessageFrame *)messageF
 {
@@ -1078,7 +1068,6 @@ static const CGFloat section_header_h = 60;
         _sectionHeader = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, section_header_h)];
         _sectionHeader.backgroundColor = [UIColor clearColor];
         _sectionHeader.alpha = 0.3;
-        
         [_sectionHeader addSubview:self.labSectionTime];
     }
     return _sectionHeader;
@@ -1097,7 +1086,6 @@ static const CGFloat section_header_h = 60;
                                        AndTxtFont:FONT(13)
                                AndBackgroundColor:[UIColor colorWithHexString:@"#A1BDC7"]];
         _labSectionTime.textAlignment = NSTextAlignmentCenter;
-        
         //圆角
         _labSectionTime.layer.cornerRadius = h * 0.5;
         _labSectionTime.layer.masksToBounds = YES;
@@ -1169,13 +1157,9 @@ static const CGFloat section_header_h = 60;
         ZWWLog(@"我收到一条不属于当前聊天的消息")
         return;
     }
-    
     MMMessageFrame *mf = [[MMMessageFrame alloc] init];
     mf.aMessage = message;
-    
-    
     ZWWLog(@"是否是历史记录:%d",message.isInsert);
-    
     if (message.isInsert) {
         [self.dataSource insertObject:mf atIndex:0];
         [self.tableView reloadData];
@@ -1188,7 +1172,6 @@ static const CGFloat section_header_h = 60;
 }
 
 #pragma mark - Private
-
 
 /**
  刷新发送状态
@@ -1224,7 +1207,6 @@ static const CGFloat section_header_h = 60;
  */
 - (void)addCurrentConversationToChatList
 {
-    
     if (self.dataSource.count) {
         MMMessageFrame *messageF = [self.dataSource lastObject];
         if (!self.isGroup) {
@@ -1234,9 +1216,10 @@ static const CGFloat section_header_h = 60;
             messageF.aMessage.conversation = _conversationModel.toUid;
             [[MMChatDBManager shareManager] addOrUpdateConversationWithMessage:messageF.aMessage isChatting:YES];
         }
-        if ([messageF.aMessage.fromID isEqualToString:[ZWUserModel currentUser].userId] && !messageF.aMessage.isInsert) {
+        NSString * userId = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+        NSString * fromID = [NSString stringWithFormat:@"%@",messageF.aMessage.fromID];
+        if ([fromID isEqualToString:userId] && !messageF.aMessage.isInsert) {
             // 消息是自己发送的，则更新消息列表最新消息UI
-            
             [[MMClient sharedClient].chatListViewC addOrUpdateConversation:messageF.aMessage.toID latestMessage:messageF isRead:YES];
         }
     }

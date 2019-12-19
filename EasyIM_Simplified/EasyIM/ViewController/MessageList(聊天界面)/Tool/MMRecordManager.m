@@ -44,7 +44,6 @@
 {
     NSError *error = nil;
     if (![[MMRecordManager shareManager] canRecord]) {
-        //        [MBProgressHUD showError:@"请在手机设置中打开录音权限" toView:[UIApplication sharedApplication].keyWindow];
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"无法录音" message:@"请在iPhone的“设置-隐私-麦克风”选项中，允许iCom访问你的手机麦克风。" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [alert show];
         if (completion) {

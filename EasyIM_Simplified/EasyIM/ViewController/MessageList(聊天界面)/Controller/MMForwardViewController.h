@@ -13,7 +13,6 @@
 //MARK: -Model
 #import "MMCommonModel.h"
 
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MMFAnyDataDelegate <NSObject>
@@ -21,8 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)forwardMessageData:(NSMutableArray *)selectData;
 
 @end
-
-
 /**
  转发
  */
@@ -34,9 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UITableView *tableView;
 
-
 @property (nonatomic, weak) id<MMFAnyDataDelegate> delegate;
-
 
 - (void)hintFullForward;
 

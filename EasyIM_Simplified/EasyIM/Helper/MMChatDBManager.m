@@ -192,7 +192,20 @@ static MMChatDBManager *instance = nil;
     versations(conversations);
     
 }
-
+- (void)deleMessage:(MMMessage *)message{
+    [self message:message baseId:YES isExist:^(BOOL isExist, FMDatabase *db) {
+        if (isExist) {
+            //删除
+            NSString *msgId = message.msgID;
+            BOOL success = [db executeUpdate:@"DELETE from message WHERE id = ?",msgId];
+            if (success) {
+                ZWWLog(@"删除成功被撤回的消息成功");
+            }else{
+                ZWWLog(@"删除失败被撤回的消息失败");
+            }
+        }
+    }];
+}
 - (void)addMessage:(MMMessage *)message
 {
     

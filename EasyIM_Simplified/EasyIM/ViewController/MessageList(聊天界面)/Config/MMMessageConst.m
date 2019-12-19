@@ -70,7 +70,7 @@ NSString *const TypeSystem      = @"system";
 NSString *const TypePicText     = @"picText";
 NSString *const TypeLocation    = @"location";
 NSString *const TypeLinkMan     = @"linkman";
-
+NSString *const TypeWithdraw     = @"TypeWithdraw";//撤回
 
 
 /************Notification*************/

@@ -17,49 +17,33 @@
 @property (nonatomic, strong) NSMutableArray *dataArr;
 @property (nonatomic, strong) UIButton *rightBtn;
 @property (nonatomic, strong) NSString *name;
-
-
 @end
-
 @implementation MMDocumentViewController
-
 #pragma mark - Getter
-
 - (UITableView *)tableView{
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, ZWStatusAndNavHeight, KScreenWidth, KScreenHeight-ZWStatusAndNavHeight) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight - ZWTabbarSafeBottomMargin) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate   = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
     return _tableView;
 }
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self setupNav];
-    
     [self setupSubviews];
-    
     [self loadData];
-    
 }
-
-
-
-#pragma mark - NAV
-
 - (void)setupNav
 {
     self.view.backgroundColor = [UIColor whiteColor];
     [self setTitle:@"本机文件"];
-    
     UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
     [rightButton setTitle:@"发送" forState:UIControlStateNormal];
     rightButton.titleLabel.font = [UIFont systemFontOfSize:17];
     [rightButton addTarget:self action:@selector(rightBarButtonClicked)forControlEvents:UIControlEventTouchUpInside];
-    //self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:rightButton];
     [rightButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.rightBtn = rightButton;
@@ -69,7 +53,7 @@
     [leftButton addTarget:self action:@selector(leftBarButtonClicked)forControlEvents:UIControlEventTouchUpInside];
     [leftButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     leftButton.titleLabel.font = [UIFont systemFontOfSize:17];
-    //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:leftButton];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:leftButton];
 }
 
 #pragma mark - Event
@@ -99,26 +83,18 @@
         }
     }
     
-        NSLog(@"fileMainPath=======%@",[MMFileTool fileMainPath]);
+        ZWWLog(@"fileMainPath=======%@",[MMFileTool fileMainPath]);
 }
-
-
 #pragma mark - UI
-
 - (void)setupSubviews
 {
     [self.view addSubview:self.tableView];
 }
-
-
 #pragma mark - UITableViewDataSource
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.dataArr.count;
 }
-
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     MMDocumentCell *cell = [MMDocumentCell cellWithTableView:tableView];

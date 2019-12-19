@@ -30,7 +30,7 @@
         _fromID = fromUser;
         _type = chatType;//单聊,群聊,视频,语音,文件,联系人,位置
         _sessionID = sessionId;
-        //张威威  在这里,配置messid  因为进到聊天界面,会创建当前message 对象,保证唯一性和全局性
+        // 在这里,配置messid  因为进到聊天界面,会创建当前message 对象,保证唯一性和全局性
         _msgID = [self messageIDWithFromid:fromUser ToId:toUser];
         _isSender = isSender;
         _cType = cType;
@@ -44,7 +44,7 @@
      msgid ++;
     NSString *timestamp = [MMDateHelper getMessageNowTime];
     NSString *sequence = [NSString stringWithFormat:@"%05d",msgid];
-    ZWWLog(@"生成的有规律的五位数字=%@",sequence)
+    //ZWWLog(@"生成的有规律的五位数字=%@",sequence)
     NSString *mid = [NSString stringWithFormat:@"%@_%@_%@_%@",timestamp,sequence,fromid,toid];
     ZWWLog(@"生成的mid=%@",mid)
     return mid;

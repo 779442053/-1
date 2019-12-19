@@ -8,16 +8,20 @@
 @interface BaseNavgationController ()<UINavigationControllerDelegate>
 
 @end
-
 @implementation BaseNavgationController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationBar.hidden = YES;
+    [[UINavigationBar appearance] setTranslucent:NO];
 }
 -(void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
     ZWWLog(@"基类 拦截带有导航的present 方法==基类 拦截带有导航的present 方法")
     viewControllerToPresent.modalPresentationStyle = 0;
+    if ([viewControllerToPresent isKindOfClass:[UIImagePickerController class]]) {
+        ZWWLog(@"选择相册,将导航栏显示出来")
+        viewControllerToPresent.navigationController.navigationBar.hidden = YES;
+        viewControllerToPresent.navigationController.navigationBar.translucent = NO;
+    }
     [super presentViewController:viewControllerToPresent animated:flag completion:completion];
 }
 

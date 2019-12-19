@@ -2293,8 +2293,8 @@
 		C4C662D32383DDCA0024C454 /* ZWPhotoHelper(一句代码调用相机相册) */ = {
 			isa = PBXGroup;
 			children = (
-				C4C662D42383DDCA0024C454 /* ZWPhotoHelper.m */,
 				C4C662D52383DDCA0024C454 /* ZWPhotoHelper.h */,
+				C4C662D42383DDCA0024C454 /* ZWPhotoHelper.m */,
 			);
 			path = "ZWPhotoHelper(一句代码调用相机相册)";
 			sourceTree = "<group>";

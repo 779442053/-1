@@ -247,7 +247,7 @@ static MMDateHelper *shared = nil;
     
     ///< 打印推算时间
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd_hh:mm:ss"];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *calculateStr = [formatter stringFromDate:calculatedate];
     
     DDLog(@"calculateStr 推算时间: %@",calculateStr );

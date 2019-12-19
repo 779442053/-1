@@ -25,6 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
  @param message 消息模型
  */
 - (void)addMessage:(MMMessage *)message;
+/**
+ 向数据库删除消息
+ 
+ @param message 消息模型
+ */
+- (void)deleMessage:(MMMessage *)message;
 
 /**
  更新消息
