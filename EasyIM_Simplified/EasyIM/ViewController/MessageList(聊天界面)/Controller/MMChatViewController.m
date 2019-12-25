@@ -39,7 +39,7 @@ static const CGFloat section_header_h = 60;
     UIMenuItem * _recallMenuItem;
     UIMenuItem * _moreMenuItem;
     NSIndexPath *_longIndexPath;
-    BOOL   _isKeyBoardAppear;     // 键盘是否弹出来了
+    //BOOL   _isKeyBoardAppear;     // 键盘是否弹出来了
 }
 @property (nonatomic, strong) MMChatBoxViewController *chatBoxVC;
 @property (nonatomic, strong) UITableView *tableView;
@@ -100,18 +100,15 @@ static const CGFloat section_header_h = 60;
     }
     return self;
 }
-
 - (void)setIsGroup:(BOOL)isGroup
 {
     _isGroup = isGroup;
     ZWWLog(@"是不是群聊==%d",isGroup)
     //[self setTitle:[_conversationModel getTitle]];
 }
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //这是聊天 代理
     [MMClient sharedClient].chattingConversation = self;
     [[MMClient sharedClient] addDelegate:self];
     [self setupUI];
@@ -119,11 +116,15 @@ static const CGFloat section_header_h = 60;
     [self.tableView.mj_header beginRefreshing];
     [self updateUnreadMessageRedIconForListAndDB];
     [self registerNotific];
+    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    [rightBtn setBackgroundImage:[UIImage imageNamed:@"chat_info_icon"] forState:UIControlStateNormal];
+    rightBtn.frame = CGRectMake(KScreenWidth - 20 - 20, ZWStatusBarHeight + 10, 20, 20);
+    [self.navigationView addSubview:rightBtn];
+    [[rightBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
+        [self rightBarButtonClicked];
+    }];
     //进到当前界面,先获取当前用户是否给我发送了消息.获取离线用户消息.或者群消息
-    
-    
 }
-
 // 更新消息列表未读消息数量, 更新数据库
 - (void)updateUnreadMessageRedIconForListAndDB
 {
@@ -132,17 +133,13 @@ static const CGFloat section_header_h = 60;
         [[MMChatDBManager shareManager] updateUnreadCountOfConversation:_conversationModel.toUid unreadCount:0];
     });
 }
-
 - (void)setupUI
 {
     NSString *title = [_conversationModel getTitle];
     [self setTitle:title];
     [self showLeftBackButton];
-
     [MMManagerGlobeUntil sharedManager].toUid = _conversationModel.toUid;
     [MMManagerGlobeUntil sharedManager].userName = [_conversationModel getTitle];
-    
-    
     self.view.backgroundColor = MMColor(240, 237, 237);
     // 注意添加顺序
     [self addChildViewController:self.chatBoxVC];
@@ -301,11 +298,9 @@ static const CGFloat section_header_h = 60;
 {
     //MARK:个人信息
     if ([_conversationModel.cmd isEqualToString:@"sendMsg"]) {
-        
         FriendInfoViewController *friend = [[FriendInfoViewController alloc] init];
         friend.userId = _conversationModel.toUid;
         friend.isFriend = NO;
-        
         //存在于通讯录即为好友
         NSArray *arrTemp = [MMContactsViewController shareInstance].arrData;
         if(arrTemp){
@@ -320,7 +315,6 @@ static const CGFloat section_header_h = 60;
                 }
             }
         }
-        
         [self.navigationController pushViewController:friend animated:YES];
     }
     //MARK:群信息
@@ -453,11 +447,11 @@ static const CGFloat section_header_h = 60;
         ZWWLog(@"键盘回复原样状态")
         [self.tableView reloadData];
         [self scrollToBottom];
-        _isKeyBoardAppear  = NO;
+        //_isKeyBoardAppear  = NO;
     } else {
          ZWWLog(@"键盘弹出")
         [self scrollToBottom];
-        _isKeyBoardAppear  = YES;
+        //_isKeyBoardAppear  = YES;
     }
     if (self.textView == nil) {
         self.textView = chatboxViewController.chatBox.textView;
@@ -956,14 +950,11 @@ static const CGFloat section_header_h = 60;
         MMMessageFrame * messageF = [self.dataSource objectAtIndex:_longIndexPath.row];
         //拿到当前消息id.走tcp 进行消息撤回操作.成功之后.刷新UI即可
         WEAKSELF
-        NSString *toUserID = messageF.aMessage.toID;
-        NSString *toUserName;
         NSString *cmd = @"groupRevokeMsg";
         if (messageF.aMessage.cType != MMConversationType_Group) {
-            toUserName = messageF.aMessage.toUserName;
             cmd = @"revokeMsg";
         }
-        MMMessage *message = [[MMChatHandler shareInstance] WithdrawMessageWithMessageID:messageF.aMessage toUserID:toUserID toUserName:toUserName cmd:cmd completion:^(MMMessage * _Nonnull message) {
+        MMMessage *message = [[MMChatHandler shareInstance] WithdrawMessageWithMessageID:messageF.aMessage cmd:cmd completion:^(MMMessage * _Nonnull message) {
             //此时,已经撤回成功啦.可以展示在界面上面啦
             //保存在本地数据库.
             //服务器成功之后删除本地数据库呗撤回的消息
@@ -1170,17 +1161,13 @@ static const CGFloat section_header_h = 60;
         [self scrollToBottom];
     }
 }
-
 #pragma mark - Private
-
 /**
  刷新发送状态
- 
  @param aMessage 消息体
  */
 - (void)updateSendStatusUIWithMessage:(MMMessage *)aMessage
 {
-    
     //谓词搜索当前message所在的位置
     NSPredicate *pr = [NSPredicate predicateWithFormat:@"aMessage == %@",aMessage];
     NSArray *arrTemp = [_dataSource  filteredArrayUsingPredicate:pr];
@@ -1198,10 +1185,7 @@ static const CGFloat section_header_h = 60;
             cell.modelFrame = self.dataSource[index];
         }
     }
-    
 }
-
-
 /**
  将当前会话添加到消息列表中
  */

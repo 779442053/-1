@@ -24,54 +24,38 @@
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *preView;
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) UIButton *btnLight;         //电灯开关
-
-
 ///记录向上滑动最小边界
 @property (nonatomic, assign) CGFloat minY;
-
 ///记录向下滑动最大边界
 @property (nonatomic, assign) CGFloat maxY;
-
 ///扫描区域图片
 @property (nonatomic, strong) UIImageView *imageV;
-
 ///扫描区域的横线是否是应该向上跑动
 @property (nonatomic, assign) BOOL shouldUp;
-
 @end
 
 @implementation SweepViewController
-
 - (void)viewWillAppear:(BOOL)animated {
-
     [self.session startRunning];
 }
-
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    
     //电灯按钮设置为关
     self.btnLight.selected = NO;
     [self lightTenOnOff:NO];
 }
-
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
-    
     CGFloat x = 0.f;
     CGFloat w = 0.f;
     CGFloat h = 0.f;
     CGFloat y = 0.f;
-    
     CGRect rectWindow = [UIScreen mainScreen].bounds;
-    
     //MARK: - 导航
-    UIImageView *navImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, rectWindow.size.width, 66)];
+    UIImageView *navImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, rectWindow.size.width, 70)];
     navImg.backgroundColor = [UIColor blackColor];
     navImg.alpha = 0.45f;
     [self.view addSubview:navImg];
-    
     //MARK:返回
     w = 24.f;
     h = 24.f;
@@ -142,21 +126,17 @@
 
 //MARK: - 返回
 - (void)backAction:(UIButton *)sender {
-    
     //present 进入
     if([self presentingViewController] != nil)
         [self dismissViewControllerAnimated:YES completion:nil];
     else
         [self.navigationController popViewControllerAnimated:YES];
-
     //关闭扫码
     [self.session stopRunning];
-    
 }
 
 //MARK: - 相册
 - (void)btnPhotoAction:(UIButton *)sender {
-    
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         if(status != PHAuthorizationStatusAuthorized){
            dispatch_async(dispatch_get_main_queue(), ^{
@@ -173,6 +153,10 @@
             imgPickerController.delegate = self;
             imgPickerController.allowsEditing = YES;
             [imgPickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+            imgPickerController.navigationBar.translucent = NO;
+            imgPickerController.modalPresentationStyle = 0;
+            //.edgesForExtendedLayout = UIEdgeInsetsMake(66, 0, 0, 0);
+            //[imgPickerController.view setY:60];
             [self presentViewController:imgPickerController animated:YES completion:nil];
         }
     }];

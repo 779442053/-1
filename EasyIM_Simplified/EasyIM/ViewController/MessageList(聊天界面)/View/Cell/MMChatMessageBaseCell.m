@@ -104,7 +104,6 @@
     }else{
         self.nameLabel.hidden = YES;
     }
-
     //MARK:发送者
     if (aMessage.isSender) {
         self.headImageView.tag   = [[ZWUserModel currentUser].userId integerValue];
@@ -144,8 +143,6 @@
 
 - (void)updateSendStatus:(MessageDeliveryState)status
 {
-    
-    // 发送状态
     switch (status) {
         case MMMessageDeliveryState_Delivering:
         {

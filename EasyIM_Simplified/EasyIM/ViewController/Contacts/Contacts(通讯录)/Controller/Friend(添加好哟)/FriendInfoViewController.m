@@ -81,14 +81,12 @@
         make.left.mas_equalTo(bottomView.mas_left).with.mas_offset(17);
         make.height.mas_equalTo(15);
     }];
-    
     [bottomView addSubview:self.RightimageV];
     [self.RightimageV mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(bottomView.mas_centerY);
         make.right.mas_equalTo(bottomView.mas_right).with.mas_offset(-17);
         make.size.mas_equalTo(CGSizeMake(7, 11));
     }];
-    
     [bottomView addPanGestureRecognizer:^(UIPanGestureRecognizer * _Nonnull recognizer, NSString * _Nonnull gestureId) {
         ZWWLog(@"设置备注")
         EditFriendRemarkController *editRemarkVC = [[EditFriendRemarkController alloc] init];
@@ -115,7 +113,6 @@
              [MMProgressHUD showHUD:@"用户信息不存在"];
          }
     }];
-    
      UIButton *deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     deleteBtn.frame = CGRectMake(10,CGRectGetMaxY(self.addBtn.frame)+20, SCREEN_WIDTH - 20, 45);
     [deleteBtn setTitle:@"删除好友" forState:UIControlStateNormal];

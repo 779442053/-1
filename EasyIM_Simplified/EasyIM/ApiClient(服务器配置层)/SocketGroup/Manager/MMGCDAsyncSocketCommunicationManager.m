@@ -372,10 +372,7 @@
             //MARK:11.解散群回调 deleteGroup
             case GCDSocketTCPCmdTypeDeleteGroup:
             {
-                if (![jsonDic[@"fromID"] isEqualToString:[ZWUserModel currentUser].userId]) {
-                    [self showAlertWithMessage:[NSString stringWithFormat:@"群主%@已将%@群解散", jsonDic[@"fromID"],jsonDic[@"groupID"]]];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTS_RELOAD object:nil userInfo:jsonDic];
-                }
+                
             }
                 break;
             //MARK:12.退出群回调 exitGroup

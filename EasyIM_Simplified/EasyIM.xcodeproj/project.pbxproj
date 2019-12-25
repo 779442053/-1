@@ -65,6 +65,7 @@
 		28233D7B238673CA0085D18B /* ZWFindPswViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 28233D7A238673CA0085D18B /* ZWFindPswViewModel.m */; };
 		28335675239DDEE600455EE0 /* ZWProfileEditerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28335674239DDEE600455EE0 /* ZWProfileEditerViewController.m */; };
 		2833733A2397AACB00CBA642 /* BaseNavgationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 283373392397AACB00CBA642 /* BaseNavgationController.m */; };
+		2853924223B3A45A00012E73 /* ZWSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2853924123B3A45A00012E73 /* ZWSearch.m */; };
 		286A8A552398AC0B00B2A069 /* ZWAddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A542398AC0B00B2A069 /* ZWAddFriendViewController.m */; };
 		286A8A582398D76700B2A069 /* ZWAddFriendViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A572398D76700B2A069 /* ZWAddFriendViewModel.m */; };
 		286A8A5C2398EA5900B2A069 /* ZWSearchBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A5B2398EA5900B2A069 /* ZWSearchBarView.m */; };
@@ -589,6 +590,8 @@
 		28335674239DDEE600455EE0 /* ZWProfileEditerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWProfileEditerViewController.m; sourceTree = "<group>"; };
 		283373382397AACB00CBA642 /* BaseNavgationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseNavgationController.h; sourceTree = "<group>"; };
 		283373392397AACB00CBA642 /* BaseNavgationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseNavgationController.m; sourceTree = "<group>"; };
+		2853924023B3A45A00012E73 /* ZWSearch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWSearch.h; sourceTree = "<group>"; };
+		2853924123B3A45A00012E73 /* ZWSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWSearch.m; sourceTree = "<group>"; };
 		286A8A532398AC0B00B2A069 /* ZWAddFriendViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWAddFriendViewController.h; sourceTree = "<group>"; };
 		286A8A542398AC0B00B2A069 /* ZWAddFriendViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWAddFriendViewController.m; sourceTree = "<group>"; };
 		286A8A562398D76700B2A069 /* ZWAddFriendViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWAddFriendViewModel.h; sourceTree = "<group>"; };
@@ -2400,6 +2403,8 @@
 		EDB6F6202223839A004CA268 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2853924023B3A45A00012E73 /* ZWSearch.h */,
+				2853924123B3A45A00012E73 /* ZWSearch.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3551,6 +3556,7 @@
 				86825FE221DE58D5005CB171 /* AppDelegate.m in Sources */,
 				181649C4230E409E009A9A66 /* MMAboutViewController.m in Sources */,
 				8625B64E21EB7CD20050C023 /* UIView+Extension.m in Sources */,
+				2853924223B3A45A00012E73 /* ZWSearch.m in Sources */,
 				188727E1230BD00A00B34FE6 /* ChatViewController.m in Sources */,
 				FAC2FBD2232616B900FF8C10 /* MMLineConversionViewController.m in Sources */,
 				C4C662DF2383DDCB0024C454 /* ZWPhotoHelper.m in Sources */,

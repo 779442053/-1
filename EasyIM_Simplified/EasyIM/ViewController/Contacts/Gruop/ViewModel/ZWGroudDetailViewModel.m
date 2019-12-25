@@ -14,7 +14,11 @@
     self.getGroupPeopleListCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
              @strongify(self)
-            [self.request POST:groupmember parameters:input success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+            NSMutableDictionary *parma  = [[NSMutableDictionary alloc]init];
+            parma[@"groupid"] = input;
+            parma[@"page"] = @"0";
+            parma[@"perpage"] = @"100";
+            [self.request POST:groupmember parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 ZWWLog(@"==群成员=%@",responseString)
                 if (responseString && [responseString[@"code"] integerValue] == 1){
                     NSDictionary *_dicTemp = responseString[@"data"][@"data"];
@@ -41,15 +45,20 @@
     self.exitGroupWithGroupid = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
-            NSDictionary *dic = @{
-            @"cmd":@"exitGroup",
-            @"sessionId":[ZWUserModel currentUser].sessionID,
-            @"groupid":input[@"groupid"],
-            @"msg":input[@"msg"]
-            };
-            [self.request POST:@"" parameters:dic success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
-                [subscriber sendCompleted];
-            } failure:^(ZWRequest *request, NSError *error) {
+            NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+            parma[@"type"] = @"req";
+            parma[@"cmd"] = @"exitGroup";
+            parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+            parma[@"groupID"] = input[@"groupid"];
+            parma[@"msg"] = input[@"msg"];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    //发出通知,更新界面UI
+                    [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTS_RELOAD object:nil];
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
                 [subscriber sendCompleted];
             }];
             return [RACDisposable disposableWithBlock:^{
@@ -61,19 +70,20 @@
     self.deleteGroupWithGroupId = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
-            NSDictionary *dic = @{
-            @"groupid":input[@"groupid"]
-            };
-            [self.request POST:deletegroup parameters:dic success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+            NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+            parma[@"groupid"] = input;
+            [self.request POST:deletegroup parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 if ([responseString[@"code"] intValue] == 1) {
-                    [YJProgressHUD showSuccess:@"删除成功"];
+                    [YJProgressHUD showSuccess:@"解散成功"];
+                    //发送通知,进行请求自己最近联系人
+                    [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTS_RELOAD object:nil];
                     [subscriber sendNext:@{@"code":@"0"}];
                 }else{
                     [YJProgressHUD showError:@"删除失败"];
                 }
                 [subscriber sendCompleted];
             } failure:^(ZWRequest *request, NSError *error) {
-                [YJProgressHUD showError:@"系统错误,请稍后再来"];
+                [YJProgressHUD showError:@"解散错误,请稍后再来"];
                 [subscriber sendCompleted];
             }];
             return [RACDisposable disposableWithBlock:^{
@@ -86,13 +96,12 @@
     self.setGroupSDNCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
            return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
                @strongify(self)
-               NSDictionary *dic = @{
-               @"cmd":@"exitGroup",
-               @"sessionId":[ZWUserModel currentUser].sessionID,
-               @"groupid":input[@"groupid"],
-               @"msg":input[@"msg"]
-               };
-               [self.request POST:@"" parameters:dic success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+               [self.request POST:setusergroupnotify parameters:input success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+                   if ([responseString[code] intValue] == 1) {
+                       [subscriber sendNext:@{@"code":@"0"}];
+                   }else{
+                       [subscriber sendNext:@{@"code":@"1"}];
+                   }
                    [subscriber sendCompleted];
                } failure:^(ZWRequest *request, NSError *error) {
                    [subscriber sendCompleted];
@@ -115,6 +124,31 @@
             [self.request POST:@"" parameters:dic success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 [subscriber sendCompleted];
             } failure:^(ZWRequest *request, NSError *error) {
+                [subscriber sendCompleted];
+            }];
+            return [RACDisposable disposableWithBlock:^{
+                
+            }];
+        }];
+    }];
+    
+    //群主踢人
+    self.kickPeopleFromGroupCommand =[[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+        return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+            NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+            parma[@"type"] = @"req";
+            parma[@"cmd"] = @"kickGroupMember";
+            parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+            parma[@"memberID"] = input[@"memberID"] ;
+            parma[@"class"] = @"0";
+            parma[@"groupID"] = input[@"groupID"];
+            parma[@"msg"] = input[@"msg"];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
                 [subscriber sendCompleted];
             }];
             return [RACDisposable disposableWithBlock:^{

@@ -57,34 +57,26 @@ static MMClient *helper = nil;
         [_multiDelegate addDelegate:delegate];
     }
 }
-
 #pragma mark - <移除当前代理>
-
 - (void)removeDelegate:(id<MMChatManager>)delegate
 {
     [_multiDelegate removeDelegate:delegate];
 }
-
 #pragma mark - <移除所有代理>
 - (void)clearAllDelegates
 {
     [_multiDelegate removeAllDelegates];
 }
-
 #pragma mark - Hangdles
-
 - (void)addHandleChatMessage:(NSDictionary *)aMessage
 {
-    
     MMLog(@"收到单聊消息===将该条消息转化成已读状态===============%@",aMessage);
     NSDictionary *userDic = aMessage[@"list"][@"user"];
     if (![userDic isKindOfClass:[NSDictionary class]]) {
         MMLog(@"消息格式有误！详见：%@",userDic);
         return;
     }
-    
     MMReceiveMessageModel *receiveModel = [MMReceiveMessageModel mj_objectWithKeyValues:userDic];
-
     MMChatContentModel *chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"content"][@"slice"]];
     if ([[userDic allKeys] containsObject:@"msg"]) {
         chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"msg"][@"slice"]];
@@ -111,9 +103,7 @@ static MMClient *helper = nil;
     MMLog(@"%d",message.isInsert);
     MMLog(@"%@",message.conversation);
     message.isInsert = receiveModel.isInsert;
-    
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // 消息插入数据库
         [[MMChatDBManager shareManager] addMessage:message];
         // 会话插入数据库或者更新会话

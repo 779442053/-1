@@ -23,7 +23,6 @@
 @property(nonatomic ,assign)int reconnectNum;///当前重连的连接次数
 @property(nonatomic,strong)ZWSocketConfig * configM;
 @property(nonatomic,assign)SGSocketConnectState connectState;
-
 @property(nonatomic,copy)SocketConnectResponseBlock connectBlock;
 //消息发送成功回调
 @property(nonatomic,copy)SocketDidReadBlock DidReadBlock;
@@ -32,7 +31,6 @@
 @end
 static ZWSocketManager * _instance = nil;
 @implementation ZWSocketManager
-
 typedef struct {
     uint16_t len;//有效负载长度,  2BYTE
     uint8_t  zip;//压缩 > 0 启用,1BYTE
@@ -252,17 +250,31 @@ typedef struct {
         NSInteger type = ZWGCDSocketTCPCmdTypeEnum(strCMD);
         switch (type) {
             case GCDSocketTCPCmdTypeHeartBeat:
-                ZWWLog(@"/** heartBeat 心跳包 */")
+                //ZWWLog(@"/** heartBeat 心跳包 */")
                 return;
             case GCDSocketTCPCmdTypeUpdateuserstate:
-                ZWWLog(@"全局通知一个用户下线暂不用直接返回")
+                ZWWLog(@"全局通知一个用户下线暂不用直接返回.登录或者修改用户在线状态")
                 [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTS_LINE object:jsonDic];
                 return;
             case GCDSocketTCPCmdTypeFriendStatus:
-                ZWWLog(@"好友上线通知")
+            {
+                ZWWLog(@"好友上线通知=%@",jsonDic)
+                [YHUtils playVoiceForMessage];
+                [ZWMessage success:@"好友上线了" title:@"温馨提示"];
+            }
                 return;
             case GCDSocketTCPCmdTypeInviteFrd2Group:
-                ZWWLog(@"邀请好友入群")
+                ZWWLog(@"邀请好友入群=%@",jsonDic)
+                if ([jsonDic[@"ret"] isEqualToString:@"1"]) {
+                    if (self.DidReadBlock) {
+                        ZWWLog(@"邀请成功 1")
+                        self.DidReadBlock(nil,jsonDic);
+                    }
+                }else{
+                   if (self.DidReadBlock) {
+                        self.DidReadBlock(error,nil);
+                    }
+                }
                 break;
             case  GCDSocketTCPCmdTypeHasBulletin:
                 ZWWLog(@"好友通知")
@@ -303,7 +315,6 @@ typedef struct {
                 if ([jsonDic.allKeys containsObject:@"sessionID"]) {
                     [ZWUserModel currentUser].sessionID = jsonDic[@"sessionID"];
                     [ZWDataManager saveUserData];
-                    ZWWLog(@"开始心跳连接")
                     [[ZWSocketManager shareInstance]startPingTimer];
                 }
             }else{//1.2 处理在别的设备登入你的账号时
@@ -330,9 +341,8 @@ typedef struct {
             //MARK:3.读取消息 对方读取了我的消息
             case GCDSocketTCPCmdTypeFetchMsg:
             {
-                //播放消息声音
-                //MessagedidReadBlock(nil,jsonDic);
                 [YHUtils playVoiceForMessage];
+                //交给聊天桥接 工具进行消息的处理
                 [[MMClient  sharedClient] addHandleChatMessage:jsonDic];
             }
                 break;
@@ -393,7 +403,7 @@ typedef struct {
                 NSString *strGroupId = [NSString stringWithFormat:@"%@",jsonDic[@"list"][@"group"][@"groupID"]];
                 NSString *strUserId = [[NSUserDefaults standardUserDefaults] stringForKey:strGroupId];
                 if (strUserId.checkTextEmpty && [ZWUserModel currentUser] && [[ZWUserModel currentUser].userId isEqualToString:strUserId]) {
-                    MMLog(@"用户[%@]已开启对群[%@]消息免打扰",strUserId,strGroupId);
+               ZWWLog(@"用户[%@]已开启对群[%@]消息免打扰",strUserId,strGroupId);
                 }
                 else{
                     //播放消息声音
@@ -441,18 +451,53 @@ typedef struct {
             //MARK:11.解散群回调 deleteGroup
             case GCDSocketTCPCmdTypeDeleteGroup:
             {
-                if (![jsonDic[@"fromID"] isEqualToString:[ZWUserModel currentUser].userId]) {
+                if ([jsonDic[@"fromID"] isEqualToString:[ZWUserModel currentUser].userId]) {
                     [self showAlertWithMessage:[NSString stringWithFormat:@"群主%@已将%@群解散", jsonDic[@"fromID"],jsonDic[@"groupID"]]];
                     [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTS_RELOAD object:nil userInfo:jsonDic];
                 }
             }
                 break;
-            //MARK:12.退出群回调 exitGroup
+                /**踢人出群回调*/
+            case GCDSocketTCPCmdTypekickGroupMember:
+            {//受到该消息,z说明群主提出了某一个群成员
+                if ([jsonDic[@"result"] intValue] == 1) {
+                    if ([jsonDic[@"memberID"] isEqualToString:[ZWUserModel currentUser].userId]){
+                        //.说明我被踢出群了
+                        [ZWMessage message:@"你被群主踢出了群聊" title:@"群消息提醒:"];
+                    }else{
+                        //受到别人退出群的系统消息
+                        [YHUtils playVoiceForMessage];
+                        [[MMClient  sharedClient] addHandleGroupMessage:jsonDic];
+                    }
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(nil, jsonDic);
+                    }
+                }else{
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(error, jsonDic);
+                    }
+                }
+            }
+                break;
+            //MARK:12.退出群回调 exitGroup需要封装成系统消息,进行界面提示
+                //当别人退出群的时候,主动接受该消息
             case GCDSocketTCPCmdTypeExitGroup:
             {
-                //暂时先这么写,以后放到通知列表里
-                if (![jsonDic[@"fromID"] isEqualToString:[ZWUserModel currentUser].userId]) {
-                    [self showAlertWithMessage:[NSString stringWithFormat:@"%@已退群出%@群",jsonDic[@"fromID"],jsonDic[@"groupID"]]];
+                if ([jsonDic[@"result"] intValue] == 1) {
+                    //自己退出,需要做界面提醒
+                    if (![jsonDic[@"fromID"] isEqualToString:[ZWUserModel currentUser].userId]) {
+                        [self showAlertWithMessage:[NSString stringWithFormat:@"%@已退群出%@群",jsonDic[@"fromID"],jsonDic[@"groupID"]]];
+                    }else{
+                        [YHUtils playVoiceForMessage];
+                        [[MMClient  sharedClient] addHandleGroupMessage:jsonDic];
+                    }
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(nil, jsonDic);
+                    }
+                }else{
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(error, jsonDic);
+                    }
                 }
             }
                 break;
@@ -501,7 +546,36 @@ typedef struct {
                 
             }
                 break;
+                //群主同意别人加入本群,无论是别人,还是自己,都需要接受这个z群消息
+                //
+            case GCDSocketTCPCmdTypeagreeJoinGroup:
+            {
+                if ([jsonDic[@"result"] intValue] == 1) {
+                    if ([jsonDic[@"ApplyID"] isEqualToString:[ZWUserModel currentUser].sessionID]) {
+                        //群主同意我加入该群
+                        NSString *gropName = jsonDic[@"name"];
+                        NSString *message = [NSString stringWithFormat:@"群主已同意您加入:%@ 群",gropName];
+                        [ZWMessage success:message title:@"群消息:"];
+                        [YHUtils playVoiceForMessage];
+                        [[MMClient  sharedClient] addHandleGroupMessage:jsonDic];
+                    }
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(nil, jsonDic);
+                    }
+                }else{
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(error, jsonDic);
+                    }
+                }
                 
+            }
+                break;
+                case GCDSocketTCPCmdTyperejectJoinGroup:
+            {
+                //群主主动发送拒绝加入群的消息回调
+                
+            }
+              break;
                 
             default:
                 NSLog(@"未知类型的cmd:%@",strCMD);

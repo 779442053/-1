@@ -11,37 +11,22 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class MemberList;
-@class list;
-@class MemberList;
 
 @interface GroupMemberModel : NSObject
-
-@property (nonatomic, copy) NSString *type; //状态
-@property (nonatomic, copy) NSString *xns; //是否成功
-@property (nonatomic, copy) NSString *cmd; //状态
-@property (nonatomic,strong) list *list;//成员
-@property (nonatomic, copy) NSString *result; //是否成功
-@property (nonatomic, copy) NSString *err; //状态
-@property (nonatomic, copy) NSString *count; //成员数量
-
-@end
-
-@interface list : NSObject
-
-@property (nonatomic, strong) NSMutableArray<MemberList *> *member; //群组
-
+@property (nonatomic, copy) NSString *groupID; //群id
+@property (nonatomic, copy) NSString *createID; //创建者id
+@property (nonatomic, strong) NSMutableArray<MemberList *> *list; //群组
 @end
 
 @interface MemberList : NSObject
-
-@property (nonatomic, copy) NSString *memberId; //
+@property (nonatomic, copy) NSString *memberId; //用户id
 @property (nonatomic, copy) NSString *type; //该人身份creator 、manager 、normal
-@property (nonatomic, copy) NSString *userName; //
+@property (nonatomic, copy) NSString *username; //
 @property (nonatomic, copy) NSString *photoUrl; //
-@property (nonatomic, copy) NSString *userSig; //用户签名
-@property (nonatomic, copy) NSString *nickName;//昵称
+@property (nonatomic, copy) NSString *usersig; //用户签名
+@property (nonatomic, copy) NSString *nickname;//昵称
+@property (nonatomic, copy) NSString *online;//是否在线
 @property (nonatomic, assign) BOOL isSelect;
-
 
 @end
 

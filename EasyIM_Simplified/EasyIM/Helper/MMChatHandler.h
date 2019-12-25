@@ -107,14 +107,10 @@ NS_ASSUME_NONNULL_BEGIN
                             completion:(void(^) (MMMessage *_Nonnull message))aCompletionBlock;
 
 /// 撤回消息
-/// @param Mid 消息ID..把需要撤回的消息传递过来,需要进行本地数据库操作
-/// @param toUserid 接受者id
-/// @param toUserName 接受者名字.如果是群,则不传
+/// @param tomessage 消息ID..把需要撤回的消息传递过来,需要进行本地数据库操作
 /// @param cmd 命令,根据此命令,判断是群还是单聊
 /// @param aCompletionBlock 返回一个消息对象
-- (MMMessage *)WithdrawMessageWithMessageID:(MMMessage *)Mid
-        toUserID:(NSString *_Nonnull)toUserid
-    toUserName:(NSString *_Nonnull)toUserName
+- (MMMessage *)WithdrawMessageWithMessageID:(MMMessage *)tomessage
            cmd:(NSString *_Nonnull)cmd
     completion:(void(^) (MMMessage *_Nonnull message))aCompletionBlock;
 

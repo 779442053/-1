@@ -72,7 +72,8 @@
     message.messageType = MMMessageType_Text;
     message.deliveryState = MMMessageDeliveryState_Delivering;
     message.conversation = toUser;
-    message.fromPhoto = photoUrl;
+    //message.fromPhoto = photoUrl;
+    message.toUserPhoto = photoUrl;
     
     //3.发送请求
     [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {//这个data  就是刚刚我发出去的消息模型
@@ -379,11 +380,9 @@
     return message;
 }
 //传过来当前消息.告知服务端,将消息撤回
-- (MMMessage *)WithdrawMessageWithMessageID:(MMMessage *)Mid
-                      toUserID:(NSString *_Nonnull)toUserid
-                   toUserName:(NSString *_Nonnull)toUserName
-                                cmd:(NSString *_Nonnull)cmd
-    completion:(void(^) (MMMessage *_Nonnull message))aCompletionBlock{
+- (MMMessage *)WithdrawMessageWithMessageID:(MMMessage *)tomessage
+       cmd:(NSString *_Nonnull)cmd
+completion:(void(^) (MMMessage *_Nonnull message))aCompletionBlock{
     //1.对内容模型赋值
     MMChatContentModel *messageBody = [[MMChatContentModel alloc] init];
     messageBody.type = TypeSystem;//告诉UI. 根据这个字段显示哪一种cell
@@ -398,39 +397,39 @@
         cType = MMConversationType_Group;
     }
     //定义消息类型和消息部分信息
-    MMMessage *message = [[MMMessage alloc] initWithToUser:toUserid
-                                                toUserName:toUserName
-                                                  fromUser:[ZWUserModel currentUser].userId
-                                              fromUserName:[ZWUserModel currentUser].userName
-                                                  chatType:chatType
-                                                  isSender:YES
-                                                       cmd:cmd
-                                                     cType:cType
-                                               messageBody:messageBody];
+    MMMessage *message = [[MMMessage alloc] initWithToUser:tomessage.toID
+                            toUserName:tomessage.toUserName
+                            fromUser:[ZWUserModel currentUser].userId
+                            fromUserName:[ZWUserModel currentUser].userName
+                             chatType:chatType
+                              isSender:YES
+                                cmd:cmd
+                             cType:cType
+                         messageBody:messageBody];
     message.messageType = MMMessageType_Text;
     message.deliveryState = MMMessageDeliveryState_Delivering;
-    message.conversation = toUserid;//数据库需要将此消息删除,根据userid
+    message.conversation = tomessage.toID;//数据库需要将此消息删除,根据userid
     NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
     parma[@"type"] = @"req";
     parma[@"cmd"] = cmd;
     parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
-    parma[@"msgID"] = Mid.msgID;
-    if (toUserName) {
+    parma[@"msgID"] = tomessage.msgID;
+    if ([cmd isEqualToString:@"revokeMsg"]) {
         //单聊
-        parma[@"toID"] = toUserid;
-        parma[@"toUserName"] = toUserName;
+        parma[@"toID"] = tomessage.toID;
+        parma[@"toUserName"] = tomessage.toUserName;
     }else{
         //群聊
-        parma[@"groupID"] = toUserid;
+        parma[@"groupID"] = tomessage.toID;
     }
     //3.发送请求
     [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
         ZWWLog(@"受到发送撤回消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
         //标机状态.撤回的消息
         //message  这个  就是系统消息,用来插入ui上面的
-        message.deliveryState = MMMessageDeliveryState_Withdraw;
-        Mid.deliveryState = MMMessageDeliveryState_Withdraw;
-        [self handleMessage:Mid WithHandle:0];
+        message.deliveryState = MMMessageDeliveryState_Delivered;
+        tomessage.deliveryState = MMMessageDeliveryState_Withdraw;
+        [self handleMessage:tomessage WithHandle:0];
         [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
             aCompletionBlock(message);
         }];

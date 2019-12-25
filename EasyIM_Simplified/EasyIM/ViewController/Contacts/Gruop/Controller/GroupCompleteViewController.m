@@ -37,17 +37,13 @@
     [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([NewGroupViewCell class]) bundle:nil] forCellReuseIdentifier:NSStringFromClass([NewGroupViewCell class])];
     
 }
-
 //
 - (void)rightAction {
-    
     if ([_nameTextF.text isEqualToString:@""]) {
         [MBProgressHUD showError:@"群组名称不能为空！"];
         return;
     }
-
     NSString *userIDs = [self.userIdArr componentsJoinedByString:@"|"];
-    
     [MMRequestManager addGroupWithGroupName:_nameTextF.text bulletin:@"" theme:@"" photo:@"" userlist:userIDs aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
         if (!error) {
             if ([dic[@"ret"] isEqualToString:@"succ"]) {
@@ -60,36 +56,28 @@
             [MMProgressHUD showHUD: MMDescriptionForError(error)];
         }
     }];
-    
-
 }
-
 - (void)delayAction
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
-
 #pragma mark - UITableView delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
 }
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.memberArray.count;
 }
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 80.0;
 }
-
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 30.0;
 }
-
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     //viewforHeader
@@ -103,12 +91,8 @@
     [label setText:[NSString stringWithFormat:@"  %ld位成员",self.memberArray.count]];
     return label;
 }
-
-
 #pragma mark - UITableViewDataSource
-
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     static NSString *cellIde=@"NewGroupViewCell";
     NewGroupViewCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIde];
     if (cell==nil) {
@@ -117,18 +101,11 @@
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     cell.userInteractionEnabled = NO;
     ContactsModel *model= self.memberArray[indexPath.row];
-    
     [cell.name setText:model.nickName];
     [cell.logoImage sd_setImageWithURL:[NSURL URLWithString:model.photoUrl] placeholderImage:K_DEFAULT_USER_PIC];
     return cell;
-    
 }
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    
 }
-
-
 @end

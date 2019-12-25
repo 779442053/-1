@@ -12,7 +12,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MMReceiveMessageModel : NSObject
-
+/**  单聊
+ <JoyIM><type>rsp</type><xns>xns_user</xns><cmd>fetchMsg</cmd><list><user><fromID>6122507</fromID><fromName></fromName><fromNick></fromNick><fromPhoto></fromPhoto><toID>1544657</toID><time>2019-12-23 11:18:50</time><msgID>20191223_111850_700_6122507_1544657</msgID><msg>
+     <slice>
+         <type>text</type>
+         <content>收到了吗</content>
+     </slice>
+ <slice><type>null</type></slice></msg>
+ <msgType>text</msgType><url></url></user></list><result>1</result><err>ok</err><code></code><timeStamp>4589875</timeStamp></JoyIM>
+ */
 #pragma mark - 公共部分
 @property (nonatomic, copy) NSString *fromID;
 @property (nonatomic, copy) NSString *fromName;

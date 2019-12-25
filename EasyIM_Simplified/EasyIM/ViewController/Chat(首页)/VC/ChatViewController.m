@@ -26,17 +26,15 @@
 #import "ZWChatViewModel.h"
 static NSString *const identifier = @"ContactTableViewCell";
 @interface ChatViewController ()<UITableViewDelegate,UITableViewDataSource,MMChatManager,YBPopupMenuDelegate,SweepViewControllerDelegate>
-
-//最近联系人
 @property (nonatomic, strong) NSMutableArray *laterPersonDataArr;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ZWChatViewModel *ViewModel;
 @property(nonatomic,strong)NSMutableArray *pushListARR;
 @end
-
 @implementation ChatViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //此处,逻辑需要修改.链接socket
     [[self.ViewModel.socketContactCommand execute:nil] subscribeNext:^(id  _Nullable x) {
         if ([x intValue] == 0) {
             [YJProgressHUD showSuccess:@"连接成功"];
@@ -214,16 +212,12 @@ static NSString *const identifier = @"ContactTableViewCell";
             [self.navigationController pushViewController:group animated:YES];
         }
             break;
-            
-        //MARK:加好友/群
         case 1:
         {
             ZWAddFriendViewController *search = [[ZWAddFriendViewController alloc] init];
             [self.navigationController pushViewController:search animated:YES];
         }
             break;
-            
-        //MARK:扫一扫
         case 2:{
             //相册权限检测
             [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
@@ -238,8 +232,6 @@ static NSString *const identifier = @"ContactTableViewCell";
             [self presentViewController:sweepVC animated:YES completion:nil];
         }
             break;
-            
-        //MARK:帮助
         case 3:{
             [YJProgressHUD showMessage:@"帮助"];
         }
@@ -270,11 +262,6 @@ static NSString *const identifier = @"ContactTableViewCell";
         VC.FromType = @"扫一扫";
         VC.userID = strId;
         [self.navigationController pushViewController:VC animated:YES];
-//        [[self.ViewModel.addFriendCommand execute:strId] subscribeNext:^(id  _Nullable x) {
-//            if ([x[@"code"] intValue] == 0) {
-//                [MMProgressHUD showHUD: @"请求成功"];
-//            }
-//        }];
     }
     //MARK:扫码加群
     else if([strInfo containsString:K_APP_QRCODE_GROUP]){
@@ -289,11 +276,7 @@ static NSString *const identifier = @"ContactTableViewCell";
                                          }];
     }
 }
-
--(void)sweepViewDidFinishError
-{
-    MMLog(@"扫描失败");
-}
+-(void)sweepViewDidFinishError{}
 #pragma mark - UITableViewDelegate and UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -302,13 +285,11 @@ static NSString *const identifier = @"ContactTableViewCell";
     }
     return 0;
 }
-    
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return G_GET_SCALE_HEIGHT(50.0f);
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
     {
-        
     ContactTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell=[[ContactTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
@@ -318,7 +299,6 @@ static NSString *const identifier = @"ContactTableViewCell";
     if (self.laterPersonDataArr && [self.laterPersonDataArr count] > indexPath.row) {
         [cell recentContactsWithModel:self.laterPersonDataArr[indexPath.row]];
     }
-
     return cell;
 }
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath

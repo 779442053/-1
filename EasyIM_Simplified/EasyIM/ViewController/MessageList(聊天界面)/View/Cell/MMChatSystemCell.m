@@ -64,7 +64,32 @@
     self.contentLabel.text = messageF.aMessage.slice.content;
     
 }
-
+- (void)updateSendStatus:(MessageDeliveryState)status{
+    switch (status) {
+        case MMMessageDeliveryState_Delivering:
+        {
+            ZWWLog(@"系统消息正在发送")
+        }
+            break;
+        case MMMessageDeliveryState_Delivered:
+        {
+            ZWWLog(@"系统消息发送成功")
+        }
+            break;
+        case MMMessageDeliveryState_Withdraw:
+        {
+            ZWWLog(@"系统消息撤回成功")
+        }
+            break;
+        case MMMessageDeliveryState_Failure:
+        {
+            ZWWLog(@"系统消息发送失败")
+        }
+            break;
+        default:
+            break;
+    }
+}
 
 
 - (void)layoutSubviews

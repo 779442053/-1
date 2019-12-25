@@ -26,7 +26,6 @@ typedef enum {
     MMMessageDeliveryState_Withdraw   // 撤回
 }MessageDeliveryState;
 
-
 // 消息类型
 typedef enum {
     MMMessageType_Text  = 1,             // 文本

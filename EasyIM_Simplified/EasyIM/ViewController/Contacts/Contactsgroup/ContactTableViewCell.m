@@ -170,14 +170,11 @@
 /** 设置*/
 - (void)recentContactsWithModel:(MMRecentContactsModel *)model
 {
-    
     if (!model) {
         return;
     }
-    
     [self.imageView setHidden:YES];
     [self.textLabel setHidden:YES];
-    
     [self.headImageView setHidden:NO];
     [self.nameLabel setHidden:NO];
     [self.detailLabel setHidden:NO];

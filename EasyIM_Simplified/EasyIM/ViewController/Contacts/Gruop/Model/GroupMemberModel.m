@@ -12,22 +12,10 @@
 
 + (NSDictionary *)modelContainerPropertyGenericClass {
     
-    return @{@"list":[list class]};
+    return @{@"list":[MemberList class]};
     
 }
-
 @end
-
-@implementation list
-
-+ (NSDictionary *)modelContainerPropertyGenericClass {
-    
-    return @{@"member":[MemberList class]};
-    
-}
-
-@end
-
 @implementation MemberList
 
 +(NSDictionary *)mj_replacedKeyFromPropertyName{

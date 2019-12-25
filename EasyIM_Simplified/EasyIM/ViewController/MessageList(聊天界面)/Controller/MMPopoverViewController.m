@@ -33,11 +33,8 @@
 @property (nonatomic, strong) UIView  *sendView;
 
 @end
-
 @implementation MMPopoverViewController
-
 #pragma mark - Init
-
 - (instancetype)initWithDataSource:(NSMutableArray *)forwardDataArr
 {
     self = [super init];
@@ -47,9 +44,7 @@
 
     return self;
 }
-
 #pragma mark - Getter
-
 - (NSMutableArray *)forwardDataArr
 {
     if (!_forwardDataArr) {
@@ -111,48 +106,29 @@
     }
     return _sendView;
 }
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    
     //1.设置页面
     [self settingUp];
-    
     //2.创建UI
     [self setupUI];
-    
 }
-
 #pragma mark - Private
-
 - (void)settingUp
 {
-    
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    
     [self.view.layer setMasksToBounds:YES];
     [self.view.layer setCornerRadius:8.0f];
 }
-
 - (void)setupUI
 {
-    
     [self.view addSubview:self.sendObject];
-    
     [self.view addSubview:self.topView];
-    
     [self.view addSubview:self.topLine];
-    
     [self.view addSubview:self.bottomView];
-    
     [self.view addSubview:self.bottomLine];
-    
     [self.view addSubview:self.sendView];
-    
     //赋值 布局
     [self uploadValue];
     

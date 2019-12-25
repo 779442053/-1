@@ -48,7 +48,7 @@ static NSInteger const name_length = 30;
 //MARK: - lazy load
 -(UIView *)contentView{
     if (!_contentView) {
-        _contentView = [BaseUIView createView:CGRectMake(0, 20, SCREEN_WIDTH, cell_height)
+        _contentView = [BaseUIView createView:CGRectMake(0, 20 + ZWStatusAndNavHeight, SCREEN_WIDTH, cell_height)
                            AndBackgroundColor:[UIColor whiteColor]
                                   AndisRadius:NO
                                     AndRadiuc:0

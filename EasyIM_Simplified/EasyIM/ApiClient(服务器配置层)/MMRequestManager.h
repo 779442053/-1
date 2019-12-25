@@ -124,12 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
                  rowCount:(NSString *_Nonnull)rowCount
               aCompletion:(void(^ _Nullable)(NSArray<MMGroupModel *> *_Nullable arrGroupList,NSError * _Nullable error))aCompletionBlock;
 
-/**
- 获取加好友通知
 
- @param aCompletionBlock 结果返回
- */
-+ (void)fetchBulletionCompletion:(void(^)(NSArray <NewFriendModel *>*bulletionList,NSError *error))aCompletionBlock;
 
 /**
  好友状态(接受/拒绝)

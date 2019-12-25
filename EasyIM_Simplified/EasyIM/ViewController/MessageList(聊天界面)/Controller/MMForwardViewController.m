@@ -81,7 +81,6 @@
     UIView *navView = [[UIView alloc] initWithFrame:CGRectMake(0, ZWStatusBarHeight, SCREEN_WIDTH, ButtonHeight)];
     [navView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:navView];
-    
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     leftBtn.frame = CGRectMake(Padding, 0, ButtonHeight, ButtonHeight);
     [leftBtn setTitle:@"关闭" forState:UIControlStateNormal];
@@ -89,11 +88,8 @@
     [leftBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
     leftBtn.tag = 10;
     [leftBtn addTarget:self action:@selector(leftAction:) forControlEvents:UIControlEventTouchUpInside];
-    
     [navView addSubview:leftBtn];
-    
     self.leftBtn = leftBtn;
-    
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     rightBtn.frame = CGRectMake(SCREEN_WIDTH-ButtonHeight-Padding-ButtonHeight/2, 7, ButtonHeight+ButtonHeight/2, 30);
     [rightBtn setTitle:@"多选" forState:UIControlStateNormal];
@@ -101,43 +97,31 @@
     [rightBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
     rightBtn.tag = 110;
     [rightBtn addTarget:self action:@selector(rightAction:) forControlEvents:UIControlEventTouchUpInside];
-
     [navView addSubview:rightBtn];
     [rightBtn.layer setCornerRadius:15];
     [rightBtn.layer setMasksToBounds:YES];
-    
-    
     self.rightBtn = rightBtn;//0,202,254
-    
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setText:@"发送给"];
     [titleLabel setFont:[UIFont systemFontOfSize:17]];
     [navView addSubview:titleLabel];
-    
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view.mas_centerX);
         make.centerY.mas_equalTo(navView.mas_centerY);
         make.height.mas_equalTo(44);
     }];
-    
 }
-
 #pragma mark - Private
-
 - (void)setupUI
 {
-    
     self.view.backgroundColor = [UIColor whiteColor];
-    
     [self.view addSubview:self.tableView];
 }
-
 - (void)loadLocalData
 {
     WEAKSELF
     //1.取出本地所有联系人消息
     [[MMChatDBManager shareManager] getAllConversations:^(NSArray<MMRecentContactsModel *> * _Nonnull conversations) {
-        
         [conversations enumerateObjectsUsingBlock:^(MMRecentContactsModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             MMCommonModel *cModel = [[MMCommonModel alloc] init];
             cModel.userId = obj.userId;
@@ -146,30 +130,22 @@
             cModel.isSelect = NO;
             [weakSelf.localArr addObject:cModel];
         }];
-        
         //1.1.刷新表格
         [self.tableView reloadData];
     }];
 }
-
 - (void)hintFullForward
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"最多同时选择9个聊天会话" preferredStyle:UIAlertControllerStyleAlert];
-    
     UIAlertAction *OKAction = [UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
     }];
-    
     [alert addAction:OKAction];
-    
     [self presentViewController:alert animated:YES completion:nil];
 }
-
 - (void)reloadData
 {
     _isReload = NO;
-    
-    
     [self.selectDataArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         MMCommonModel *cModel = (MMCommonModel *)obj;
         [self.localArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -181,45 +157,34 @@
     }];
     [self.tableView reloadData];
 }
-
 #pragma mark - Action
-
 - (void)leftAction:(UIButton *)sender
 {
     if (self.rightBtn.tag == 110) {
         [self dismissViewControllerAnimated:YES completion:nil];
         return;
     }
-    
     [sender setTitle:@"关闭" forState:UIControlStateNormal];
-    
     self.rightBtn.tag = 110;
     self.rightBtn.selected = !self.rightBtn.selected;
     [self.rightBtn setTitle:@"多选" forState:UIControlStateNormal];
     [self.rightBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.rightBtn setBackgroundColor:[UIColor whiteColor]];
     [self.rightBtn setUserInteractionEnabled:YES];
-    
     [self.selectDataArr removeAllObjects];
-    
     [self.localArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         MMCommonModel *model = (MMCommonModel *)obj;
         model.isSelect = NO;
     }];
-    
     [self.tableView reloadData];
 }
-
 - (void)rightAction:(UIButton *)sender
 {
-    
     if (sender.tag == 120 && self.selectDataArr.count) {
-        
         MMLog(@"已经选择了%zd个准备转发",self.selectDataArr.count);
         [self messageF:self.selectDataArr];
         return;
     }
-    
     sender.selected = !sender.selected;
     if (sender.selected) {
         sender.tag = 120;
@@ -227,15 +192,12 @@
         [sender setBackgroundColor:RGBCOLOR(148, 240, 255)];
         [self.leftBtn setTitle:@"取消" forState:UIControlStateNormal];
         [self.rightBtn setUserInteractionEnabled:NO];
-        
     }else{
         sender.tag = 110;
         [sender setTitle:@"多选" forState:UIControlStateNormal];
     }
     [self.tableView reloadData];
 }
-
-
 #pragma mark - Getter&Setter
 
 - (UITableView *)tableView

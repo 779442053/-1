@@ -10,7 +10,7 @@
 
 @implementation ZWAPIConseKey
 // 服务地址
-NSString *const  HTURL = @"http://admin3.joyvc.com";//域名
+NSString *const  HTURL = @"http://imapi.joyvc.com";//域名
 NSString *const  HTURL_Test = @"http://imapi.51fy.co";//域名2
 
 NSString *const  Login = @"/api_im/user/login2";
@@ -50,7 +50,7 @@ NSString *const  getmsghis = @"/api_im/msg/getmsghis";
 NSString *const  pushmsgtouser = @"/api_im/msg/pushmsgtouser";
 NSString *const  offlineGroupMsg = @"/api_im/msg/offlineGroupMsg";
 NSString *const  getgroupmsghis = @"/api_im/msg/getgroupmsghis";
-NSString *const  kickGroupMember = @"/webim/api";
+//NSString *const  kickGroupMember = @"/webim/api";
 NSString *const  groupmember = @"/api_im/group/groupmember";
 NSString *const  inviteFrd2Group = @"/webim/api";
 NSString *const  addgroup = @"/api_im/group/addgroup";

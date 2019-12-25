@@ -129,7 +129,7 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     /** sendMsg 发送消息回调 */
     GCDSocketTCPCmdTypeSendMsg,
     
-    /** fetchMsg 读取消息 */
+    /** fetchMsg 读取消息 接受到聊天消息 */
     GCDSocketTCPCmdTypeFetchMsg,
     
     /** HangUpCall 挂断 */
@@ -173,7 +173,13 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     /** logout 退出登录 */
     GCDSocketTCPCmdTypeLogout,
     /** 撤回消息 */
-    GCDSocketTCPCmdTyperevokeMsg
+    GCDSocketTCPCmdTyperevokeMsg,
+    /**群主踢人*/
+    GCDSocketTCPCmdTypekickGroupMember,
+    /**群主同意申请人加入本群*/
+    GCDSocketTCPCmdTypeagreeJoinGroup,
+    /**群主拒绝申请人加入本群*/
+    GCDSocketTCPCmdTyperejectJoinGroup
     
 };
 
@@ -202,7 +208,10 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
 @"exitChatRoom",\
 @"sendChatRoomMsg",\
 @"logout",\
-@"revokeMsg"]
+@"revokeMsg",\
+@"kickGroupMember",\
+@"agreeJoinGroup",\
+@"rejectJoinGroup"]
 
 /** 枚举 to 字串 */
 #define ZWGCDSocketTCPCmdTypeString(type) ([ZWGCDSocketTCPCmdTypeGet objectAtIndex:type])

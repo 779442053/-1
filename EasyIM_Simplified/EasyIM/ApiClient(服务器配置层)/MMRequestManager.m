@@ -390,51 +390,6 @@
     }];
 }
 
-
-
-
-+ (void)fetchBulletionCompletion:(void(^)(NSArray <NewFriendModel *>*bulletionList,NSError *error))aCompletionBlock
-{
-    
-    //1.构造参数
-    NSDictionary *dic = @{
-                          @"cmd":@"fetchBulletin",
-                          @"sessionId":[ZWUserModel currentUser].sessionID,
-                          };
-    
-    //2.构造Get请求
-    [[MMApiClient sharedClient] GET:K_APP_REQUEST_API parameters:dic success:^(id  _Nonnull responseObject) {
-        
-        NSMutableArray *requesFrieds = [[NSMutableArray alloc] init];
-        
-        NSString *xmlStr = [NSString stringWithContentsOfURL:[NSURL URLWithString:responseObject[@"downloadurl"]] encoding:NSUTF8StringEncoding error:nil];
-        NSMutableDictionary *jsonDic = [NSMutableDictionary dictionaryWithXMLString:xmlStr].mutableCopy;
-        [jsonDic removeObjectForKey:@"__name"];//删除带有__name的参数
-        MMLog(@"%@",jsonDic);
-        id bulletin = jsonDic[@"bulletinList"][@"bulletin"];
-        if ([bulletin isKindOfClass:[NSArray class]]) {
-            for (NSDictionary *dict in bulletin) {
-                NewFriendModel *model = [NewFriendModel yy_modelWithDictionary:dict];
-                [requesFrieds addObject:model];
-            }
-        }else{
-            if (![jsonDic[@"bulletinList"] isKindOfClass:[NSDictionary class]]) {
-                MMLog(@"经过这里了");
-            }else{
-                MMLog(@"我的天哪");
-                NewFriendModel *model = [NewFriendModel yy_modelWithDictionary:bulletin];
-                [requesFrieds addObject:model];
-            }
-        }
-        
-        aCompletionBlock(requesFrieds, nil);
-        
-    } failure:^(NSError * _Nonnull error) {
-        aCompletionBlock(nil, error);
-    }];
-}
-
-
 + (void)aNoticFriendsWithCmd:(NSString *)cmd
                    tagUserId:(NSString *)tagUserId
                         time:(NSString *)time

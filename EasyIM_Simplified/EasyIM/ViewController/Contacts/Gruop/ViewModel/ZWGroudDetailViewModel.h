@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong)RACCommand *setGroupSDNCommand;
 @property(nonatomic,strong)RACCommand *deleteGroupWithGroupId;
 @property(nonatomic,strong)RACCommand *exitGroupWithGroupid;
+@property(nonatomic,strong)RACCommand *kickPeopleFromGroupCommand;
 @property(nonatomic,strong)RACCommand *setGroupChatBg;
 @end
 

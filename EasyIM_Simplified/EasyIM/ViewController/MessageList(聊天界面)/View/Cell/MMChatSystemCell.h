@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
                        reusableId:(NSString *)ID;
 
 @property (nonatomic, strong) MMMessageFrame *messageF;
-
+- (void)updateSendStatus:(MessageDeliveryState)status;
 @end
 
 NS_ASSUME_NONNULL_END
