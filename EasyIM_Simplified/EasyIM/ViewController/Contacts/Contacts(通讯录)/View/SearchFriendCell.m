@@ -95,7 +95,7 @@
         make.left.mas_equalTo(self.titleLabel.mas_left);
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(3);
         make.height.mas_equalTo(15);
-        make.width.mas_equalTo(150);
+        make.width.mas_equalTo(250);
     }];
     
     [self.button mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -127,12 +127,10 @@
 }
 
 - (void)cellInitGroupData:(MMGroupModel *_Nullable)model{
-    
     if (!model) {
         NSLog(@"群组数据不存在");
         return;
     }
-
     if (model.photo.checkTextEmpty) {
         [self.headView sd_setImageWithURL:model.photo.mj_url
                          placeholderImage:[UIImage imageNamed:@"contacts_group_icon"]];
@@ -142,7 +140,7 @@
     }
     
     [self.titleLabel setText:model.name.checkTextEmpty ? model.name : @"佚名群"];
-    [self.desLabel setText:model.theme];
+    [self.desLabel setText:model.bulletin];
 }
 
 @end

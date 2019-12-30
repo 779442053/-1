@@ -72,5 +72,22 @@
             }];
         }];
     }];
+    self.add2GroupCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+        return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+            NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+            parma[@"type"] = @"req";
+            parma[@"cmd"] = @"joinGroup";
+            parma[@"sessionID"] = [ZWUserModel currentUser].userId;
+            parma[@"groupID"] = input;
+            parma[@"msg"] = [NSString stringWithFormat:@"你好!我是%@，请求加入该群",[ZWUserModel currentUser].nickName];
+            ZWWLog(@"添加朋友=%@",parma)
+            [ZWSocketManager SendDataWithData:parma];
+            [subscriber sendCompleted];
+            return [RACDisposable disposableWithBlock:^{
+                
+            }];
+        }];
+    }];
+    
 }
 @end

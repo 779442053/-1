@@ -213,27 +213,8 @@
 didSelectItem:(MMChatBoxItem)itemType
 {
     switch (itemType) {
-        //MARK:相册
         case MMChatBoxItemAlbum:
         {
-//            ZWPhotoConfig *config = [[ZWPhotoConfig alloc] init];
-//            config.navBarTintColor = [UIColor colorWithHexString:@"FD4772"];
-//            //config.navBarBgColor = [UIColor colorWithHexString:@"#333237"];
-//            config.navBarBgColor = [UIColor redColor];
-//            config.navBarTitleColor = [UIColor colorWithHexString:@"#FFFFFF"];
-//            config.allowsEditing = YES;
-//            [[ZWPhotoHelper creatWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary config:config] getSourceWithSelectImageBlock:^(id data) {
-//                if ([data isKindOfClass:[UIImage class]]) { // 图片
-//                    UIImage *simpleImg = [UIImage simpleImage:data];
-//                    NSString *filePath = [[MMMediaManager sharedManager] saveImage:simpleImg];
-//                    if (_delegate && [_delegate respondsToSelector:@selector(chatBoxViewController:sendImageMessage:imagePath:)]) {
-//                        [_delegate chatBoxViewController:self sendImageMessage:simpleImg imagePath:filePath];
-//                    }
-//                } else {
-//                    [MMProgressHUD showHUD:@"选取的不是图片,请选择图片" withDelay:1.5];
-//                }
-//            }];
-            
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
                 self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
                 [self presentViewController:self.imagePicker animated:YES completion:^{}];

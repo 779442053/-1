@@ -13,17 +13,32 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMReceiveMessageModel : NSObject
 /**  单聊
- <JoyIM><type>rsp</type><xns>xns_user</xns><cmd>fetchMsg</cmd><list><user><fromID>6122507</fromID><fromName></fromName><fromNick></fromNick><fromPhoto></fromPhoto><toID>1544657</toID><time>2019-12-23 11:18:50</time><msgID>20191223_111850_700_6122507_1544657</msgID><msg>
-     <slice>
-         <type>text</type>
-         <content>收到了吗</content>
-     </slice>
- <slice><type>null</type></slice></msg>
- <msgType>text</msgType><url></url></user></list><result>1</result><err>ok</err><code></code><timeStamp>4589875</timeStamp></JoyIM>
+ user =         {
+     fromID = 643444;
+     fromName = lw003;
+     fromNick = "\U6d4b\U8bd5003";
+     fromPhoto = "http://imapi.joyvc.com/storage/users/2019/11/28/2019-11-28-20-52-40-5ddfc318e4e93.jpg";
+     msg =             {
+         slice =                 (
+                                 {
+                 content = "\U963f\U9e7f\U63d0\U9ad8";
+                 type = text;
+             },
+                                 {
+                 type = null;
+             }
+         );
+     };
+     msgID = "191227-152707_00001_643444_3993692";
+     msgType = text;
+     time = "2019-12-27 15:26:55";
+     toID = 3993692;
+ };
  */
 #pragma mark - 公共部分
 @property (nonatomic, copy) NSString *fromID;
 @property (nonatomic, copy) NSString *fromName;
+@property (nonatomic, copy) NSString *fromNick;
 @property (nonatomic, copy) NSString *fromPhoto;
 @property (nonatomic, copy) NSString *time;
 @property (nonatomic, copy) NSString *msgID;
@@ -31,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) MMChatContentModel *slice;
 
 #pragma mark - 单聊接收部分
-@property (nonatomic, copy) NSString *fromNick;
+//@property (nonatomic, copy) NSString *fromNick;
 @property (nonatomic, copy) NSString *toID;
 @property (nonatomic, copy) NSString *toName;
 

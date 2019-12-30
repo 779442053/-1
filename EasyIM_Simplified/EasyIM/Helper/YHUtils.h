@@ -121,6 +121,7 @@ typedef void(^HHAlertCallback)(BOOL resultYes );
 //MARK: - 播放声音
 /** 新消息声音播放 */
 + (void)playVoiceForMessage;
++ (void)ShackTheIphon;
 
 /** 音视频关闭或拒绝提示音 */
 + (void)closeVoiceAudioAndVideo;

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GroupCompleteViewController">
             <connections>
+                <outlet property="TopPadding" destination="yLw-BI-HWI" id="B4e-f3-Cng"/>
                 <outlet property="logoBtn" destination="qjj-5h-xS1" id="87T-c5-ewu"/>
                 <outlet property="nameTextF" destination="gq3-3W-zji" id="Sxz-pU-GYh"/>
                 <outlet property="tableView" destination="VYm-S4-gsa" id="dru-zU-WnO"/>
@@ -33,13 +32,15 @@
                                 <constraint firstAttribute="width" constant="65" id="WZ9-HE-Iag"/>
                             </constraints>
                             <state key="normal" image="edit_camera.png"/>
+                            <connections>
+                                <action selector="LogoImageBtnClick:" destination="-1" eventType="touchUpInside" id="OlE-se-SOQ"/>
+                            </connections>
                         </button>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="输入群组名称" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gq3-3W-zji">
                             <rect key="frame" x="95" y="27.5" width="260" height="35"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="35" id="MOa-TG-FxM"/>
                             </constraints>
-                            <nil key="textColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
@@ -88,7 +89,7 @@
                 <constraint firstItem="ms1-pN-V8U" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="yLw-BI-HWI"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
-            <point key="canvasLocation" x="-41" y="-227"/>
+            <point key="canvasLocation" x="-1068" y="-613"/>
         </view>
     </objects>
     <resources>

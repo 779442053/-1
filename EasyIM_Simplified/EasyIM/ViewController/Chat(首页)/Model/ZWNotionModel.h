@@ -7,7 +7,9 @@
 //
 
 #import "ZWBaseModel.h"
-
+/**获取通知类型的定义*/
+#import "ZWNotificationEnum.h"
+#import "ZWNotificationEnumTwo.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ZWNotionModel : ZWBaseModel
@@ -20,11 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,copy)NSString *fromID;
 @property(nonatomic,copy)NSString *fromPhoto;
 /***/
-@property(nonatomic,copy)NSString *bulletinType;
+//@property(nonatomic,copy)NSString *bulletinType;
 @property(nonatomic,copy)NSString *fromNick;
 @property(nonatomic,copy)NSString *webrtcId;
 @property(nonatomic,copy)NSString *msg;
-//@property(nonatomic,copy)NSString *fromNick;
+@property(nonatomic,assign) BULLETIN_FLOW_TYPE bulletinFlowType;
+@property(nonatomic,assign) BULLETIN_TYPE bulletinType;
 //@property(nonatomic,copy)NSString *
 @end
 

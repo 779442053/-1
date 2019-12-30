@@ -57,7 +57,6 @@ static MMEasyIMHelper *helper = nil;
     //如群组,会议室等 共同跳转同一个类 如加对方为好友跳转到相对应的界面并传值
     id object = aNotif.object;
     MMConversationModel *model = nil;
-    
     if ([object isKindOfClass:[ContactsModel class]]) {
         ContactsModel *contact = (ContactsModel *)object;
         contact.cmd = @"sendMsg";
@@ -67,8 +66,8 @@ static MMEasyIMHelper *helper = nil;
             ZWGroupModel *zwgroup = (ZWGroupModel *)object;
             MMGroupModel *group = [[MMGroupModel alloc]init];
             group.cmd = @"groupMsg";
-            group.name = zwgroup.groupname;
-            group.groupID = zwgroup.gid;
+            group.name = zwgroup.name;
+            group.groupID = zwgroup.ID;
             model = [MMConversationHelper modelFromGroup:group];
         }else{
             MMGroupModel *group = (MMGroupModel *)object;

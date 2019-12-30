@@ -11,9 +11,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ZWGroupModel : ZWBaseModel
-@property(nonatomic,copy)NSString *groupname;
-@property(nonatomic,copy)NSString *gid;
-@property (nonatomic, copy) NSString *cmd;
+@property(nonatomic,copy)NSString *time;
+@property(nonatomic,copy)NSString *ID;
+@property (nonatomic, copy) NSString *notice;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *creatorID;
+@property (nonatomic, copy) NSString *type;
 @end
 
 NS_ASSUME_NONNULL_END

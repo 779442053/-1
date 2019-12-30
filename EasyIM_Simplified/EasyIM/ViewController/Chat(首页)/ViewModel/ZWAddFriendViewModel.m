@@ -37,10 +37,10 @@
     
     //要求进群
     //需要先判断用户是否在群里.暂时找不到请求的接口
-    self.addGroupCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+    self.addGroupCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(NSMutableDictionary * input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
              //@strongify(self)
-            [YJProgressHUD showLoading:@"加载中..."];
+            //[YJProgressHUD showLoading:@"加载中..."];
             NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
             parma[@"type"] = @"req";
             parma[@"cmd"] = @"joinGroup";
@@ -48,7 +48,15 @@
             parma[@"groupID"] = input[@"groupID"];
             parma[@"creatorID"] = input[@"creatorID"];
             parma[@"msg"] = @"你好！我想加入该群";
-            //[self.ZWTCPrequest ];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                [YJProgressHUD hideHUD];
+                if (!error) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
+                [subscriber sendCompleted];
+            } ];
            
             return [RACDisposable disposableWithBlock:^{
                 

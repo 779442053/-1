@@ -30,7 +30,7 @@
             parma[@"userid"] = [ZWUserModel currentUser].userId;
             parma[@"page"] = [NSString stringWithFormat:@"%ld",self.page];
             parma[@"perpage"] = @"20";
-            [self.request POST:getfriendgroup parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+            [self.request POST:getgroup parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                                     [YJProgressHUD hideHUD];
                            });
@@ -82,7 +82,7 @@
             parma[@"userid"] = [ZWUserModel currentUser].userId;
             parma[@"page"] = [NSString stringWithFormat:@"%ld",self.page];
             parma[@"perpage"] = @"20";
-            [self.request POST:getfriendgroup parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+            [self.request POST:getgroup parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                                     [YJProgressHUD hideHUD];
                            });
@@ -135,7 +135,13 @@
             parma[@"toID"] = input;
             parma[@"msg"] = [NSString stringWithFormat:@"你好!我是%@，请求加您为好友",[ZWUserModel currentUser].nickName];
             ZWWLog(@"添加朋友=%@",parma)
-            [ZWSocketManager SendDataWithData:parma];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
+            }];
             [subscriber sendCompleted];
             return [RACDisposable disposableWithBlock:^{
                 

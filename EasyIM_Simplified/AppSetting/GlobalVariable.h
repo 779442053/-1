@@ -92,7 +92,6 @@
 #define K_APP_REQUEST_PLATFORM @"IOS"
 
 //MARK: - GCDSocketTCPCMD 枚举
-////////////////////////////////////////////////////////////////////////////////
 typedef NS_ENUM(NSUInteger,MMConGroupItem){
     MMConGroup_Friend = 0,
     MMConGroup_Group,
@@ -102,19 +101,14 @@ typedef NS_ENUM(NSUInteger,MMConGroupItem){
 typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     /** heartBeat 心跳包 */
     GCDSocketTCPCmdTypeHeartBeat = 0,
-    
     /** updateuserstate 下线通知 */
     GCDSocketTCPCmdTypeUpdateuserstate,
-    
     /** friendStatus 好友上线通知 */
     GCDSocketTCPCmdTypeFriendStatus,
-   
     /** inviteFrd2Group 邀请好友入群 */
     GCDSocketTCPCmdTypeInviteFrd2Group,
-    
     /** hasBulletin 好友通知 */
     GCDSocketTCPCmdTypeHasBulletin,
-
     /**
      * 视频呼叫返回状态(对方等待通知界面)
      * callUser  1v1音视频呼叫
@@ -122,54 +116,38 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
      */
     GCDSocketTCPCmdTypeCallUser,
     GCDSocketTCPCmdTypeCallGroup,
-    
     /** login 获取登陆消息 */
     GCDSocketTCPCmdTypeLogin,
-    
     /** sendMsg 发送消息回调 */
     GCDSocketTCPCmdTypeSendMsg,
-    
     /** fetchMsg 读取消息 接受到聊天消息 */
     GCDSocketTCPCmdTypeFetchMsg,
-    
     /** HangUpCall 挂断 */
     GCDSocketTCPCmdTypeHangUpCall,
-    
     /** 接受音视频邀请(AcceptCall 1v1、AcceptGroupCall 1vM) */
     GCDSocketTCPCmdTypeAcceptCall,
     GCDSocketTCPCmdTypeAcceptGroupCall,
-    
     /** 拒绝视频邀请(RejectCall 1v1、RejectGroupCall 1vM) */
     GCDSocketTCPCmdTypeRejectCall,
     GCDSocketTCPCmdTypeRejectGroupCall,
-       
     /** fetchGroupMsg 读取群消息 */
     GCDSocketTCPCmdTypeFetchGroupMsg,
-
     /** checkUserOnline 检查用户是否在线 */
     GCDSocketTCPCmdTypeCheckUserOnline,
-    
     /** groupMsg 发群消息回调 */
     GCDSocketTCPCmdTypeGroupMsg,
-    
     /** addFriend 加好友回调 */
     GCDSocketTCPCmdTypeAddFriend,
-    
     /** deleteGroup 解散群回调 */
     GCDSocketTCPCmdTypeDeleteGroup,
-
     /** exitGroup 退出群回调 */
     GCDSocketTCPCmdTypeExitGroup,
-    
     /** joinChatRoom 加入聊天室 */
     GCDSocketTCPCmdTypeJoinChatRoom,
-    
     /** exitChatRoom 离开聊天室 */
     GCDSocketTCPCmdTypeExitChatRoom,
-    
     /** sendChatRoomMsg 聊天室发送消息/礼物/红包 */
     GCDSocketTCPCmdTypeSendChatRoomMsg,
-    
     /** logout 退出登录 */
     GCDSocketTCPCmdTypeLogout,
     /** 撤回消息 */
@@ -179,7 +157,17 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     /**群主同意申请人加入本群*/
     GCDSocketTCPCmdTypeagreeJoinGroup,
     /**群主拒绝申请人加入本群*/
-    GCDSocketTCPCmdTyperejectJoinGroup
+    GCDSocketTCPCmdTyperejectJoinGroup,
+    /**加入本群*/
+    GCDSocketTCPCmdTypejoinGroup,
+    /**创建群*/
+    GCDSocketTCPCmdTyperejectaddGroup,
+    /**接受好友的添加请求*/
+    GCDSocketTCPCmdTypeacceptFriend,
+    /**拒绝好友的添加请求*/
+    GCDSocketTCPCmdTyperejectFriend,
+    /**忽略通知*/
+    GCDSocketTCPCmdTypeignoreBulletin
     
 };
 
@@ -211,7 +199,12 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
 @"revokeMsg",\
 @"kickGroupMember",\
 @"agreeJoinGroup",\
-@"rejectJoinGroup"]
+@"rejectJoinGroup",\
+@"addGroup",\
+@"acceptFriend",\
+@"rejectFriend",\
+@"joinGroup",\
+@"ignoreBulletin"]
 
 /** 枚举 to 字串 */
 #define ZWGCDSocketTCPCmdTypeString(type) ([ZWGCDSocketTCPCmdTypeGet objectAtIndex:type])

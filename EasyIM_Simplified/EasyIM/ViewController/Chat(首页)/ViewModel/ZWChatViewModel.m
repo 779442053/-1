@@ -8,7 +8,8 @@
 
 #import "ZWChatViewModel.h"
 #import "MMRecentContactsModel.h"
-#import "ZWNotionModel.h"
+
+#import "NewFriendModel.h"
 @interface ZWChatViewModel()
 @property (nonatomic,assign)NSInteger *Currentpage;
 @end
@@ -46,19 +47,7 @@
             }];
         }];
     }];
-    /**
-    获取常用/最近联系人列表
-    @param targetType 联系人类型
-    - desc + targetType 描述+type值
-    - 最近联系人  2
-    - 常用联系人  12
-    - 最近群组  3
-    - 常用群组  13
-    - 最近会议  4
-    - 常会会议  14
-    @param callBack 结果返回
-    */
-    
+
     self.requestCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
              @strongify(self)
@@ -68,9 +57,15 @@
             parma[@"page"] = [NSString stringWithFormat:@"%ld",(long)self.Currentpage];
             parma[@"perpage"] = @"20";
             [self.request POST:getusernormal parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
-                ZWWLog(@"最近联系人=%@",responseString)
+               // ZWWLog(@"最近联系人=%@",responseString)
                 if ([responseString[code] intValue] == 1) {
+                    //获取到最近联系人,将s本地数据库进行更新操作
+                    //targettype 2最近联系人(默认) 12常用联系人 3最近群组 13常用群组4最近会议 14 常用会议
                     
+                    
+                }else if ([responseString[code] intValue] == 1020 && [responseString[@"message"] isEqualToString:@"登陆验证失败"]){
+                    [subscriber sendNext:@{@"code":@"2"}];
+                    [YJProgressHUD showError:responseString[msg]];
                 }else{
                     [subscriber sendNext:@{@"code":@"1"}];
                     [MMProgressHUD showError:responseString[msg]];
@@ -94,8 +89,11 @@
             [self.request POST:@"/api_im/friend/fetchBulletin" parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 ZWWLog(@"登录之后,获取系统所有的通知 = %@",responseString)
                 if ([responseString[code] intValue] == 1) {
-                    NSArray *arr = [ZWNotionModel  mj_objectArrayWithKeyValuesArray:responseString[@"data"][@"data"]];
+                    NSArray *arr = [NewFriendModel  mj_objectArrayWithKeyValuesArray:responseString[@"data"][@"data"]];
                     [subscriber sendNext:@{@"code":@"0",@"res":arr}];
+                }else if ([responseString[code] intValue] == 1020 && [responseString[msg] isEqualToString:@"登陆验证失败"]){
+                    [subscriber sendNext:@{@"code":@"2"}];
+                    [YJProgressHUD showError:responseString[msg]];
                 }else{
                     [YJProgressHUD showError:responseString[msg]];
                 }

@@ -34,6 +34,7 @@ FOUNDATION_EXTERN NSString *const adduserdynamic;
 FOUNDATION_EXTERN NSString *const setCoordinate;
 FOUNDATION_EXTERN NSString *const addfriendtogroup;
 FOUNDATION_EXTERN NSString *const getfriendgroup;
+//FOUNDATION_EXTERN NSString *const getgroup;
 FOUNDATION_EXTERN NSString *const addfriendgroup;
 FOUNDATION_EXTERN NSString *const delfriendgroup;
 FOUNDATION_EXTERN NSString *const delfriendtogroup;

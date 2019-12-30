@@ -12,8 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEditGroupCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UIImageView *headImage;
-@property (weak, nonatomic) IBOutlet UILabel *nameLbl;
+@property (strong, nonatomic)  UIImageView *headImage;
+@property (strong, nonatomic)  UILabel *nameLbl;
 
 @end
 

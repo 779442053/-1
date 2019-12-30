@@ -21,8 +21,9 @@ typedef void (^AddFStatusBlock)( id __nullable data,NSError *__nullable error);
 @protocol AddFriendAgreeDelegate2 <NSObject>
 
 @optional
-
+//接受好友请求(群)
 - (void)acceptRquestWithType:(MMFApp)type aComption:(AddFStatusBlock)aComptionBlock;
+//拒绝好友请求(群)
 - (void)rejectRequestWithType:(MMFApp)type aComption:(AddFStatusBlock)aComptionBlock;
 
 @end

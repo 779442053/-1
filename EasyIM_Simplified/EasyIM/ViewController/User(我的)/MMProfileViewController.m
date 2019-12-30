@@ -224,7 +224,6 @@ static NSString *const identifier = @"ZWProfileCell";
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
-
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
@@ -256,7 +255,6 @@ static NSString *const identifier = @"ZWProfileCell";
             
         }
     }];
-
 }
 -(ZWProfilViewModel *)ViewModel{
     if (_ViewModel == nil) {

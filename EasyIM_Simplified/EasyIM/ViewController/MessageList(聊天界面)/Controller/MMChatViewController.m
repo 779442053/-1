@@ -7,12 +7,8 @@
 //
 
 #import "MMChatViewController.h"
-
 #import "MMChatHearder.h"
 #import "GlobalVariable.h"
-
-#import <MJRefresh.h>
-
 #import <AVFoundation/AVFoundation.h> // 基于AVFoundation,通过实例化的控制器来设置player属性
 #import <AVKit/AVKit.h>  // 1. 导入头文件  iOS 9 新增
 //ViewController
@@ -39,7 +35,6 @@ static const CGFloat section_header_h = 60;
     UIMenuItem * _recallMenuItem;
     UIMenuItem * _moreMenuItem;
     NSIndexPath *_longIndexPath;
-    //BOOL   _isKeyBoardAppear;     // 键盘是否弹出来了
 }
 @property (nonatomic, strong) MMChatBoxViewController *chatBoxVC;
 @property (nonatomic, strong) UITableView *tableView;
@@ -81,12 +76,6 @@ static const CGFloat section_header_h = 60;
 
 
 @implementation MMChatViewController
--(ZWChartViewModel *)ViewModel{
-    if (_ViewModel == nil) {
-        _ViewModel = [[ZWChartViewModel alloc]init];
-    }
-    return _ViewModel;
-}
 - (instancetype)initWithCoversationModel:(MMConversationModel *)aConversationModel
 {
     self = [super init];
@@ -188,7 +177,6 @@ static const CGFloat section_header_h = 60;
         
         _isAlreadyLoad = NO;
     }
-    
     //1.1如果本地没有则去从历史记录取
     if (!dataArray.count && !_isAlreadyLoad) {
         MMLog(@"在服务器上取");
@@ -198,14 +186,11 @@ static const CGFloat section_header_h = 60;
     else{
         _currentPage ++;
     }
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         [_tableView.mj_header endRefreshing];
     });
-    
     [self.dataSource insertObjects:dataArray atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, dataArray.count)]];
     [self.tableView reloadData];
-    
     if (_isFirstLoad && self.dataSource.count) {
         //tableView还没刷新完就开始调用滚到到底部的方法，所以可以利用伪延迟来进行处理
         double delayInSeconds = 0.1;
@@ -548,7 +533,6 @@ static const CGFloat section_header_h = 60;
                           toUserPhotoUrl:_conversationModel.photoUrl
                           cmd:_conversationModel.cmd
                           completion:^(MMMessage * _Nonnull message) {
-                              //刷新当前发送状态 这里显示的是发送失败或者发送完成状态
                               [weakSelf updateSendStatusUIWithMessage:message];
                           }];
     
@@ -1119,13 +1103,6 @@ static const CGFloat section_header_h = 60;
     return _timer;
 }
 #pragma mark - MMChatManagerDelegate(收到消息)
-
-/**
- 代理接收到消息
- 
- @param manager 消息管理
- @param message 消息体
- */
 - (void)clientManager:(MMClient *)manager didReceivedMessage:(MMMessage *)message
 {
     ZWWLog(@"受到一条消息========\n %@",message);
@@ -1137,13 +1114,12 @@ static const CGFloat section_header_h = 60;
             return;
         }
     }
-    
     NSString * fromID = [NSString stringWithFormat:@"%@",message.fromID];
     NSString * userid = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
     NSString * toID = [NSString stringWithFormat:@"%@",message.toID];;
     NSString * toUid = [NSString stringWithFormat:@"%@",self.conversationModel.toUid];
     ZWWLog(@"idididid = fromid = %@  userid= %@ toID= %@  toUid = %@",fromID,userid,toID,toUid)
-    if (![fromID isEqualToString:userid] && ![toID isEqualToString:toUid]) {
+    if (![fromID isEqualToString:toUid] && ![toID isEqualToString:toUid]) {
         // 不展示UI
         ZWWLog(@"我收到一条不属于当前聊天的消息")
         return;
@@ -1214,5 +1190,10 @@ static const CGFloat section_header_h = 60;
 {
     MMLog(@"转发数据已回传");
 }
-
+-(ZWChartViewModel *)ViewModel{
+    if (_ViewModel == nil) {
+        _ViewModel = [[ZWChartViewModel alloc]init];
+    }
+    return _ViewModel;
+}
 @end

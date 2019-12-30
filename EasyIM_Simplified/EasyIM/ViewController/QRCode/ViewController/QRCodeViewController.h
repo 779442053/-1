@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  二维码视图初始化
-
  @param type 二维码类型 0个人、1群聊、2会议室
  @param fid 个人或群或会议室编号
  @param fname 个人或群或会议室名称

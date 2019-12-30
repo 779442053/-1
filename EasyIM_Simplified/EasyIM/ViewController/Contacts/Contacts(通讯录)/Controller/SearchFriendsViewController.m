@@ -65,6 +65,15 @@ static NSString *const page_size = @"10";
             if (self.item == MMConGroup_Group) {
                 [[self.ViewModel.searchMoreGroupCommand execute:self.key] subscribeNext:^(id  _Nullable x) {
                     NSArray *arr = x[@"res"];
+                    [arr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        MMGroupModel *groupModel =(MMGroupModel *)obj;
+                        NSString *creatID = [NSString stringWithFormat:@"%@",groupModel.creatorID];
+                        NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+                        if ([groupModel isKindOfClass:[MMGroupModel class]] && [creatID isEqualToString:userID]) {
+                            groupModel.IsMyGroup = YES;
+                            return ;
+                        }
+                    }];
                     [self.dataSource addObjectsFromArray:arr];
                     [self.tableView reloadData];
                     if (arr.count == 0) {
@@ -113,6 +122,15 @@ static NSString *const page_size = @"10";
             [[self.ViewModel.searchGroupCommand execute:text] subscribeNext:^(id  _Nullable x) {
                 if ([x[@"code"] intValue] == 0) {
                     self.dataSource = x[@"res"];
+                    [self.dataSource enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        MMGroupModel *groupModel =(MMGroupModel *)obj;
+                        NSString *creatID = [NSString stringWithFormat:@"%@",groupModel.creatorID];
+                        NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+                        if ([groupModel isKindOfClass:[MMGroupModel class]] && [creatID isEqualToString:userID]) {
+                            groupModel.IsMyGroup = YES;
+                            return ;
+                        }
+                    }];
                     [self.tableView reloadData];
                 }
             }];
@@ -198,35 +216,26 @@ static NSString *const page_size = @"10";
         //加群//在群里,直接展示群详情,进去可以聊天.不在,直接请求加入请求
         if (self.item == MMConGroup_Group) {
             MMGroupModel *model = (MMGroupModel *)self.dataSource[index];
-            if (model && [ZWUserModel currentUser]) {
-                [[self.ViewModel.addGroupCommand execute:model.groupID] subscribeNext:^(id  _Nullable x) {
-                    if ([x[@"code"] intValue] == 0) {
-                        [MMProgressHUD showHUD:x[@"desc"]];
-                    }
-                }];
-                [MMRequestManager inviteFrd2GroupWithGroupId:model.groupID
-                                                    friendId:[ZWUserModel currentUser].userId
-                                                 aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
-                    if (K_APP_REQUEST_OK(dic[K_APP_REQUEST_CODE])) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [MMProgressHUD showHUD:dic[@"desc"]];
-                        });
-                    }
-                    else{
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [MMProgressHUD showHUD:error?MMDescriptionForError(error):dic[K_APP_REQUEST_MSG]];
-                        });
-                    }
-                }];
+            if (model.IsMyGroup) {
+                [YJProgressHUD showMessage:@"您已经是群成员啦"];
+            }else{
+                if (model && [ZWUserModel currentUser]) {
+                    NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+                    parma[@"groupID"] = model.groupID;
+                    parma[@"creatorID"] = model.creatorID;
+                    [[self.ViewModel.addGroupCommand execute:parma] subscribeNext:^(id  _Nullable x) {
+                        if ([x[@"code"] intValue] == 0) {
+                            [YJProgressHUD showSuccess:@"请求发送成功,等待群主确认"];
+                        }
+                    }];
+                }
+                else{
+                    [MMProgressHUD showHUD:@"群组数据不存在"];
+                }
             }
-            else{
-                [MMProgressHUD showHUD:@"群组数据不存在"];
-            }
-        }
-        //加好友
-        else{
-            SearchFriendModel *searchModel = self.dataSource[index];
             
+        }else{
+            SearchFriendModel *searchModel = self.dataSource[index];
             if (!searchModel.isFriend) {
                 NSString *myName = [ZWUserModel currentUser].userName;
                 

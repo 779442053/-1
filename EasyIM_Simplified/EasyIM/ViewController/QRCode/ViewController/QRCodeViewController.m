@@ -98,10 +98,8 @@ static CGFloat const margin_qrcode = 20;
 -(void)initView{
     //MARK:主题内容
     [self.view addSubview:self.contentView];
-    
-    //MARK:绘制二维码
+    //MARK:绘制二维码 二维码类型 0个人、1群聊、2会议室
     NSString *strContent = [NSString stringWithFormat:@"%@://%@",K_APP_QRCODE_USER,_qrcode_fid];
-    //二维码类型 0个人、1群聊、2会议室
     if (_qrcode_type == 1) {
         strContent = [NSString stringWithFormat:@"%@://%@",K_APP_QRCODE_GROUP,_qrcode_fid];
     }

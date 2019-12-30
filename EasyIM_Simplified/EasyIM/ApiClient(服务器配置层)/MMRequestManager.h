@@ -144,22 +144,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-/**
- 增加群
-
- @param groupName 群名
- @param bulletin 公告
- @param theme 主题
- @param photo 群头像
- @param userlist 用户列表
- @param aCompletionBlock 结果返回
- */
-+ (void)addGroupWithGroupName:(NSString *)groupName
-                     bulletin:(NSString *)bulletin
-                        theme:(NSString *)theme
-                        photo:(NSString *)photo
-                     userlist:(NSString *)userlist
-                  aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock;
 
 
 

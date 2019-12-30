@@ -68,6 +68,7 @@
     
     UIView *bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(topView.frame) + 12, KScreenWidth, 40)];
     bottomView.backgroundColor = [UIColor whiteColor];
+    bottomView.userInteractionEnabled = YES;
     [self.view addSubview:bottomView];
     
     UILabel *botomLB = [[UILabel alloc]init];

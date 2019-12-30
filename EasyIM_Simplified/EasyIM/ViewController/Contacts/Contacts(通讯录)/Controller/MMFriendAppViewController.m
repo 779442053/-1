@@ -11,48 +11,31 @@
 #import "MMButton.h"
 
 @interface MMFriendAppViewController ()<UITableViewDelegate, UITableViewDataSource>
-
 @property (nonatomic, strong) UITableView *tableView;
-
 @end
 
 @implementation MMFriendAppViewController
-
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, ZWStatusAndNavHeight, SCREEN_WIDTH, SCREEN_HEIGHT - ZWStatusAndNavHeight) style:UITableViewStylePlain];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.showsHorizontalScrollIndicator = NO;
-//        _tableView.backgroundColor = [UIColor whiteColor];
         _tableView.tableFooterView = [UIView new];
         _tableView.delegate = self;
         _tableView.dataSource = self;
     }
     return _tableView;
 }
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
     [self setTitle:@"详细资料"];
-    
     [self.view addSubview:self.tableView];
 }
-
-#pragma mark - UITableViewDataSource and UITableViewDelegate
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return 3;
 }
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch (indexPath.row) {
@@ -108,8 +91,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    NSInteger bullentinType = [_model.bulletinType integerValue];
-    switch (bullentinType) {
+    switch (_model.bulletinType) {
         case 0:
         {
             UIView *sectionFoot = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 60)];
@@ -147,33 +129,27 @@
             [tipLabel setTextColor:[UIColor lightGrayColor]];
             [tipLabel setFont:[UIFont systemFontOfSize:13]];
             [tipLabel setTextAlignment:NSTextAlignmentCenter];
-            
-            if (bullentinType == 1) {
+            if (_model.bulletinType == 1) {
                 [tipLabel setText:@"已同意申请"];
-            }else if (bullentinType == 2){
+            }else if (_model.bulletinType == 2){
                 [tipLabel setText:@"已拒绝申请"];
-            }else if (bullentinType == 3){
+            }else if (_model.bulletinType == 3){
                 [tipLabel setText:@"对方已同意"];
-            }else if (bullentinType == 4){
+            }else if (_model.bulletinType == 4){
                 [tipLabel setText:@"对方已拒绝"];
-            }else if (bullentinType == 5){
+            }else if (_model.bulletinType == 5){
                 [tipLabel setText:@"对方已删除"];
             }
-
-
             return tipLabel;
         }
         default:
             break;
     }
-    
     return nil;
 }
-
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    NSInteger tag = [_model.bulletinType integerValue];
-    switch (tag) {
+    switch (_model.bulletinType) {
         case 0:
             return 80.0f;
             break;
@@ -186,7 +162,6 @@
     }
     return 0.0f;
 }
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch (indexPath.row) {
@@ -201,15 +176,10 @@
     }
     return 0.0f;
 }
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-
-#pragma mark - Private
-
 - (void)agreeAction:(UIButton *)sender
 {
 //    WEAKSELF

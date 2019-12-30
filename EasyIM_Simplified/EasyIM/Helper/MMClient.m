@@ -34,7 +34,6 @@ static MMClient *helper = nil;
     });
     return helper;
 }
-
 - (id)init
 {
     self = [super init];
@@ -44,46 +43,48 @@ static MMClient *helper = nil;
     }
     return self;
 }
-
 - (void)dealloc
 {
-    
 }
-#pragma mark - Public Methods
-#pragma mark - <添加代理>
 - (void)addDelegate:(id<MMChatManager>)delegate
 {
     if (delegate && ![_multiDelegate.delegates.allObjects containsObject:delegate]) {
         [_multiDelegate addDelegate:delegate];
     }
 }
-#pragma mark - <移除当前代理>
 - (void)removeDelegate:(id<MMChatManager>)delegate
 {
     [_multiDelegate removeDelegate:delegate];
 }
-#pragma mark - <移除所有代理>
 - (void)clearAllDelegates
 {
     [_multiDelegate removeAllDelegates];
 }
-#pragma mark - Hangdles
 - (void)addHandleChatMessage:(NSDictionary *)aMessage
-{
-    MMLog(@"收到单聊消息===将该条消息转化成已读状态===============%@",aMessage);
+{//这里,我收到了一条消息==此时,并不知道当前对话是否开启
+    ZWWLog(@"收到单聊消息===将该条消息转化成已读状态===============%@",aMessage);
     NSDictionary *userDic = aMessage[@"list"][@"user"];
     if (![userDic isKindOfClass:[NSDictionary class]]) {
-        MMLog(@"消息格式有误！详见：%@",userDic);
+        ZWWLog(@"消息格式有误！详见：%@",userDic);
         return;
     }
     MMReceiveMessageModel *receiveModel = [MMReceiveMessageModel mj_objectWithKeyValues:userDic];
     MMChatContentModel *chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"content"][@"slice"]];
     if ([[userDic allKeys] containsObject:@"msg"]) {
-        chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"msg"][@"slice"]];
+        if ([userDic[@"msg"][@"slice"] isKindOfClass:[NSArray class]]) {
+            NSArray *slicearr = userDic[@"msg"][@"slice"];
+            if (slicearr.count) {
+                NSDictionary *sliceDict = slicearr[0];
+                chatContentModel = [MMChatContentModel yy_modelWithDictionary:sliceDict];
+            }
+        }else{
+            chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"msg"][@"slice"]];
+        }
     }
-
-    BOOL isSender  = [receiveModel.fromID isEqualToString:[ZWUserModel currentUser].userId] ? YES:NO;
-    
+    NSString *fromID = [NSString stringWithFormat:@"%@",receiveModel.fromID];
+    NSString *UserID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+    BOOL isSender  = [fromID isEqualToString:UserID] ? YES:NO;
+    //创建消息模型
     MMMessage *message = [[MMMessage alloc] initWithToUser:receiveModel.toID
                                                 toUserName:receiveModel.toName
                                                   fromUser:receiveModel.fromID
@@ -95,13 +96,14 @@ static MMClient *helper = nil;
                                                messageBody:chatContentModel];
     
     message.localtime = [[NSDate date] timeStamp];
+    //消息类型===当对方撤回消息的时候或者是系统消息的时候,需要手动封装消息
     message.messageType = [MMRecentConVersationModel getMessageType:message.slice.type];
     message.fromPhoto = receiveModel.fromPhoto;
-    message.timestamp = [self transTimeStamp:receiveModel.time];
-    message.deliveryState = isSender ? MMMessageDeliveryState_Delivered:MMMessageDeliveryState_Failure;
-    message.conversation = isSender ? message.toID :  message.fromID;//会话对象是conversation 对方的id
-    MMLog(@"%d",message.isInsert);
-    MMLog(@"%@",message.conversation);
+    message.timestamp = [self transTimeStamp:receiveModel.time];//毫秒
+    message.deliveryState = isSender ? MMMessageDeliveryState_Delivered:MMMessageDeliveryState_Delivered;
+    message.conversation = isSender ? message.toID :  message.fromID;//
+    MMLog(@"========%d",message.isInsert);
+    MMLog(@"======%@",message.conversation);
     message.isInsert = receiveModel.isInsert;
    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // 消息插入数据库
@@ -111,7 +113,6 @@ static MMClient *helper = nil;
         BOOL isChatting = [currentToId isEqualToString:[MMClient sharedClient].chattingConversation.conversationModel.toUid];
         [[MMChatDBManager shareManager] addOrUpdateConversationWithMessage:message isChatting:isChatting];
     });
-    
     // 代理处理
     if (self.chatListViewC || self.chattingConversation) {
         [_multiDelegate clientManager:self
@@ -132,8 +133,9 @@ static MMClient *helper = nil;
     }
     
     MMReceiveMessageModel *receiveModel = [MMReceiveMessageModel mj_objectWithKeyValues:userDic];
-    
-    if ([receiveModel.fromID isEqualToString:[ZWUserModel currentUser].userId] && !receiveModel.isInsert) {
+    NSString * fromID = [NSString stringWithFormat:@"%@",receiveModel.fromID];
+    NSString * userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+    if ([fromID isEqualToString:userID] && !receiveModel.isInsert) {
         return;
     }
 

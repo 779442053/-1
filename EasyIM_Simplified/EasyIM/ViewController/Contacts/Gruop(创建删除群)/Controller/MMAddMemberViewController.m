@@ -146,9 +146,8 @@
     static NSString *cellIde = @"NewGroupViewCell";
     NewGroupViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIde];
     if (cell==nil) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"NewGroupViewCell" owner:self options:nil] lastObject];
+        cell = [tableView dequeueReusableCellWithIdentifier:@"NewGroupViewCell" forIndexPath:indexPath];
     }
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     if (self.dataSource && [self.dataSource count] > indexPath.row) {
         NSString *strNickName;
         NSString *userId;
@@ -208,7 +207,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 80.0f;
+    return 60.0f;
 }
 #pragma mark - NewGroupViewCellDelegate
 // 选中成员
@@ -277,6 +276,7 @@
         _tableView.tableFooterView = [UIView new];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        [_tableView registerClass:[NewGroupViewCell class] forCellReuseIdentifier:@"NewGroupViewCell"];
     }
     return _tableView;
 }

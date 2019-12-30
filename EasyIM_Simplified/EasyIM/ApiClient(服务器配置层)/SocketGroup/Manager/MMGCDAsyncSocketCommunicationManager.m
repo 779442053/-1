@@ -26,7 +26,7 @@
 
 //ViewCtroller
 #import "LoginVC.h"
-#import "AddFriendStatusViewController.h"
+
 
 //Defines
 #import "MMDefines.h"
@@ -452,7 +452,7 @@
                 break;
                 
             default:
-                NSLog(@"未知类型的cmd:%@",strCMD);
+                
                 break;
         }
     }

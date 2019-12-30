@@ -416,42 +416,6 @@
         aCompletionBlock(nil, error);
     }];
 }
-
-
-+ (void)addGroupWithGroupName:(NSString *)groupName
-                     bulletin:(NSString *)bulletin
-                        theme:(NSString *)theme
-                        photo:(NSString *)photo
-                     userlist:(NSString *)userlist
-                  aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock
-{
-    
-    //1.构造参数
-    NSDictionary *dic = @{
-                          @"cmd":@"addGroup",
-                          @"sessionId":[ZWUserModel currentUser].sessionID,
-                          @"groupName":groupName,
-                          @"bulletin":bulletin,
-                          @"theme":theme,
-                          @"photo":@"",
-                          @"userlist":userlist,
-                          };
-    
-    //2.构造Get请求
-    [[MMApiClient sharedClient] GET:K_APP_REQUEST_API parameters:dic success:^(id  _Nonnull responseObject) {
-        MMLog(@"%@",responseObject);
-        aCompletionBlock(responseObject, nil);
-    } failure:^(NSError * _Nonnull error) {
-        MMLog(@"%@",error);
-        aCompletionBlock(nil, error);
-    }];
-}
-
-
-
-
-
-
 /**
  获取群成员
  

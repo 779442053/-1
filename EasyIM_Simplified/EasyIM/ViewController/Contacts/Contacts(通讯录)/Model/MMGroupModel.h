@@ -22,8 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *type; //类型
 @property (nonatomic, copy) NSString *theme;//主题
 @property (nonatomic, copy) NSString *bulletin; //公告
-
 @property (nonatomic, copy) NSString *cmd;
+@property (nonatomic, assign) BOOL IsMyGroup;
 
 @end
 

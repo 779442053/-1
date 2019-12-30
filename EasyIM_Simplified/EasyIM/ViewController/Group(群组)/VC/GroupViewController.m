@@ -118,7 +118,6 @@ static NSString *const identifier = @"ContactTableViewCell";
     self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
          [self getMoreData];
     }];
-    // 马上进入刷新状态
     [self.tableView.mj_header beginRefreshing];
 }
 #pragma mark 获取我的群聊
@@ -246,7 +245,6 @@ static NSString *const identifier = @"ContactTableViewCell";
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.tableFooterView = [UIView new];
-        //注册
         [_tableView registerClass:[ContactTableViewCell class] forCellReuseIdentifier:identifier];
     }
     return _tableView;

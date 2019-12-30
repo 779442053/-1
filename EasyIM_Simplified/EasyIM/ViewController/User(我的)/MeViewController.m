@@ -50,9 +50,7 @@ static NSString *const k_data_name = @"name";
 @property(nonatomic,strong) UIButton *btnQRcode;
 @property(nonatomic,strong) ZWMeViewModel *ViewModel;
 @end
-
 @implementation MeViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setTitle:@"我"];
@@ -131,29 +129,30 @@ static NSString *const k_data_name = @"name";
 {
     NSString *strInfo = [NSString stringWithFormat:@"%@",sweepResult];
     MMLog(@"扫描成功，详见：%@",sweepResult);
-    
     NSArray *arrTemp = [strInfo componentsSeparatedByString:@"://"];
     NSString *strId = [NSString stringWithFormat:@"%@",arrTemp.lastObject];
     if (!strId.checkTextEmpty) {
         [MMProgressHUD showHUD:@"信息不存在"];
         return;
     }
-    
-    //MARK:扫码添加用户
     if ([strInfo containsString:K_APP_QRCODE_USER]) {
         if ([strId isEqualToString:[ZWUserModel currentUser].userId]) {
             [MMProgressHUD showHUD:@"不能添加自己为好友"];
             return;
         }
-        
         [[self.ViewModel.addFriendCommand execute:strId] subscribeNext:^(id  _Nullable x) {
             if ([x[@"code"] intValue] == 0) {
-                [MMProgressHUD showHUD: @"请求成功"];
+                [MMProgressHUD showHUD: @"添加好友申请发送成功"];
             }
         }];
     }
     //MARK:扫码加群
     else if([strInfo containsString:K_APP_QRCODE_GROUP]){
+        [[self.ViewModel.add2GroupCommand execute:strId] subscribeNext:^(id  _Nullable x) {
+            if ([x[@"code"] intValue] == 0) {
+                [MMProgressHUD showHUD: @"入群申请发送成功"];
+            }
+        }];
         [MMRequestManager inviteFrd2GroupWithGroupId:strId
                                             friendId:[ZWUserModel currentUser].userId
                                          aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {

@@ -109,7 +109,6 @@
 
 - (void)setContactsModel:(ContactsModel *)contactsModel
 {
-
     [self.imageView setHidden:YES];
     [self.textLabel setHidden:YES];
     [self.unReadLabel setHidden:YES];
@@ -181,17 +180,16 @@
     [self.timeLabel setHidden:NO];
     
     NSURL *url = [NSURL URLWithString:[model.latestHeadImage containsString:@"http"]?model.latestHeadImage:@""];
-    [self.headImageView sd_setImageWithURL:url placeholderImage:K_DEFAULT_USER_PIC];
+    if ([model.latestHeadImage isEqualToString:@"tongzhi"]) {
+        self.headImageView.image = [UIImage imageNamed:model.latestHeadImage];
+    }else{
+        [self.headImageView sd_setImageWithURL:url placeholderImage:K_DEFAULT_USER_PIC];
+    }
     [self.nameLabel setText:model.latestnickname];
     [self.detailLabel setText:model.latestMsgStr];
     NSDate *date = [MMDateHelper dateWithTimeIntervalInMilliSecondSince1970:model.latestMsgTimeStamp];
     [self.timeLabel setText:[MMDateHelper formattedTime:date]];
-    
-    
     [self updateUnreadCount:model.unReadCount];
-    
-    
-    
     [self setCellFrame];
     
 }
@@ -226,7 +224,7 @@
     [self.nameLabel setHidden:NO];
     [self.detailLabel setHidden:YES];
     self.headImageView.image = [UIImage imageNamed:@"zwgroupIcon"];
-    [self.nameLabel setText:ZWgroupModel.groupname];
+    [self.nameLabel setText:ZWgroupModel.name];
     [self.headImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView.mas_centerY);
         make.left.mas_equalTo(self.contentView.mas_left).offset(15);
@@ -258,7 +256,59 @@
     NSString *numUnRead = messageUnCount > 99 ? @"99+" : [NSString stringWithFormat:@"%ld", messageUnCount];
     [self.unReadLabel setText:numUnRead];
 }
-
+-(void)updateNotifionModel:(ZWNotionModel *)Model{
+    if (!Model) {
+        return;
+    }
+    [self.imageView setHidden:YES];
+    [self.textLabel setHidden:YES];
+    [self.headImageView setHidden:NO];
+    [self.nameLabel setHidden:NO];
+    [self.detailLabel setHidden:NO];
+    [self.timeLabel setHidden:NO];
+    
+    NSURL *url = [NSURL URLWithString:[Model.fromPhoto containsString:@"http"]?Model.fromPhoto:@""];
+    [self.headImageView sd_setImageWithURL:url placeholderImage:K_DEFAULT_USER_PIC];
+    [self.nameLabel setText:Model.fromName];
+    NSString * latestMsgStr;
+    switch (Model.bulletinType) {
+        case BULLETIN_TYPE_ADD_FRIEND:
+        {
+            latestMsgStr = @"请求添加你为好友";
+        }
+            break;
+        case BULLETIN_TYPE_BE_DEL_FRIEND:
+        {
+            latestMsgStr = @"被好友移除";
+        }
+            break;
+        case BULLETIN_TYPE_ACCEPT_FRIEND:
+        {
+            latestMsgStr = @"同意加好友";
+        }
+            break;
+        case BULLETIN_TYPE_BE_INVITE_INTO_GROUP:
+        {
+            latestMsgStr = @"邀请您加入群聊";
+        }
+            break;
+        case BULLETIN_TYPE_REJECT_FRIEND://2
+        {
+            latestMsgStr = @"别人拒绝我加好友的申请";
+        }
+            break;
+    default:
+            {
+                latestMsgStr = @"未定义的通知消息";
+            }
+        break;
+    }
+    [self.detailLabel setText:latestMsgStr];
+    NSDate *date = [MMDateHelper dateWithTimeIntervalInMilliSecondSince1970:[Model.time doubleValue]];
+    [self.timeLabel setText:[MMDateHelper formattedTime:date]];
+    [self updateUnreadCount:1];
+    [self setCellFrame];
+}
 - (void)setCellFrame
 {
     

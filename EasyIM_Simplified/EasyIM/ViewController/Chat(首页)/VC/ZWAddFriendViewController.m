@@ -25,18 +25,12 @@
 @property (nonatomic,strong) UIButton *myCoderBtn;
 @property (nonatomic,strong) UIView *contactbtn;
 @property (nonatomic,strong) UIView *ScanBtn;
-
 @property (nonatomic,strong) NSMutableArray *dataScoure;
-
 @property(nonatomic,strong)ZWAddFriendViewModel *ViewModel;
-
 @end
-
 @implementation ZWAddFriendViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
 }
 -(void)zw_bindViewModel{
     UITapGestureRecognizer *Contacttap = [[UITapGestureRecognizer alloc] init];

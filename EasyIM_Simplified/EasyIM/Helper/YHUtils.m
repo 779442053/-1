@@ -581,12 +581,13 @@ static AssistObject *g_assistObj = nil;
 
 
 //MARK: - 播放声音
+/**手机振动,针对群发消息*/
++ (void)ShackTheIphon{
+    AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+}
 /** 新消息声音播放 */
 + (void)playVoiceForMessage{
-    
-    //手机振动
     AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
-    
     CFURLRef soundFileURLRef = CFBundleCopyResourceURL(CFBundleGetMainBundle(), CFSTR("sms-received"), CFSTR("caf"), NULL);
     SystemSoundID soundFileID;
     AudioServicesCreateSystemSoundID(soundFileURLRef, &soundFileID);
@@ -783,10 +784,8 @@ static void soundCompletionBlock(SystemSoundID SSID, void *mySelf){
     
     if (strInput && ![strInput isEqualToString:@""]){
         NSMutableString *ms = [[NSMutableString alloc] initWithString:strInput];
-        
         CFStringTransform((__bridge CFMutableStringRef)ms, NULL, kCFStringTransformMandarinLatin, NO);
         CFStringTransform((__bridge CFMutableStringRef)ms, NULL, kCFStringTransformStripDiacritics, NO);
-        
         NSArray *pyArr = [ms componentsSeparatedByString:@" "];
         if (pyArr && [pyArr count] > 0) {
             NSString *strResult = [[NSString stringWithFormat:@"%@",pyArr.firstObject] substringToIndex:1];

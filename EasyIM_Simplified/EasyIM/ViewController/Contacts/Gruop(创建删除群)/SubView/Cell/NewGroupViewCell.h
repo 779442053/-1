@@ -20,11 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface NewGroupViewCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *logoImage;
-@property (weak, nonatomic) IBOutlet UIButton *selBtn;
-@property (weak, nonatomic) IBOutlet UILabel *name;
-@property (weak, nonatomic) IBOutlet UILabel *desLable;
-@property (weak, nonatomic) IBOutlet UIImageView *selImage;
+
+@property (strong, nonatomic)  UIImageView *logoImage;
+@property (strong, nonatomic)  UIButton *selBtn;
+@property (strong, nonatomic)  UILabel *name;
+@property (strong, nonatomic)  UILabel *desLable;
+@property (strong, nonatomic)  UIImageView *selImage;
 
 @property (nonatomic,weak) id<NewGroupViewCellDelegate> delegate;
 

@@ -58,7 +58,13 @@
             parma[@"time"] = [MMDateHelper getNowTime];
             parma[@"msg"] = @"你好!通过添加好友，我们可以聊天啦";
             ZWWLog(@"接受好友请求=%@",parma)
-           [ZWSocketManager SendDataWithData:parma];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
+            }];
             [subscriber sendCompleted];
             return [RACDisposable disposableWithBlock:^{
                 
@@ -75,7 +81,13 @@
             parma[@"time"] = [MMDateHelper getNowTime];
             parma[@"msg"] = @"对方拒绝你的好友请求";
             ZWWLog(@"拒绝好友请求=%@",parma)
-           [ZWSocketManager SendDataWithData:parma];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }
+            }];
             [subscriber sendCompleted];
             return [RACDisposable disposableWithBlock:^{
                 

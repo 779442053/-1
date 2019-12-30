@@ -35,60 +35,19 @@
 
 - (void)setModelFrame:(MMMessageFrame *)modelFrame
 {
-    
     [super setModelFrame:modelFrame];
-    
+    //自己发送的图片,可以在本地拿到图片的路径
     MMMediaManager *manager = [MMMediaManager sharedManager];
     UIImage *image = [manager imageWithLocalPath:[manager imagePathWithName:modelFrame.aMessage.slice.filePath.lastPathComponent]];
     self.imageBtn.frame = modelFrame.picViewF;
     self.bubbleView.userInteractionEnabled = _imageBtn.imageView.image != nil;
     self.bubbleView.image = nil;
     if (modelFrame.aMessage.isSender&&image) {    // 发送者
+        ZWWLog(@"我是发送图片者")
         UIImage *arrowImage = [manager arrowMeImage:image size:modelFrame.picViewF.size mediaPath:modelFrame.aMessage.slice.filePath isSender:modelFrame.aMessage.isSender];
         [self.imageBtn setBackgroundImage:arrowImage forState:UIControlStateNormal];
-    } else {
-        [self.imageBtn setBackgroundImage:[UIImage imageNamed:@"workgroup_img_defaultPhoto"] forState:UIControlStateNormal];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 [self.imageBtn sd_setImageWithURL:[NSURL URLWithString:modelFrame.aMessage.slice.content] forState:UIControlStateNormal];
-             });
-        });
-        
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//
-//            UIImage *image;
-//            if (messageBody.fileName.length) { // 从本地读取图片
-//
-//                NSFileManager *fileManager = [NSFileManager defaultManager];
-//                NSData *imageData = [fileManager contentsAtPath:[[NSString getFielSavePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"s_%@", messageBody.fileName]]];
-//                image = [UIImage imageWithData:imageData];
-//
-//            };
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//
-//                if (image) { // 本地有图片
-//
-//                    FLLog(@"本地有图片");
-//                    [self.messageImage setImage:image];
-//                }
-//                else { // 网络加载图片
-//
-//                    FLLog(@"网络加载图片");
-//                    [self.messageImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", BaseUrl, messageBody.thumbnailRemotePath]]];
-//                }
-//            });
-//        });
-
-        
-//        NSString *orgImgPath = [manager originImgPath:modelFrame];
-//        if ([MMFileTool fileExistsAtPath:orgImgPath]) {
-//            UIImage *orgImg = [manager imageWithLocalPath:orgImgPath];
-//            UIImage *arrowImage = [manager arrowMeImage:orgImg size:modelFrame.picViewF.size mediaPath:orgImgPath isSender:modelFrame.model.isSender];
-//            [self.imageBtn setBackgroundImage:arrowImage forState:UIControlStateNormal];
-//        } else {
-//            [manager arrowMeImage:self.imageBtn.curre.ntBackgroundImage size:modelFrame.picViewF.size mediaPath:modelFrame.model.message.slice.content isSender:modelFrame.model.isSender];
-//            [self.imageBtn setBackgroundImage:imageView.image forState:UIControlStateNormal];
-//        }
+    } else {//接受别人的图片,将图片裁剪成别人图片箭头的样子
+        [self.imageBtn sd_setImageWithURL:[NSURL URLWithString:modelFrame.aMessage.slice.content] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"zhaopian"]];
     }
 }
 

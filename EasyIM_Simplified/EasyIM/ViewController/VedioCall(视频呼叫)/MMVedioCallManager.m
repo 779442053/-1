@@ -110,18 +110,15 @@ static MMVedioCallManager *vedioCallManager = nil;
     if (!notify.object) {
         return;
     }
-    
     //2.如果正在通话中给出提示
     if (isCalling) {
         [MMProgressHUD showHUD:@"有通话正在进行"];
         return;
     }
-    
     //3.接收通知过来的消息
     MMCallParty callParty = (MMCallParty)[notify.object[CALL_CALLPARTY] integerValue];// 主叫方与被叫方
     MMCallType type = (MMCallType)[notify.object[CALL_TYPE] integerValue];// 通话类型
     NSString *chatter = [notify.object valueForKey:CALL_CHATTER] ;// 被叫方ID
-    
     //4.给当前的会话Model赋值
     self.currenSession = [[MMCallSessionModel alloc] init];
     self.currenSession.callParty = callParty;
@@ -129,7 +126,6 @@ static MMVedioCallManager *vedioCallManager = nil;
     self.currenSession.fromId = [ZWUserModel currentUser].userId;
     self.currenSession.callStatus = MMCallStatus_callIng;//正在呼叫对方
     self.currenSession.callParty = MMCallParty_Calling;
-    
     //5.视频和语音调起不同的页面
     if (type == MMCallTypeVideo) {
         //5.1如果是视频
@@ -138,13 +134,10 @@ static MMVedioCallManager *vedioCallManager = nil;
         //5.2否则则是音频
         MM1v1AudioViewController *audioVC = [[MM1v1AudioViewController alloc] initWithCallSession:self.currenSession];
         audioVC.arrUserDatas = notify.object[CALL_USER_DETAILS];
-        
         self.currenViewCtr = audioVC;
     }
     [self presentViewController:_currenViewCtr];
-    
     self.currenViewCtr.callStatus = MMCallStatus_callIng;
-    
     //6.判断对方是否在线:不在线则给出提示,在前就发起视频请求,同时更改从 (正在连接中)-->(呼叫等待中)
     [MMRequestManager checkUserOnlineWithUserId:chatter callBack:^(NSInteger status, NSError * _Nonnull error) {
         if (!error && status == 1) {

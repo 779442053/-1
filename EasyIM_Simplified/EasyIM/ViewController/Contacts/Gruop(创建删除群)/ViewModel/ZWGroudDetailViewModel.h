@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong)RACCommand *exitGroupWithGroupid;
 @property(nonatomic,strong)RACCommand *kickPeopleFromGroupCommand;
 @property(nonatomic,strong)RACCommand *setGroupChatBg;
+@property(nonatomic,strong)RACCommand *creatGroupCommand;
+@property(nonatomic,strong)RACCommand *UploadImageToSeverCommand;
 @end
 
 NS_ASSUME_NONNULL_END

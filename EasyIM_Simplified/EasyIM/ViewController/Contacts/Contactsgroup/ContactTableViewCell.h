@@ -15,6 +15,8 @@
 #import "MMRecentContactsModel.h"
 //群组
 #import "ZWGroupModel.h"
+//通知
+#import "ZWNotionModel.h"
 
 @protocol MMFriendCellDelegate <NSObject>
 
@@ -46,6 +48,7 @@
 
 
 - (void)updateUnreadCount:(NSInteger)messageUnCount;
-
+//展示通知消息的cell
+-(void)updateNotifionModel:(ZWNotionModel *)Model;
 
 @end

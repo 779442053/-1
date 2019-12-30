@@ -29,13 +29,12 @@
 -(void)zw_addSubviews{
     [self setTitle:@"详细资料"];
     [self showLeftBackButton];
-    
     UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, ZWStatusAndNavHeight + 15, KScreenWidth, 135)];
        topView.backgroundColor = [UIColor whiteColor];
        [self.view addSubview:topView];
     [topView addSubview:self.imageV];
     [self.imageV mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(topView.mas_centerY);
+        make.top.mas_equalTo(topView.mas_top).with.mas_offset(20);
         make.left.mas_equalTo(topView.mas_left).with.mas_offset(10);
         make.size.mas_equalTo(CGSizeMake(45, 45));
     }];
@@ -98,27 +97,39 @@
     [self.view addSubview:self.blacklistBtn];
     [self.blacklistBtn addTarget:self action:@selector(blacklistEvent:) forControlEvents:UIControlEventTouchUpInside];
     [self.blacklistBtn setLayerBorderWidth:0 borderColor:nil cornerRadius:5];
-    self.desLable.text = [NSString stringWithFormat:@"账号:%@",_model.fromName];
+    self.desLable.text = [NSString stringWithFormat:@"账号:%@",_model.fromID];
     self.verifiMsgLable.text = [NSString stringWithFormat:@"我是 %@",self.nickLable.text];
     [self.imageV sd_setImageWithURL:[NSURL URLWithString:_model.fromPhoto] placeholderImage:[UIImage imageNamed:@"setting_default_icon"]];
     [self.imageV wyh_autoSetImageCornerRedius:3 ConrnerType:UIRectCornerAllCorners];
 }
 // 通过验证
+
 - (void)verificationEvent:(id)sender {
-    [self.ViewModel.acceptFriendCommand execute:_model.fromID];
+    [[self.ViewModel.acceptFriendCommand execute:_model.fromID] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            if ([self.delegate respondsToSelector:@selector(acceptRquestWithType:aComption:)]) {
+                [self.delegate acceptRquestWithType:MMFAppAccept aComption:^(id  _Nullable data, NSError * _Nullable error) {
+                    ZWWLog(@"接受好友请求的回调")
+                }];
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }];
     
-    //通过之后,进行好友详情 = ===通知实现调用
-//    _model.bulletinType = @(1).description;
-//    FriDetailViewController *vc = [[FriDetailViewController alloc]init];
-//    vc.Nmodel = _model;
-//    [self.navigationController pushViewController:vc animated:YES];
 }
 //加入黑名单
 - (void)blacklistEvent:(id)sender {
-    [self.ViewModel.rejectFriendCommand execute:_model.fromID];
-    //需要手动改变数据源对象
-//    model.bulletinType = @(2).description;
-//    [self.navigationController popToRootViewControllerAnimated:YES];
+    [[self.ViewModel.rejectFriendCommand execute:_model.fromID] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            if ([self.delegate respondsToSelector:@selector(rejectRequestWithType:aComption:)]) {
+                [self.delegate rejectRequestWithType:MMFAppRes aComption:^(id  _Nullable data, NSError * _Nullable error) {
+                    ZWWLog(@"决绝好友请求的回调")
+                }];
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }];
+    
 }
 
 -(UIImageView *)imageV{

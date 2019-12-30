@@ -14,6 +14,8 @@
 #import "SearchFriendsViewController.h"
 #import "ZWAddFriendViewController.h"
 #import "AddFriViewController.h"
+
+#import "AddFriendStatusViewController.h"
 #import "MMTools.h"
 //相册
 #import <Photos/Photos.h>
@@ -24,6 +26,7 @@
 //扫一扫
 #import "SweepViewController.h"
 #import "ZWChatViewModel.h"
+#import "LoginVC.h"
 static NSString *const identifier = @"ContactTableViewCell";
 @interface ChatViewController ()<UITableViewDelegate,UITableViewDataSource,MMChatManager,YBPopupMenuDelegate,SweepViewControllerDelegate>
 @property (nonatomic, strong) NSMutableArray *laterPersonDataArr;
@@ -37,9 +40,9 @@ static NSString *const identifier = @"ContactTableViewCell";
     //此处,逻辑需要修改.链接socket
     [[self.ViewModel.socketContactCommand execute:nil] subscribeNext:^(id  _Nullable x) {
         if ([x intValue] == 0) {
-            [YJProgressHUD showSuccess:@"连接成功"];
+            //[YJProgressHUD showSuccess:@"连接成功"];
         }else{
-            [YJProgressHUD showError:@"连接失败"];
+            [YJProgressHUD showError:@"Tcp连接失败"];
         }
     }];
 }
@@ -54,7 +57,22 @@ static NSString *const identifier = @"ContactTableViewCell";
     [[self.ViewModel.GetPushdataCommand execute:nil] subscribeNext:^(id  _Nullable x) {
         if ([x[@"code"] intValue] == 0) {
             [self.pushListARR addObjectsFromArray:x[@"res"]];
+            MMRecentContactsModel *model = [[MMRecentContactsModel alloc]init];
+            model.unReadCount = self.pushListARR.count;
+            model.latestMsgStr = [NSString stringWithFormat:@"您有%lu条未读通知消息",(unsigned long)self.pushListARR.count];
+            model.latestnickname = @"通知消息";
+            model.latestHeadImage = @"tongzhi";
+            NewFriendModel *notifionModel = self.pushListARR.lastObject;
+            model.latestMsgTimeStamp = [notifionModel.time longLongValue];
+            [self.laterPersonDataArr insertObject:model atIndex:0];
+            [self.tableView reloadData];
+            ZWWLog(@"获取最近的通知===%@",self.pushListARR)
             [[NSNotificationCenter defaultCenter] postNotificationName:IMPushData object:self.pushListARR];
+        }else if ([x[@"code"] intValue] == 2){
+            LoginVC *login = [[LoginVC alloc]init];
+            BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:login];
+            [self.navigationController presentViewController:nav animated:YES completion:nil];
+            return ;
         }
     }];
 }
@@ -125,20 +143,16 @@ static NSString *const identifier = @"ContactTableViewCell";
     searchVC.item = MMConGroup_Friend;
     [self.navigationController pushViewController:searchVC animated:YES];
 }
-//MARK: - 注册通知
 - (void)registerNotic
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noticReload:) name:NEARLYLISTRELOAD object:nil];//我的最近联系人记录
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noticReload:) name:CONTACTS_RELOAD object:nil];//通讯录
 }
-    
 // 通知常用联系人/常用联系群 重新加载数据
 - (void)noticReload:(NSNotification *) notification
 {
     NSString *tagType = notification.userInfo[@"tagType"];
     ZWWLog(@"收到的通知==%@",tagType)
-    //获取本地之后, 开始向IM 注册 我已经上线  联系人 ,群里
-    // 最近联系人和最近的群,都是存储在本地
     if ([tagType isEqualToString:@"12"]) {
         [self loadData:TargetType_TopC];//常用联系人
     }else{
@@ -153,6 +167,11 @@ static NSString *const identifier = @"ContactTableViewCell";
         if ([x[@"code"] intValue] == 0) {
             [self.laterPersonDataArr removeAllObjects];
             [self.laterPersonDataArr addObjectsFromArray:x[@"res"]];
+        }else if ([x[@"code"] intValue] == 2){
+            LoginVC *login = [[LoginVC alloc]init];
+            BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:login];
+            [self.navigationController presentViewController:nav animated:YES completion:nil];
+            return ;
         }
     }];
 }
@@ -192,12 +211,9 @@ static NSString *const identifier = @"ContactTableViewCell";
 #pragma mark - load data
 - (void)queryDataFromDB
 {
-    //1.删除之前所有最近联系人列表
     [self.laterPersonDataArr removeAllObjects];
-    //2.取出本地所有联系人消息
     [[MMChatDBManager shareManager] getAllConversations:^(NSArray<MMRecentContactsModel *> * _Nonnull conversations) {
         [self.laterPersonDataArr addObjectsFromArray:conversations];
-        //2.1.刷新表格
         [self.tableView reloadData];
     }];
 }
@@ -295,7 +311,6 @@ static NSString *const identifier = @"ContactTableViewCell";
         cell=[[ContactTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
-    //好友列表展示
     if (self.laterPersonDataArr && [self.laterPersonDataArr count] > indexPath.row) {
         [cell recentContactsWithModel:self.laterPersonDataArr[indexPath.row]];
     }
@@ -335,11 +350,18 @@ static NSString *const identifier = @"ContactTableViewCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
     MMRecentContactsModel *model;
     if (self.laterPersonDataArr && [self.laterPersonDataArr count] > indexPath.row) {
         model = self.laterPersonDataArr[indexPath.row];
-        [[NSNotificationCenter defaultCenter] postNotificationName:CHAT_PUSHVIEWCONTROLLER object:model];
+        if (model.userId) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:CHAT_PUSHVIEWCONTROLLER object:model];
+        }else{
+            ZWWLog(@"进到通知界面")
+            AddFriendStatusViewController *vc = [[AddFriendStatusViewController alloc]init];
+            vc.newFriendsArr = self.pushListARR;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        
     }
 }
     
@@ -347,7 +369,6 @@ static NSString *const identifier = @"ContactTableViewCell";
 #pragma mark - Action
 - (void)deleteNormalAction:(NSIndexPath *)indexPath
 {
-    
     MMRecentContactsModel *model;
     if (self.laterPersonDataArr && [self.laterPersonDataArr count] > indexPath.row) {
         model = self.laterPersonDataArr[indexPath.row];
@@ -365,18 +386,12 @@ static NSString *const identifier = @"ContactTableViewCell";
         }
     }];
 }
-    
-    
-#pragma mark - Public
 - (MMRecentContactsModel *)isExistConversationWithToUser:(NSString *)toUser
 {
-    
     MMRecentContactsModel *conversationModel;
     NSInteger index = 0;
     for (MMRecentContactsModel *conversation in self.laterPersonDataArr) {
-        
         if ([conversation.userId isEqualToString:toUser]) {
-            
             conversationModel = conversation;
             break;
         }
@@ -384,48 +399,39 @@ static NSString *const identifier = @"ContactTableViewCell";
     }
     return conversationModel;
 }
-    
 - (void)addOrUpdateConversation:(NSString *)conversationName latestMessage:(MMMessageFrame *)message isRead:(BOOL)isRead
 {
-    
     MMRecentContactsModel *conversation = [self isExistConversationWithToUser:conversationName];
     if (conversation) {
+        ZWWLog(@"当前会话未开启，未读消息")
         conversation.latestMsgStr = message.aMessage.slice.content;
         conversation.latestMsgTimeStamp = message.aMessage.timestamp;
         [self updateLatestMsgForConversation:conversation latestMessage:message isRead:isRead];
     }
     else {
-        // 如果当前会话开启，则已读消息
+        ZWWLog(@"如果当前会话开启，则已读消息")
         [self addConversationWithMessage:message conversationId:conversationName isReaded:isRead];
     }
 }
     
 - (void)addConversationWithMessage:(MMMessageFrame *)message conversationId:(NSString *)conversationId isReaded:(BOOL)read
 {
-    
     MMRecentContactsModel *conversation = [[MMRecentContactsModel alloc] init];
     conversation.unReadCount = read?0:1;
     conversation.userId = conversationId;
-    
     [self.laterPersonDataArr insertObject:conversation atIndex:0];
     [self.tableView reloadData];
-    
 }
-    
 - (void)updateLatestMsgForConversation:(MMRecentContactsModel *)conversation latestMessage:(MMMessageFrame *)message isRead:(BOOL)isRead
 {
-    
     conversation.unReadCount += 1;
     if (isRead) {
         conversation.unReadCount = 0;
     }
-    // 将会话放到最前面
     [self.laterPersonDataArr removeObject:conversation];
     [self.laterPersonDataArr insertObject:conversation atIndex:0];
     [self.tableView reloadData];
-    
 }
-    
 - (void)updateRedPointForUnreadWithConveration:(NSString *)conversationName
 {
     MMRecentContactsModel *conversation = [self isExistConversationWithToUser:conversationName];
@@ -434,8 +440,6 @@ static NSString *const identifier = @"ContactTableViewCell";
         [self updateRedPointForCellAtIndexPath:indexPath];
     }
 }
-    
-    
 // 打开会话，更新未读消息数量
 - (void)updateRedPointForCellAtIndexPath:(NSIndexPath *)indexPath {
     MMRecentContactsModel *model = self.laterPersonDataArr[indexPath.row];
@@ -443,15 +447,7 @@ static NSString *const identifier = @"ContactTableViewCell";
     ContactTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     [cell updateUnreadCount:0];
 }
-    
- 
-#pragma mark - MMChatManagerDelegate
-/**
- 代理接收到消息
- 
- @param manager 消息管理
- @param message 消息体
- */
+
 - (void)clientManager:(MMClient *)manager didReceivedMessage:(MMMessage *)message
 {
     MMMessageFrame *mf = [[MMMessageFrame alloc] init];

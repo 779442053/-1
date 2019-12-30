@@ -237,6 +237,7 @@
                 }];
             }else{
                 messageBody.content = url;
+                messageBody.filePath = filePath;
                 [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {
                     ZWWLog(@"受到发送图片消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
                     [self sendMessage:message isReSend:NO error:error aSendStausChange:^{

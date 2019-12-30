@@ -157,14 +157,11 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    
     UIView *header = [[UIView alloc] init];
     [header setBackgroundColor:RGBCOLOR(240, 240, 240)];
-    
     UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 100, 40)];
     textLabel.text = @"我的群聊";
     [header addSubview:textLabel];
-    
     return header;
 }
 

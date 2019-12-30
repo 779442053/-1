@@ -35,7 +35,6 @@
         }
     }];
 }
-#pragma mark - UITableViewDelegateAndUITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 2;
@@ -56,11 +55,10 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *cellIde = @"EditGroupViewCell";
+    static NSString *cellIde = @"MMEditGroupCell";
     MMEditGroupCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIde];
     if (cell==nil) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"MMEditGroupCell" owner:self options:nil] lastObject];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        cell = [[MMEditGroupCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MMEditGroupCell"];
     }
     MemberList *model;
     if (indexPath.section == 0) {
@@ -94,7 +92,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 50.0f;
+    return 60.0f;
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -163,6 +161,7 @@
         _tableView.tableFooterView = [UIView new];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        [_tableView registerClass:[MMEditGroupCell class] forCellReuseIdentifier:@"MMEditGroupCell"];
     }
     return _tableView;
 }

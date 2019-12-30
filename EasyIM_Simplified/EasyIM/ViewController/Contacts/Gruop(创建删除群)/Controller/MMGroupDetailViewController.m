@@ -27,6 +27,7 @@ static const CGFloat foot_view_h = 48;
 @property (nonatomic, strong) UIButton           *btnGroupQrCode;//群二维码
 @property (nonatomic, strong) UIView *footView;
 @property (nonatomic, strong) ZWGroudDetailViewModel *viewModel;
+
 @end
 @implementation MMGroupDetailViewController{
     UIImage *_selectImg;
@@ -73,12 +74,12 @@ static const CGFloat foot_view_h = 48;
 }
 //MARK: - 群二维码
 -(void)btnGroupAction:(UIButton *)sender{
-//    QRCodeViewController *qrcodeVC = [[QRCodeViewController alloc]
-//                                      initWithType:1
-//                                      AndFromId:self.groupId
-//                                      AndFromName:self.name
-//                                      WithFromPic:nil];
-//    [self.navigationController pushViewController:qrcodeVC animated:YES];
+    QRCodeViewController *qrcodeVC = [[QRCodeViewController alloc]
+                                      initWithType:1
+                                      AndFromId:self.groupId
+                                      AndFromName:self.name
+                                      WithFromPic:nil];
+    [self.navigationController pushViewController:qrcodeVC animated:YES];
 }
 //MARK: - 设置群背景图
 -(void)setGroupChatBg:(NSString * _Nonnull)strUrlBg{
