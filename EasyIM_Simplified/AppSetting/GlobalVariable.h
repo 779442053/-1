@@ -167,7 +167,9 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     /**拒绝好友的添加请求*/
     GCDSocketTCPCmdTyperejectFriend,
     /**忽略通知*/
-    GCDSocketTCPCmdTypeignoreBulletin
+    GCDSocketTCPCmdTypeignoreBulletin,
+    /**delFriend 删除好友*/
+    GCDSocketTCPCmdTypedelFriend
     
 };
 
@@ -204,7 +206,8 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
 @"acceptFriend",\
 @"rejectFriend",\
 @"joinGroup",\
-@"ignoreBulletin"]
+@"ignoreBulletin",\
+@"delFriend"]
 
 /** 枚举 to 字串 */
 #define ZWGCDSocketTCPCmdTypeString(type) ([ZWGCDSocketTCPCmdTypeGet objectAtIndex:type])

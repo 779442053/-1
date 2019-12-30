@@ -90,7 +90,11 @@
                 ZWWLog(@"登录之后,获取系统所有的通知 = %@",responseString)
                 if ([responseString[code] intValue] == 1) {
                     NSArray *arr = [NewFriendModel  mj_objectArrayWithKeyValuesArray:responseString[@"data"][@"data"]];
-                    [subscriber sendNext:@{@"code":@"0",@"res":arr}];
+                    if (arr.count) {
+                        [subscriber sendNext:@{@"code":@"0",@"res":arr}];
+                    }else{
+                        [subscriber sendNext:@{@"code":@"1"}];
+                    }
                 }else if ([responseString[code] intValue] == 1020 && [responseString[msg] isEqualToString:@"登陆验证失败"]){
                     [subscriber sendNext:@{@"code":@"2"}];
                     [YJProgressHUD showError:responseString[msg]];

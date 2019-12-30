@@ -98,7 +98,8 @@
     }
     //MARK:扫码添加用户
     if ([strInfo containsString:K_APP_QRCODE_USER]) {
-        if ([strId isEqualToString:[ZWUserModel currentUser].userId]) {
+        NSString *userID = [ZWUserModel currentUser].userId;
+        if ([strId isEqualToString:userID]) {
             [MMProgressHUD showHUD:@"不能添加自己为好友"];
             return;
         }

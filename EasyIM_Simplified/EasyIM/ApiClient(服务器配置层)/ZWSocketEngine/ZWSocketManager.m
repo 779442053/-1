@@ -292,8 +292,8 @@ typedef struct {
             {
                 //接收到对方的视频请求
                 NSString *fUId = [jsonDic.allKeys containsObject:@"frmUid"]?jsonDic[@"frmUid"]:jsonDic[@"fromId"];
-                if (![fUId isEqualToString:[ZWUserModel currentUser].userId]) {
-                    
+                NSString *userID = [ZWUserModel currentUser].userId;
+                if (![fUId isEqualToString:userID]) {
                     //循环播放提示音，在接受或拒绝或超时时关闭播放
                     [YHUtils playVoiceForAudioAndVideo:^(AVAudioPlayer *_Nullable _avaudio) {
                         _avAudioPlayer = _avaudio;
@@ -354,12 +354,13 @@ typedef struct {
                 [self stopAndReleaseAudioPlayer];
                 [YHUtils closeVoiceAudioAndVideo];
                 //如果对方挂断则通知对方已挂断
-                if (![jsonDic[@"fromId"] isEqualToString:[ZWUserModel currentUser].userId]) {
+                NSString *userID = [ZWUserModel currentUser].userId;
+                if (![jsonDic[@"fromId"] isEqualToString:userID]) {
                     //...通知...
                     [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Refuse object:nil userInfo:jsonDic];
                 }else{
                     //挂断的Response
-                    if (![jsonDic[@"webrtcId"] isEqualToString:[ZWUserModel currentUser].userId]) {
+                    if (![jsonDic[@"webrtcId"] isEqualToString:userID]) {
                         [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Refuse object:nil userInfo:jsonDic];
                     }else{
 
@@ -373,7 +374,8 @@ typedef struct {
             {
                 [self stopAndReleaseAudioPlayer];
                 NSString *fUId = [jsonDic.allKeys containsObject:@"frmUid"]?jsonDic[@"frmUid"]:jsonDic[@"fromId"];
-                if (![fUId isEqualToString:[ZWUserModel currentUser].userId]) {
+                NSString *userID = [ZWUserModel currentUser].userId;
+                if (![fUId isEqualToString:userID]) {
                     //振动手机提示
                     [YHUtils vibratingCellphone];
                     //对方接受邀请,通知发请求者改变此时状态
@@ -429,6 +431,12 @@ typedef struct {
 
             }
                 break;
+            case GCDSocketTCPCmdTypedelFriend:
+            {
+
+            }
+                break;
+                
             //MARK:9.发群消息回调 groupMsg
             case GCDSocketTCPCmdTypeGroupMsg:
             {
@@ -462,7 +470,8 @@ typedef struct {
             //MARK:11.解散群回调 deleteGroup
             case GCDSocketTCPCmdTypeDeleteGroup:
             {
-                if ([jsonDic[@"fromID"] isEqualToString:[ZWUserModel currentUser].userId]) {
+                NSString *userID = [ZWUserModel currentUser].userId;
+                if ([jsonDic[@"fromID"] isEqualToString:userID]) {
                     [self showAlertWithMessage:[NSString stringWithFormat:@"群主%@已将%@群解散", jsonDic[@"fromID"],jsonDic[@"groupID"]]];
                     [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTS_RELOAD object:nil userInfo:jsonDic];
                 }
@@ -472,7 +481,8 @@ typedef struct {
             case GCDSocketTCPCmdTypekickGroupMember:
             {//受到该消息,z说明群主提出了某一个群成员
                 if ([jsonDic[@"result"] intValue] == 1) {
-                    if ([jsonDic[@"memberID"] isEqualToString:[ZWUserModel currentUser].userId]){
+                    NSString *userID = [ZWUserModel currentUser].userId;
+                    if ([jsonDic[@"memberID"] isEqualToString:userID]){
                         //.说明我被踢出群了
                         [ZWMessage message:@"你被群主踢出了群聊" title:@"群消息提醒:"];
                     }else{
@@ -496,7 +506,8 @@ typedef struct {
             {
                 if ([jsonDic[@"result"] intValue] == 1) {
                     //自己退出,需要做界面提醒
-                    if (![jsonDic[@"fromID"] isEqualToString:[ZWUserModel currentUser].userId]) {
+                    NSString *userID = [ZWUserModel currentUser].userId;
+                    if (![jsonDic[@"fromID"] isEqualToString:userID]) {
                         [self showAlertWithMessage:[NSString stringWithFormat:@"%@已退群出%@群",jsonDic[@"fromID"],jsonDic[@"groupID"]]];
                     }else{
                         [YHUtils playVoiceForMessage];

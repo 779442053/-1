@@ -128,8 +128,8 @@
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
            NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
-            parma[@"userid"] = [ZWUserModel currentUser].userId;
-            parma[@"muserid"] = input;
+            parma[@"muserid"] = [ZWUserModel currentUser].userId;
+            parma[@"userid"] = input;
             [self.request POST:userinfo parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 ZWWLog(@"获取好友信息=%@",responseString)
                 if ([responseString[code] intValue] == 1) {

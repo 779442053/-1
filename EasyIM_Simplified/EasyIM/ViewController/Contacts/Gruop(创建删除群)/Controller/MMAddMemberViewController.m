@@ -164,7 +164,8 @@
         cell.indexPath = indexPath;
         
         //MARK:群视频邀请判断
-        if ((self.isGroupVideo || self.isGroupAudio) && [ZWUserModel currentUser] && [userId isEqualToString:[ZWUserModel currentUser].userId]) {
+        NSString *userID = [ZWUserModel currentUser].userId;
+        if ((self.isGroupVideo || self.isGroupAudio) && [ZWUserModel currentUser] && [userId isEqualToString:userID]) {
             //灰色不可选择
             cell.userInteractionEnabled = NO;
             cell.name.textColor = G_EEF0F3_COLOR;

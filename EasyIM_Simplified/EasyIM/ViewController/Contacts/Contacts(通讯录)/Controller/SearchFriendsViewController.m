@@ -97,7 +97,8 @@ static NSString *const page_size = @"10";
                                 SearchFriendModel *searchModel = (SearchFriendModel *)obj;
                                 [self.frdList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                     ContactsModel *contactsModel = (ContactsModel *)obj;
-                                    if (([contactsModel isKindOfClass:[ContactsModel class]] && [searchModel.userid isEqualToString:contactsModel.userId]) || [searchModel.userid isEqualToString:[ZWUserModel currentUser].userId] ) {
+                                    NSString *userID = [ZWUserModel currentUser].userId;
+                                    if (([contactsModel isKindOfClass:[ContactsModel class]] && [searchModel.userid isEqualToString:contactsModel.userId]) || [searchModel.userid isEqualToString:userID] ) {
                                         searchModel.isFriend = YES;
                                         return ;
                                     }
@@ -252,7 +253,8 @@ static NSString *const page_size = @"10";
 #pragma mark - 添加好友网络请求
 - (void)addFriendrequest:(NSString *)tagUserid msg:(NSString *)msg
 {
-    if ([tagUserid isEqualToString:[ZWUserModel currentUser].userId]) {
+    NSString *userID = [ZWUserModel currentUser].userId;
+    if ([tagUserid isEqualToString:userID]) {
         [MMProgressHUD showHUD:@"不能添加自己为好友"];
         return;
     }

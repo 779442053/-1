@@ -30,6 +30,9 @@
         self.messageTFView.keyboardType = UIKeyboardTypeEmailAddress;
     }else if ([self.Type isEqualToString:@"请设置您的签名"]){
         self.messageTFView.frame = CGRectMake(12, ZWStatusAndNavHeight +15, KScreenWidth - 36, 110);
+    }else if ([self.Type isEqualToString:@"请设置手机号"]){
+        self.messageTFView.frame = CGRectMake(12, ZWStatusAndNavHeight +15, KScreenWidth - 36, 50);
+        self.messageTFView.keyboardType = UIKeyboardTypeNamePhonePad;
     }else{
         self.messageTFView.frame = CGRectMake(12, ZWStatusAndNavHeight +15, KScreenWidth - 36, 110);
     }
@@ -82,6 +85,19 @@
                 }];
             }else{
                 [YJProgressHUD showError:@"请输入您的签名"];
+            }
+        }else if ([self.Type isEqualToString:@"请设置手机号"]){
+            if (self.messageTFView.text.length) {
+                [[self.ViewModel.updateUserInfoCommand execute:@{@"mobile":self.messageTFView.text,@"code":@"4"}] subscribeNext:^(id  _Nullable x) {
+                    if ([x[@"code"] intValue] == 0) {
+                        if (self.confirmIdentity) {
+                            self.confirmIdentity(self.messageTFView.text);
+                        }
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }
+                }];
+            }else{
+                [YJProgressHUD showError:@"请输入您的手机号"];
             }
         }
         

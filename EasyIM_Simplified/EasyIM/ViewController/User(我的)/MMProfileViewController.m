@@ -132,6 +132,19 @@ static NSString *const identifier = @"ZWProfileCell";
 
             }
                 break;
+            case 1:
+            {
+                ZWProfileEditerViewController *mUser = [[ZWProfileEditerViewController alloc] init];
+                mUser.Type = @"请设置手机号";
+                mUser.confirmIdentity = ^(NSString * _Nonnull Vuale) {
+                    [ZWUserModel currentUser].mobile = Vuale;
+                    [ZWDataManager saveUserData];
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
+                    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                };
+                [self.navigationController pushViewController:mUser animated:YES];
+            }
+                break;
             case 2:
             {
                 ZWProfileEditerViewController *mUser = [[ZWProfileEditerViewController alloc] init];
@@ -187,7 +200,6 @@ static NSString *const identifier = @"ZWProfileCell";
                 [self.navigationController pushViewController:mUser animated:YES];
             }
             break;
-                
             default:
                 break;
         }

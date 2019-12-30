@@ -71,6 +71,8 @@
             }else if ([input[@"code"] intValue] == 3){
                 //性别   1.男  2.女
                 parma[@"sex"] = input[@"sex"];
+            }else if ([input[@"code"] intValue] == 4){
+                parma[@"mobile"] = input[@"mobile"];
             }
             [self.request POST:update parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 [YJProgressHUD hideHUD];

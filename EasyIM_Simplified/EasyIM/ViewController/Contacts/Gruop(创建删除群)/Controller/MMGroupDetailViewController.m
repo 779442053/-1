@@ -298,7 +298,8 @@ static const CGFloat foot_view_h = 48;
     else if(indexPath.section == 2){
         if (indexPath.row == 0) {
             //群主才修改背景
-            if (!self.creatorId.checkTextEmpty || ![self.creatorId isEqualToString:[ZWUserModel currentUser].userId]) {
+            NSString *userID = [ZWUserModel currentUser].userId;
+            if (!self.creatorId.checkTextEmpty || ![self.creatorId isEqualToString:userID]) {
                  [MMProgressHUD showHUD:@"非群主无法设置群聊背景"];
                 return;
             }
@@ -323,7 +324,8 @@ static const CGFloat foot_view_h = 48;
         }
     }else if (indexPath.section == 3){
         ZWWLog(@"编辑群公告")
-        if (!self.creatorId.checkTextEmpty || ![self.creatorId isEqualToString:[ZWUserModel currentUser].userId]) {
+        NSString *userID = [ZWUserModel currentUser].userId;
+        if (!self.creatorId.checkTextEmpty || ![self.creatorId isEqualToString:userID]) {
              [MMProgressHUD showHUD:@"非群主无法编辑群公告"];
             return;
         }
@@ -444,7 +446,8 @@ static const CGFloat foot_view_h = 48;
         _footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, foot_view_h)];
         _footView.backgroundColor = [UIColor clearColor];
         //如果群的创建ID等于用户ID 则为群主 权利是解散该群 不是则有退出该群
-        if ([self.creatorId isEqualToString:[ZWUserModel currentUser].userId]) {
+        NSString *userID = [ZWUserModel currentUser].userId;
+        if ([self.creatorId isEqualToString:userID]) {
             UIButton *disbandedGroup = [UIButton  buttonWithType:UIButtonTypeCustom];
             disbandedGroup.backgroundColor = [UIColor whiteColor];
             [disbandedGroup setTitle:@"解散该群" forState:UIControlStateNormal];

@@ -156,7 +156,7 @@ static MMClient *helper = nil;
                                                messageBody:chatContentModel];
     
     message.isInsert = receiveModel.isInsert;
-    message.isSender = [receiveModel.fromID isEqualToString:[ZWUserModel currentUser].userId]?YES:NO;
+    message.isSender = [receiveModel.fromID isEqualToString:userID]?YES:NO;
     message.localtime = [[NSDate date] timeStamp];
     message.timestamp = [self transTimeStamp:receiveModel.time];
     message.messageType = [MMRecentConVersationModel getMessageType:message.slice.type];
