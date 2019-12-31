@@ -97,7 +97,7 @@ typedef NS_ENUM(NSUInteger,MMConGroupItem){
     MMConGroup_Group,
     MMConGroup_Topic,
 };
-
+//枚举,具有一定顺序或者自定义顺序.....需要修改
 typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     /** heartBeat 心跳包 */
     GCDSocketTCPCmdTypeHeartBeat = 0,
@@ -158,14 +158,14 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     GCDSocketTCPCmdTypeagreeJoinGroup,
     /**群主拒绝申请人加入本群*/
     GCDSocketTCPCmdTyperejectJoinGroup,
-    /**加入本群*/
-    GCDSocketTCPCmdTypejoinGroup,
     /**创建群*/
     GCDSocketTCPCmdTyperejectaddGroup,
     /**接受好友的添加请求*/
     GCDSocketTCPCmdTypeacceptFriend,
     /**拒绝好友的添加请求*/
     GCDSocketTCPCmdTyperejectFriend,
+    /**加入本群*/
+    GCDSocketTCPCmdTypejoinGroup,
     /**忽略通知*/
     GCDSocketTCPCmdTypeignoreBulletin,
     /**delFriend 删除好友*/

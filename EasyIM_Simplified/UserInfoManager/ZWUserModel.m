@@ -18,7 +18,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         user = [[ZWUserModel alloc]init];
-        user.nickName = @"请设置昵称";
+        user.nickName = @"";
         user.isLogin = NO;
         user.cmd = @"";
         user.departId = @"";

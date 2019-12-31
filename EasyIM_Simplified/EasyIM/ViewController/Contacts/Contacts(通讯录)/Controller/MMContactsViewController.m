@@ -320,7 +320,6 @@ static MMContactsViewController *_shareInstance = nil;
     [_sectionHeadView addSubview:labTitle];
     return _sectionHeadView;
 }
-//MARK: - 获取通讯录数据
 -(void)getAddressData{
     //防止重复操作
     if (!self.dataScoure || [self.dataScoure count] <= 0) {
@@ -328,18 +327,15 @@ static MMContactsViewController *_shareInstance = nil;
         NSArray *keysToFetch = @[CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey];
         CNContactFetchRequest *fetchRequest = [[CNContactFetchRequest alloc] initWithKeysToFetch:keysToFetch];
         CNContactStore *contactStore = [[CNContactStore alloc] init];
-        
         [contactStore enumerateContactsWithFetchRequest:fetchRequest error:nil usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
             NSMutableDictionary *myDict = [[NSMutableDictionary alloc] init];
             NSString *givenName = contact.givenName;
             NSString *familyName = contact.familyName;
             NSLog(@"givenName=%@, familyName=%@", givenName, familyName);
-            
             NSString *nameStr = [NSString stringWithFormat:@"%@%@",contact.familyName,contact.givenName];
             if (!nameStr) { nameStr = @"";}
             NSArray *phoneNumbers = contact.phoneNumbers;
             [myDict setObject:nameStr forKey:@"aName"];
-            
             BOOL isTel = NO;
             for (CNLabeledValue *labelValue in phoneNumbers) {
                 NSString *label = labelValue.label;
@@ -351,7 +347,6 @@ static MMContactsViewController *_shareInstance = nil;
                 
                 isTel = YES;
             }
-            
             if (isTel == NO) {[myDict setObject:@"" forKey:@"cellphone"];}
             
             if (!self.dataScoure) {
@@ -360,34 +355,26 @@ static MMContactsViewController *_shareInstance = nil;
             [self.dataScoure addObject:myDict];
         }];
     }
-    
     //电话去重
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary<NSString *,id> * bindings) {
         NSInteger i = 0;
         NSString *strPhone = [NSString stringWithFormat:@"%@",[evaluatedObject valueForKey:@"cellphone"]];
-        
         if (self.dataScoure && [self.dataScoure count] > 0) {
             i = 0;
-            
             for (NSDictionary *object in self.dataScoure) {
                 if([[object valueForKey:@"cellphone"] isEqualToString:strPhone]){
                     i++;
                 }
             }
-            
             return i > 1?NO:YES;
         }
         else{
             return NO;
         }
-        
         return YES;
     }];
-    
     NSArray *arrTemp = [self.dataScoure filteredArrayUsingPredicate:predicate];
     self.dataScoure = [NSMutableArray arrayWithArray:arrTemp];
-    
-    //NSLog(@"通讯录条数:%zd",self.dataScoure.count);
 }
 //MARK: - 修改备注
 - (void)remarkFriend:(NSIndexPath *)indexPath
@@ -399,7 +386,6 @@ static MMContactsViewController *_shareInstance = nil;
     }];
     
     UIAlertAction *confimAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        
         UITextField *remarkField = alert.textFields.firstObject;
         if (!remarkField.text.length) {
             [MMProgressHUD showHUD:@"备注内容不能为空"];
@@ -423,7 +409,6 @@ static MMContactsViewController *_shareInstance = nil;
             }
         }
     }];
-    
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"返回" style:UIAlertActionStyleCancel handler:nil];
     [alert addAction:confimAction];
     [alert addAction:cancelAction];
@@ -437,7 +422,7 @@ static MMContactsViewController *_shareInstance = nil;
             ContactsModel *model = arrTemp[indexPath.row];
             if ([model isKindOfClass:[ContactsModel class]]) {
                 WEAKSELF
-                [[self.ViewModel.deleteUserCommand execute:nil] subscribeNext:^(id  _Nullable x) {
+                [[self.ViewModel.deleteUserCommand execute:model.userId] subscribeNext:^(id  _Nullable x) {
                     if ([x[@"code"] intValue] == 0) {
                         [MMProgressHUD showHUD:@"删除成功"];
                         [weakSelf.listTableView beginUpdates];
@@ -447,14 +432,12 @@ static MMContactsViewController *_shareInstance = nil;
         }
     }
 }
-//MARK: -  UITableViewDataSource、UITableViewDelegate
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     if (self.muArrSectionData && [self.muArrSectionData count] > 0) {
         return [self.muArrSectionData count];
     }
     return 1;
 }
-//MARK:组头、组尾
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (self.muArrSectionData && [self.muArrSectionData count] > section && section > 0) {
         return cell_section_height;
@@ -496,11 +479,9 @@ static MMContactsViewController *_shareInstance = nil;
     
     NSArray *arrTemp = [self getListCellForSection:indexPath.section];
     if (arrTemp && [arrTemp count] > indexPath.row){
-        
         NSString *strName;
         NSString *strUrl;
         id cellData = arrTemp[indexPath.row];
-        
         if ([cellData isKindOfClass:[ContactsModel class]]) {
             ContactsModel *model = (ContactsModel *)cellData;
             strName = model.getName;
@@ -510,18 +491,15 @@ static MMContactsViewController *_shareInstance = nil;
             strName = cellData[k_data_name];
             strUrl = [NSString stringWithFormat:@"%@",cellData[k_data_pic]];
         }
-        
         [cell cellInitDataForName:strName
                            AndPic:strUrl];
     }
-    
     if (indexPath.section == 0 && indexPath.row == 0 && _unReadCount > 0) {
         [cell setRightBadgeForNO:_unReadCount];
     }
     else{
         [cell setRightBadgeForNO:0];
     }
-    
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -540,7 +518,6 @@ static MMContactsViewController *_shareInstance = nil;
                     if (tabbar) {
                         [tabbar hideBadgeOnItemIndex:1];
                     }
-                    
                     AddFriendStatusViewController *vc = [[AddFriendStatusViewController alloc] init];
                     [self.navigationController pushViewController:vc animated:YES];
                 }

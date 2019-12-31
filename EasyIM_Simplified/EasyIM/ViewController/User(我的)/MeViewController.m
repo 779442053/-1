@@ -27,23 +27,14 @@ static CGFloat const margin_left = 19;
 static CGFloat const cell_height = 46;
 static CGFloat const cell_section_height = 10;
 static NSString *const cell_identify = @"contact_cell_identify";
-
 static CGFloat const head_view_height = 106;
-
 static NSString *const k_data_pic = @"pic";
 static NSString *const k_data_name = @"name";
-
-#define NAVTINTCOLOR [UIColor blackColor];
-
 @interface MeViewController ()<UITableViewDelegate,UITableViewDataSource,SweepViewControllerDelegate>
-
 @property(nonatomic,strong) UITableView *listTableView;
 @property(nonatomic,strong) NSArray *arrListData;
-
-//////////////////////////////////////////////////////
 @property(nonatomic,strong) UIView *headView;
 @property(nonatomic,strong) UIView *headContentView;
-
 @property(nonatomic,strong) UIButton *btnPic;
 @property(nonatomic,strong) UILabel  *labUserName;
 @property(nonatomic,strong) UILabel  *labAccount;
@@ -61,7 +52,16 @@ static NSString *const k_data_name = @"name";
 -(void)zw_bindViewModel{
     [[self.ViewModel.getMyUserInfoCommand execute:[ZWUserModel currentUser].userId] subscribeNext:^(id  _Nullable x) {
         if ([x[@"code"] intValue] == 0) {
-            self.labUserName.text = [ZWUserModel currentUser].nickName;
+            NSString *userName = [ZWUserModel currentUser].userName;
+            NSString *mobil = [ZWUserModel currentUser].mobile;
+            NSString *nickName = [ZWUserModel currentUser].nickName;
+            if (!ZWWOBJECT_IS_EMPYT(userName)) {
+                self.labUserName.text = userName;
+            }else if (!ZWWOBJECT_IS_EMPYT(mobil)){
+                self.labUserName.text = mobil;
+            }else if (!ZWWOBJECT_IS_EMPYT(nickName)){
+                self.labUserName.text = nickName;
+            }
             self.labAccount.text = [NSString stringWithFormat:@"账号:%@",[ZWUserModel currentUser].userId];
             [self.btnPic sd_setImageWithURL:[ZWUserModel currentUser].photoUrl.mj_url
                     forState:UIControlStateNormal
@@ -75,6 +75,16 @@ static NSString *const k_data_name = @"name";
         [self.btnPic sd_setImageWithURL:[ZWUserModel currentUser].photoUrl.mj_url
                                forState:UIControlStateNormal
                        placeholderImage:K_DEFAULT_USER_PIC];
+        NSString *userName = [ZWUserModel currentUser].userName;
+        NSString *mobil = [ZWUserModel currentUser].mobile;
+        NSString *nickName = [ZWUserModel currentUser].nickName;
+        if (!ZWWOBJECT_IS_EMPYT(userName)) {
+            self.labUserName.text = userName;
+        }else if (!ZWWOBJECT_IS_EMPYT(mobil)){
+            self.labUserName.text = mobil;
+        }else if (!ZWWOBJECT_IS_EMPYT(nickName)){
+            self.labUserName.text = nickName;
+        }
     }
 }
 //获取列数据

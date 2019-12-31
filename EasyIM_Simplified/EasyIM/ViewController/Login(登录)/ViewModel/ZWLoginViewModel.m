@@ -72,7 +72,13 @@
                         ZWUserModel *userModel = [ZWUserModel currentUser];
                          userModel.userId = dict[@"userId"];
                          userModel.token = dict[@"token"];
-                         userModel.userName = dict[@"username"];
+                        if (dict[@"username"] && !ZWWOBJECT_IS_EMPYT(dict[@"username"])) {
+                            userModel.userName = dict[@"username"];
+                        }else if (dict[@"nickName"] && !ZWWOBJECT_IS_EMPYT(dict[@"nickName"])) {
+                            userModel.nickName = dict[@"nickName"];
+                                
+                            }
+                         
                          userModel.userPsw = parmay[@"userPsw"];
                          userModel.domain = parmay[@"domain"];
                          userModel.isLogin = YES;
@@ -113,7 +119,15 @@
     parma[@"xns"] = @"xns_user";
     parma[@"loginType"] = @"410";
     parma[@"deviceDesc"] = [UIDevice currentDevice].name;
-    parma[@"userName"] = [ZWUserModel currentUser].userName;
+    NSString *userName = [ZWUserModel currentUser].userName;
+    NSString *mobil = [ZWUserModel currentUser].mobile;
+    if (!ZWWOBJECT_IS_EMPYT(userName)) {
+        parma[@"userName"] = userName;
+    }else if (!ZWWOBJECT_IS_EMPYT(mobil)){
+        parma[@"mobile"] = mobil;
+    }else{
+        [YJProgressHUD showError:@"缺少用户昵称,名字,账号"];
+    }
     parma[@"userPsw"] = [ZWUserModel currentUser].userPsw;
     parma[@"domain"] = @"9000";
     parma[@"timeStamp"] = [MMDateHelper getNowTime];

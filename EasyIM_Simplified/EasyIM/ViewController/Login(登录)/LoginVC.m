@@ -169,7 +169,6 @@
     controller.registerFinish = ^(NSString * _Nonnull strPhone, NSString * _Nonnull strPwd) {
         self.accountField.text = strPhone;
         self.passField.text = strPwd;
-        [self login:nil];
     };
      BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:controller];
     controller.modalPresentationStyle = 0;
@@ -200,7 +199,6 @@
         [MMProgressHUD showHUD:errorMsg];
         return;
     }
-    //[[MMSystemHelp deviceVersion] stringByAppendingString:@"-iOS"]
     NSDictionary *dict = @{
        @"loginType":@"2",
        @"deviceDesc":[UIDevice currentDevice].name,
@@ -266,7 +264,6 @@
     if ([textField.textInputMode.primaryLanguage isEqual:@"emoji"] || textField.textInputMode.primaryLanguage == nil) {
         return NO;
     }
-    
     NSUInteger length = textField.text.length;
     NSUInteger strLength = string.length;
     

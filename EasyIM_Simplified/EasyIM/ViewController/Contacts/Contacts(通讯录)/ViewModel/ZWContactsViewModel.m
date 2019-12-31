@@ -118,6 +118,7 @@
             parma[@"muserid"] = input[@"muserid"];
             parma[@"musername"] = input[@"musername"];;
             [self.request POST:setmemo parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+                ZWWLog(@"修改好友备注以及设置好友推送=%@",responseString)
                 if ([responseString[@"code"] intValue] == 1) {
                     [YJProgressHUD showSuccess:@"修改成功"];
                     [subscriber sendNext:@{@"code":@"0"}];
@@ -134,13 +135,13 @@
             }];
         }];
     }];
-    self.deleteUserCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(NSDictionary * input) {
+    self.deleteUserCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(NSString * input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
             NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
-            parma[@"userid"] = [ZWUserModel currentUser].userId;
-            parma[@"muserid"] = input[@"muserid"];
-            parma[@"musername"] = input[@"musername"];
+            parma[@"id"] = input;
+//            parma[@"muserid"] = input[@"muserid"];
+//            parma[@"musername"] = input[@"musername"];
             [self.request POST:delusernormal parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 if ([responseString[@"code"] intValue] == 1) {
                     [YJProgressHUD showSuccess:@"删除成功"];

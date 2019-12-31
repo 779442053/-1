@@ -79,7 +79,7 @@ typedef struct {
  *  @param dic 请求体
  */
 + (void)SendDataWithData:(NSMutableDictionary*)dic{
-    //ZWWLog(@"发送数据包字典 \n=%@",dic)
+    ZWWLog(@"发送数据包字典 \n=%@",dic)
     NSInteger SocketrequestTag = ZWGCDSocketTCPCmdTypeEnum(dic[@"cmd"]);
     NSString *body = [NSString stringWithFormat:@"<JoyIM>%@</JoyIM>",dic.innerXML];
     //ZWWLog(@"请求包体=\n %@",body)
@@ -315,6 +315,9 @@ typedef struct {
             {
                 if ([jsonDic.allKeys containsObject:@"sessionID"]) {
                     [ZWUserModel currentUser].sessionID = jsonDic[@"sessionID"];
+                    [ZWUserModel currentUser].nickName = jsonDic[@"nickName"];
+                    [ZWUserModel currentUser].photoUrl = jsonDic[@"photoUrl"];
+                    [ZWUserModel currentUser].userSig = jsonDic[@"userSig"];
                     [ZWDataManager saveUserData];
                     [[ZWSocketManager shareInstance]startPingTimer];
                 }
@@ -606,12 +609,13 @@ typedef struct {
             }
               break;
             case GCDSocketTCPCmdTypejoinGroup:
-            {//加入群
+            {
                 if ([jsonDic[@"result"] intValue] == 1) {
                     if (self.DidReadBlock) {
                         self.DidReadBlock(nil, jsonDic);
                     }
                 }else{
+                    [ZWMessage error:jsonDic[@"err"] title:@"申请失败!"];
                     if (self.DidReadBlock) {
                         self.DidReadBlock(error, jsonDic);
                     }

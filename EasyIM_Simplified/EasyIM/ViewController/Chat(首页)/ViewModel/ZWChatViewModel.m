@@ -26,7 +26,15 @@
                     parma[@"xns"] = @"xns_user";
                     parma[@"loginType"] = @"410";
                     parma[@"deviceDesc"] = [UIDevice currentDevice].name;
-                    parma[@"userName"] = [ZWUserModel currentUser].userName;
+                    NSString *userName = [ZWUserModel currentUser].userName;
+                   NSString *mobil = [ZWUserModel currentUser].mobile;
+                   if (!ZWWOBJECT_IS_EMPYT(userName)) {
+                       parma[@"userName"] = userName;
+                   }else if (!ZWWOBJECT_IS_EMPYT(mobil)){
+                       parma[@"mobile"] = mobil;
+                   }else{
+                       [YJProgressHUD showError:@"缺少用户昵称,名字,账号"];
+                   }
                     parma[@"userPsw"] = [ZWUserModel currentUser].userPsw;
                     parma[@"domain"] = @"9000";
                     parma[@"timeStamp"] = [MMDateHelper getNowTime];
@@ -34,7 +42,6 @@
                     parma[@"enc"] = @"0";
                     parma[@"zip"] = @"0";
                     [ZWSocketManager SendDataWithData:parma] ;
-                    
                     [subscriber sendNext:@"0"];
                 }else{
                     [subscriber sendNext:@"1"];
