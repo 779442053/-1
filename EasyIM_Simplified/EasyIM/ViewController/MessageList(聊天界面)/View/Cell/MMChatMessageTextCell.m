@@ -9,7 +9,7 @@
 #import "MMChatMessageTextCell.h"
 
 #import "MMFaceManager.h"
-
+#import "YJProgressHUD.h"
 
 @implementation MMChatMessageTextCell
 
@@ -42,30 +42,21 @@
     }
     //    self.chatLabel.text = modelFrame.model.content;
 }
-
-
 - (void)attemptOpenURL:(NSURL *)url
 {
     BOOL safariCompatible = [url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"];
     if (safariCompatible && [[UIApplication sharedApplication] canOpenURL:url]) {
         [[UIApplication sharedApplication] openURL:url];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警示" message:@"您的链接无效" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        [alert show];
+        [YJProgressHUD showError:@"您的链接无效"];
     }
 }
-
 - (void)urlSkip:(NSURL *)url
 {
     [self routerEventWithName:GXRouterEventURLSkip
                      userInfo:@{@"url"   : url
                                 }];
 }
-
-
-
-
-#pragma mark - Getter and Setter
 - (KILabel *)chatLabel
 {
     if (nil == _chatLabel) {

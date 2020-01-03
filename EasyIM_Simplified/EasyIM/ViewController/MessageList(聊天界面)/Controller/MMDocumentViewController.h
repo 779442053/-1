@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface MMDocumentViewController : UIViewController
+@interface MMDocumentViewController : MMBaseViewController
 
 @property (nonatomic, weak) id <MMDocumentDelegate>delegate;
 

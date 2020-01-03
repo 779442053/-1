@@ -16,14 +16,10 @@
 #import "NSDate+Extension.h"
 #import "VoiceConverter.h"
 #import "MMReceiveMessageModel.h"
-
 #define lastUpdateKey [NSString stringWithFormat:@"%@-%@",[MMUser currentUser].eId,@"LastUpdate"]
 #define groupInfoLastUpdateKey [NSString stringWithFormat:@"%@-%@",[MMUser currentUser].eId,@"groupInfoLastUpdate"]
 #define directLastUpdateKey [NSString stringWithFormat:@"%@-%@",[MMUser currentUser].eId,@"directLastUpdate"]
-
 @implementation MMMessageHelper
-
-
 // 获取语音消息时长
 + (CGFloat)getVoiceTimeLengthWithPath:(NSString *)path
 {
@@ -32,14 +28,10 @@
     CGFloat audioDurationSeconds =CMTimeGetSeconds(audioDuration);
     return audioDurationSeconds;
 }
-
-// 图片按钮在窗口中得位置
 + (CGRect)photoFramInWindow:(UIButton *)photoView
 {
     return [photoView convertRect:photoView.bounds toView:[UIApplication sharedApplication].keyWindow];
 }
-
-// 放大后的图片按钮在窗口中的位置
 + (CGRect)photoLargerInWindow:(UIButton *)photoView
 {
     //    CGSize imgSize     = photoView.imageView.image.size;

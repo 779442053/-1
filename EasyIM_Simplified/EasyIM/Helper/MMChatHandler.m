@@ -87,7 +87,7 @@
 }
 
 /**
- 发送联系人消息
+ 发送联系人消息=====
  */
 - (MMMessage *)sendLinkmanMessageModel:(MMChatContentModel *)model
                                toUser:(NSString *_Nonnull)toUser
@@ -106,7 +106,6 @@
         chatType = @"groupchat";
         cType = MMConversationType_Group;
     }
-    
     MMMessage *message = [[MMMessage alloc] initWithToUser:toUser
                                                 toUserName:toUserName
                                                   fromUser:[ZWUserModel currentUser].userId
@@ -436,6 +435,52 @@ completion:(void(^) (MMMessage *_Nonnull message))aCompletionBlock{
         }];
     }];
     //返回这个撤回消息的状态和内容 '你撤回了一条消息'
+    return message;
+}
+- (MMMessage *)sendLocationMessage:(CLLocationCoordinate2D )locationCoordinate
+        Address:(NSString *)address
+        toUser:(NSString *)toUser
+    toUserName:(NSString *)toUserName
+toUserPhotoUrl:(NSString *)photoUrl
+           cmd:(NSString *)cmd
+    completion:(void(^) (MMMessage *message))aCompletionBlock{
+    //1.对内容模型赋值
+    MMChatContentModel *messageBody = [[MMChatContentModel alloc] init];
+    messageBody.type = TypeLocation;
+    messageBody.weiDu = locationCoordinate.latitude;
+    messageBody.jingDu = locationCoordinate.longitude;
+    messageBody.address = address;
+    BOOL isGroup = NO;
+    NSString *chatType = @"chat";
+    MMConversationType cType = MMConversationType_Chat;
+    if ([cmd isEqualToString:@"groupMsg"]) {
+        isGroup = YES;
+        chatType = @"groupchat";
+        cType = MMConversationType_Group;
+    }
+    //定义消息类型和消息部分信息
+    MMMessage *message = [[MMMessage alloc] initWithToUser:toUser
+                                                toUserName:toUserName
+                                                  fromUser:[ZWUserModel currentUser].userId
+                                              fromUserName:[ZWUserModel currentUser].userName
+                                                  chatType:chatType
+                                                  isSender:YES
+                                                       cmd:cmd
+                                                     cType:cType
+                                               messageBody:messageBody];
+    message.messageType = MMMessageType_Location;
+    message.deliveryState = MMMessageDeliveryState_Delivering;
+    message.conversation = toUser;
+    message.toUserPhoto = photoUrl;
+    
+    //3.发送请求
+    [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {//这个data  就是刚刚我发出去的消息模型
+        ZWWLog(@"受到发送消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
+        //开始k将这条消息写入本地数据库
+        [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
+            aCompletionBlock(message);
+        }];
+    }];
     return message;
 }
 -(ZWChatHandlerViewModel *)ViewModel{

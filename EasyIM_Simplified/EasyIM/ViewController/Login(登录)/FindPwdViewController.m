@@ -137,9 +137,7 @@ static CGFloat const txt_height = 44;
         [timer invalidate];
         timer = nil;
     }
-    
     timerNo = 0;
-    
     //按钮启用
     [self.txtPhone setEnabled:YES];
     [self.btnSendCode setEnabled:YES];
@@ -264,20 +262,15 @@ static CGFloat const txt_height = 44;
         _txtConfirmPwd.textColor = ktextColor;
         _txtConfirmPwd.font = [UIFont systemFontOfSize:14];
         _txtConfirmPwd.backgroundColor = [UIColor whiteColor];
-        
         _txtConfirmPwd.keyboardType = UIKeyboardTypeDefault;
         _txtConfirmPwd.returnKeyType = UIReturnKeyJoin;
-        
         _txtConfirmPwd.delegate = self;
         _txtConfirmPwd.placeholder = @"请再次输入密码";
-        
         //显示清除按钮
         _txtConfirmPwd.clearButtonMode = UITextFieldViewModeWhileEditing;
         _txtConfirmPwd.leftPadding = 0;
-        
         //密码框
         _txtConfirmPwd.secureTextEntry = YES;
-        
         _txtConfirmPwd.hasBorder = NO;
         _txtConfirmPwd.hasBottomBorder = YES;
         _txtConfirmPwd.borderStyle = UITextBorderStyleNone;

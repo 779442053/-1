@@ -57,6 +57,17 @@ static NSString *const identifier = @"ContactTableViewCell";
     [[self.ViewModel.GetPushdataCommand execute:nil] subscribeNext:^(id  _Nullable x) {
         if ([x[@"code"] intValue] == 0) {
             [self.pushListARR addObjectsFromArray:x[@"res"]];
+            if (self.pushListARR.count) {
+                KinTabBarController *tabbar = (KinTabBarController *)self.tabBarController;
+                if (tabbar) {
+                    if (self.pushListARR.count > 0) {
+                        [tabbar showBadgeOnItemIndex:1 withValue:self.pushListARR.count];
+                    }
+                    else{
+                        [tabbar hideBadgeOnItemIndex:1];
+                    }
+                }
+            }
             MMRecentContactsModel *model = [[MMRecentContactsModel alloc]init];
             model.unReadCount = self.pushListARR.count;
             model.latestMsgStr = [NSString stringWithFormat:@"您有%lu条未读通知消息",(unsigned long)self.pushListARR.count];
@@ -66,7 +77,6 @@ static NSString *const identifier = @"ContactTableViewCell";
             model.latestMsgTimeStamp = [notifionModel.time longLongValue];
             [self.laterPersonDataArr insertObject:model atIndex:0];
             [self.tableView reloadData];
-            ZWWLog(@"获取最近的通知===%@",self.pushListARR)
             [[NSNotificationCenter defaultCenter] postNotificationName:IMPushData object:self.pushListARR];
         }else if ([x[@"code"] intValue] == 2){
             LoginVC *login = [[LoginVC alloc]init];
@@ -269,7 +279,7 @@ static NSString *const identifier = @"ContactTableViewCell";
     }
     //MARK:扫码添加用户
     if ([strInfo containsString:K_APP_QRCODE_USER]) {
-        NSString *userID = [ZWUserModel currentUser].userId;
+        NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
         if ([strId isEqualToString:userID]) {
             [MMProgressHUD showHUD:@"不能添加自己为好友"];
             return;
@@ -282,15 +292,7 @@ static NSString *const identifier = @"ContactTableViewCell";
     }
     //MARK:扫码加群
     else if([strInfo containsString:K_APP_QRCODE_GROUP]){
-        [MMRequestManager inviteFrd2GroupWithGroupId:strId
-                                            friendId:[ZWUserModel currentUser].userId
-                                         aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
-                                             if (K_APP_REQUEST_OK(dic[K_APP_REQUEST_CODE])) {
-                                                 [MMProgressHUD showHUD:@"入群申请发送成功"];
-                                             }else{
-                                                 [MMProgressHUD showHUD:error?MMDescriptionForError(error):dic[K_APP_REQUEST_MSG]];
-                                             }
-                                         }];
+        [YJProgressHUD showMessage:@"扫码加入群聊"];
     }
 }
 -(void)sweepViewDidFinishError{}

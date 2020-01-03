@@ -64,7 +64,7 @@
 #pragma mark - 添加好友网络请求
 - (void)addFriendrequest:(NSString *)tagUserid msg:(NSString *)msg
 {
-    NSString *userID = [ZWUserModel currentUser].userId;
+    NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
     if ([tagUserid isEqualToString:userID]) {
         [MMProgressHUD showHUD:@"不能添加自己为好友"];
         return;

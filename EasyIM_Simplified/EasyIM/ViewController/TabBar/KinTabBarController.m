@@ -16,7 +16,7 @@
 #import "MeViewController.h"
 #import "GroupViewController.h"
 
-static const NSInteger TabbarItemNums = 4;
+static const NSInteger TabbarItemNums = 5;
 #define SCREEN_SIZE [UIScreen mainScreen].bounds.size
 #define kselectedImageArray @[@"tabbar_01ed",@"tabbar_02ed",@"tabbar_05ed",@"tabbar_05ed",@"tabbar_04ed"]
 #define kimageArray @[@"tabbar_01",@"tabbar_02",@"tabbar_05",@"tabbar_03",@"tabbar_04"]
@@ -159,7 +159,6 @@ static const NSInteger TabbarItemNums = 4;
     badgeView.font = FONT(10);
     badgeView.adjustsFontSizeToFitWidth = YES;
     badgeView.textAlignment = NSTextAlignmentCenter;
-    
     badgeView.tag = 888 + index;
     badgeView.layer.cornerRadius = 7.5;//圆形
     badgeView.backgroundColor = [UIColor redColor];//颜色：红色

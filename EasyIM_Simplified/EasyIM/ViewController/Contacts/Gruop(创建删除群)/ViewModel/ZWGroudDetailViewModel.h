@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong)RACCommand *setGroupChatBg;
 @property(nonatomic,strong)RACCommand *creatGroupCommand;
 @property(nonatomic,strong)RACCommand *UploadImageToSeverCommand;
+@property(nonatomic,strong)RACCommand *SearchGroupCommand;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -113,7 +113,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (MMMessage *)WithdrawMessageWithMessageID:(MMMessage *)tomessage
            cmd:(NSString *_Nonnull)cmd
     completion:(void(^) (MMMessage *_Nonnull message))aCompletionBlock;
-
+//发送位置消息
+- (MMMessage *)sendLocationMessage:(CLLocationCoordinate2D )locationCoordinate
+        Address:(NSString *)address
+        toUser:(NSString *)toUser
+    toUserName:(NSString *)toUserName
+toUserPhotoUrl:(NSString *)photoUrl
+           cmd:(NSString *)cmd
+    completion:(void(^) (MMMessage *message))aCompletionBlock;
 @end
 
 NS_ASSUME_NONNULL_END

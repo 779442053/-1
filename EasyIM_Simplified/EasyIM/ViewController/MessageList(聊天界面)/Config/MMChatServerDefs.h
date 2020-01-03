@@ -35,6 +35,7 @@ typedef enum {
     MMMessageType_Doc,                   // 文档
     MMMessageType_Location,              // 位置
     MMMessageType_linkman,//联系人
+    MMMessageType_linkMap,//跳转地图
     MMMessageType_TextURL,               // 文本＋链接
     MMMessageType_ImageURL,              // 图片＋链接
     MMMessageType_URL,                   // 纯链接

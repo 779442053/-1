@@ -23,18 +23,12 @@ static CGFloat const k_margin = 15;
 @end
 
 @implementation MMChatLinkManCell
-
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
 }
-
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
               reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -44,14 +38,12 @@ static CGFloat const k_margin = 15;
     }
     return self;
 }
-
 - (void)setModelFrame:(MMMessageFrame *)modelFrame
 {
     [super setModelFrame:modelFrame];
-    
     _model = modelFrame.aMessage.slice;
     self.labNickname.text = _model.nickName;
-    self.labUsername.text = [NSString stringWithFormat:@"账号：%@",_model.userName.checkTextEmpty?_model.userName:@""];
+    self.labUsername.text = [NSString stringWithFormat:@"账号：%@",_model.userID.checkTextEmpty?_model.userID:@""];
 
     if (_model.photo.checkTextEmpty) {
         [self.imgPic sd_setImageWithURL:_model.photo.mj_url placeholderImage:K_DEFAULT_USER_PIC];
@@ -73,18 +65,13 @@ static CGFloat const k_margin = 15;
         _labNickname.textColor = [UIColor blackColor];
     }
 }
-
-
-//MARK: - initView
 -(void)initView{
     [self.contentView addSubview:self.labTitle];
     [self.labTitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(60, 21));
-        
         make.left.equalTo(self.bubbleView).offset(k_margin);
         make.top.equalTo(self.bubbleView).offset(10);
     }];
-    
     [self.contentView addSubview:self.topLine];
     [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.offset(0.5);
@@ -96,29 +83,23 @@ static CGFloat const k_margin = 15;
     [self.contentView addSubview:self.imgPic];
     [self.imgPic mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(45, 45));
-
         make.left.equalTo(self.labTitle.mas_left).offset(0);
         make.top.equalTo(self.topLine.mas_bottom).offset(10);
     }];
-
     [self.contentView addSubview:self.labNickname];
     [self.labNickname mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.bubbleView).offset(-k_margin);
         make.height.offset(21);
-
         make.left.mas_equalTo(self.imgPic.mas_right).offset(10);
         make.top.mas_equalTo(self.imgPic.mas_top).offset(0);
     }];
-
     [self.contentView addSubview:self.labUsername];
     [self.labUsername mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.offset(21);
-
         make.left.mas_equalTo(self.imgPic.mas_right).offset(10);
         make.right.mas_equalTo(self.bubbleView).offset(-k_margin);
         make.bottom.mas_equalTo(self.imgPic.mas_bottom).offset(0);
     }];
-    
     //MARK:点击事件
     self.bubbleView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self

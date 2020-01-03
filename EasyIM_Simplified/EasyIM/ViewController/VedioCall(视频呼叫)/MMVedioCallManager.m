@@ -123,7 +123,8 @@ static MMVedioCallManager *vedioCallManager = nil;
     self.currenSession = [[MMCallSessionModel alloc] init];
     self.currenSession.callParty = callParty;
     self.currenSession.toId = chatter;
-    self.currenSession.fromId = [ZWUserModel currentUser].userId;
+    NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+    self.currenSession.fromId = userID;
     self.currenSession.callStatus = MMCallStatus_callIng;//正在呼叫对方
     self.currenSession.callParty = MMCallParty_Calling;
     //5.视频和语音调起不同的页面
@@ -300,12 +301,12 @@ static MMVedioCallManager *vedioCallManager = nil;
     MMCallType type = (MMCallType)[notify.object[CALL_TYPE] integerValue];// 通话类型
     //NSArray *arrChatter = [notify.object valueForKey:CALL_CHATTER];// 被叫方ID，userId 数组
     NSString *strGroupId = [NSString stringWithFormat:@"%@",[notify.object valueForKey:CALL_GROUPID]];
-    
     //4.给当前的会话Model赋值
     self.currenSession = [[MMCallSessionModel alloc] init];
     self.currenSession.callParty = callParty;
     self.currenSession.toId = strGroupId;
-    self.currenSession.fromId = [ZWUserModel currentUser].userId;
+    NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+    self.currenSession.fromId = userID;
     self.currenSession.callStatus = MMCallStatus_callIng;//正在呼叫对方
     self.currenSession.callParty = MMCallParty_Calling;
     

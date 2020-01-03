@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ZWRegistViewModel : ZWBaseViewModel
 @property(nonatomic,strong)RACCommand *CodeCommand;
 @property(nonatomic,strong)RACCommand *RegistCommand;
+@property(nonatomic,strong)RACCommand *ForgetPswCommand;
 @end
 
 NS_ASSUME_NONNULL_END

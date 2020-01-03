@@ -23,11 +23,12 @@
 #import "ZWPhotoHelper.h"
 //邀请好友
 #import "MMAddMemberViewController.h"
-
-@interface MMChatBoxViewController ()<MMChatBoxDelegate,MMChatBoxMoreViewDelegate, UIImagePickerControllerDelegate,MMDocumentDelegate,UINavigationControllerDelegate,MMAddMemberViewControllerDelegate>
+//位置
+#import "ZWLocationViewController.h"
+@interface MMChatBoxViewController ()<MMChatBoxDelegate,MMChatBoxMoreViewDelegate, UIImagePickerControllerDelegate,MMDocumentDelegate,UINavigationControllerDelegate,MMAddMemberViewControllerDelegate,LocationViewControllerDelegate>
 
 @property (nonatomic, assign) CGRect keyboardFrame;
-
+@property (strong, nonatomic, readonly) UIViewController *rootViewController;
 /** chatBar more view */
 @property (nonatomic, strong) MMChatBoxMoreView *chatBoxMoreView;
 /** emoji face */
@@ -115,7 +116,6 @@
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
-    //ZWWLog(@"键盘即将消失==%@",notification)
     self.keyboardFrame = CGRectZero;
     if (_delegate && [_delegate respondsToSelector:@selector(chatBoxViewController:didChangeChatBoxHeight:)]) {
         [_delegate chatBoxViewController:self didChangeChatBoxHeight:HEIGHT_TABBAR];
@@ -274,7 +274,7 @@ didSelectItem:(MMChatBoxItem)itemType
             MMDocumentViewController *docVC = [[MMDocumentViewController alloc] init];
             docVC.delegate = self;
             BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:docVC];
-            nav.navigationBar.hidden = NO;
+            nav.navigationBar.hidden = YES;
             nav.modalPresentationStyle = 0;
             [self presentViewController:nav animated:YES completion:nil];
         }
@@ -294,7 +294,12 @@ didSelectItem:(MMChatBoxItem)itemType
         //MARK:位置
         case MMChatBoxItemLocation:
         {
-            [MMProgressHUD showHUD:@"正在开发中..." withDelay:1.0];
+            ZWLocationViewController *addressVC = [[ZWLocationViewController alloc]init];
+            addressVC.delegate = self;
+            BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:addressVC];
+            //nav.navigationBar.hidden = NO;
+            nav.modalPresentationStyle = 0;
+            [self presentViewController:nav animated:YES completion:nil];
         }
             break;
         case MMChatBoxItemVideo:
@@ -313,6 +318,23 @@ didSelectItem:(MMChatBoxItem)itemType
             break;
         default:
             break;
+    }
+}
+#pragma mark - XMLocationViewControllerDelegate
+- (UIViewController *)rootViewController
+{
+    return [[UIApplication sharedApplication] keyWindow].rootViewController;
+}
+- (void)cancelLocation
+{
+    [self.rootViewController dismissViewControllerAnimated:YES completion:nil];
+}
+- (void)sendLocation:(CLPlacemark *)placemark
+{
+    [self cancelLocation];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatBoxViewController:sendLocation:locationText:)])
+    {
+        [self.delegate chatBoxViewController:self sendLocation:placemark.location.coordinate locationText:placemark.name];
     }
 }
 -(void)groupInvitation:(BOOL)isVideo{
@@ -350,14 +372,11 @@ didSelectItem:(MMChatBoxItem)itemType
                                         }
                                     }];
 }
-
-
 //MARK: - MMAddMemberViewControllerDelegate(群音视频)
 -(void)mmInvitationMemberFinish:(NSArray *)arrMembersId
                      andGroupId:(NSString *)strGroupId
                  andDetailsData:(NSArray *)arrDetails
                      andIsVideo:(BOOL)isVideo{
-    
     //一个人，1v1
     if ([arrMembersId count] <= 1) {
         NSDictionary *dicObject = @{
@@ -383,9 +402,7 @@ didSelectItem:(MMChatBoxItem)itemType
         [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio1VM
                                                             object:dicObject];
     }
-    
 }
-
 //MARK:联系人
 -(void)mmDidSelectForLinkmanId:(NSString *)strUserId
                    andUserName:(NSString *)strUserName
@@ -399,8 +416,6 @@ didSelectItem:(MMChatBoxItem)itemType
                                 AndPhoto:strPhoto];
     }
 }
-
-
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
@@ -482,7 +497,6 @@ didSelectItem:(MMChatBoxItem)itemType
                 }
             }];
         } else {
-            ZWWLog(@"===============================================")
             self.chatBoxMoreView.y = HEIGHT_TABBAR + HEIGHT_CHATBOXVIEW;
             [self.view addSubview:self.chatBoxMoreView];
             [UIView animateWithDuration:0.3 animations:^{
@@ -529,9 +543,6 @@ didSelectItem:(MMChatBoxItem)itemType
 - (void)chatBoxDidStartRecordingVoice:(MMChatBox *)chatBox
 {
     self.recordName = [self currentRecordFileName];
-    //    if ([_delegate respondsToSelector:@selector(voiceDidStartRecording)]) {
-    //        [_delegate voiceDidStartRecording];
-    //    }
     [[MMRecordManager shareManager] startRecordingWithFileName:self.recordName completion:^(NSError *error) {
         if (error) {   // 加了录音权限的判断
         } else {
@@ -558,7 +569,6 @@ didSelectItem:(MMChatBoxItem)itemType
         }
     }];
 }
-
 - (void)chatBoxDidCancelRecordingVoice:(MMChatBox *)chatBox
 {
     if ([_delegate respondsToSelector:@selector(voiceDidCancelRecording)]) {
@@ -566,26 +576,19 @@ didSelectItem:(MMChatBoxItem)itemType
     }
     [[MMRecordManager shareManager] removeCurrentRecordFile:self.recordName];
 }
-
 - (void)chatBoxDidDrag:(BOOL)inside
 {
     if ([_delegate respondsToSelector:@selector(voiceWillDragout:)]) {
         [_delegate voiceWillDragout:inside];
     }
 }
-
-
 #pragma mark - MMDocumentDelegate
-
 - (void)selectedFileName:(NSString *)fileName
 {
     if ([self.delegate respondsToSelector:@selector(chatBoxViewController:sendFileMessage:)]) {
         [self.delegate chatBoxViewController:self sendFileMessage:fileName];
     }
 }
-
-
-
 - (NSString*)parseRoom:(NSString*)room {
     if (!room.length) {
         [MMProgressHUD showHUD:@"Missing room name."];

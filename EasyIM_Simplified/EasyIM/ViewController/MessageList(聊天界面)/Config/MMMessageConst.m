@@ -68,7 +68,7 @@ NSString *const TypeVideo       = @"video";
 NSString *const TypeFile        = @"file";
 NSString *const TypeSystem      = @"system";
 NSString *const TypePicText     = @"picText";
-NSString *const TypeLocation    = @"location";
+NSString *const TypeLocation    = @"linkMap";
 NSString *const TypeLinkMan     = @"linkman";
 NSString *const TypeWithdraw     = @"TypeWithdraw";//撤回
 

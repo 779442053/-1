@@ -13,17 +13,34 @@
 #import "MMFriendAppViewController.h"
 #import "VerificationViewController.h"//验证
 #import "FriDetailViewController.h"//发消息
-
+#import "ZWChatViewModel.h"
 #import "ZWSocketManager.h"
 @interface AddFriendStatusViewController ()<UITableViewDataSource, UITableViewDelegate, NSXMLParserDelegate,AddFriendAgreeDelegate,AddFriendAgreeDelegate2>
 @property (nonatomic, weak)   UITableView *resultListView;
 @property (nonatomic, strong) NSString *startTag;
 @property (nonatomic, strong) NSIndexPath *indexPath;
 @property (nonatomic, strong) NSString *userId;
+@property(nonatomic,strong)ZWChatViewModel *ViewModel;
 @end
 @implementation AddFriendStatusViewController
+-(ZWChatViewModel *)ViewModel{
+    if (_ViewModel == nil) {
+        _ViewModel = [[ZWChatViewModel alloc]init];
+    }
+    return _ViewModel;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
+}
+-(void)zw_bindViewModel{
+//    if (self.newFriendsArr.count == 0) {
+//        [[self.ViewModel.GetPushdataCommand execute:nil] subscribeNext:^(id  _Nullable x) {
+//            if ([x[@"code"] intValue] == 0) {
+//                self.newFriendsArr = x[@"res"];
+//                [self.resultListView reloadData];
+//            }
+//        }];
+//    }
 }
 -(void)zw_addSubviews{
     [self setTitle:@"新的消息"];

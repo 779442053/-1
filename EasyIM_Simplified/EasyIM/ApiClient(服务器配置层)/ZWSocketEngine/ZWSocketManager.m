@@ -102,22 +102,31 @@ typedef struct {
         presliceDic[@"content"] = message.slice.content;
     }else if (message.messageType == MMMessageType_Voice){//短录音
         presliceDic[@"type"] = message.slice.type;
-        presliceDic[@"content"] = message.slice.content;//先上传,获取url
+        presliceDic[@"content"] = message.slice.content;
         presliceDic[@"duration"] = [NSString stringWithFormat:@"%ld",message.slice.duration];
     }else if (message.messageType == MMMessageType_Image){//图片
         presliceDic[@"type"] = message.slice.type;
-        presliceDic[@"content"] = message.slice.content;//先上传,获取url
+        presliceDic[@"content"] = message.slice.content;
         presliceDic[@"width"] = [NSString stringWithFormat:@"%f",message.slice.width];
         presliceDic[@"height"] = [NSString stringWithFormat:@"%f",message.slice.height];
     }else if (message.messageType == MMMessageType_Video){//短视频
         presliceDic[@"type"] = message.slice.type;
-        presliceDic[@"content"] = message.slice.content;//先上传,获取url
+        presliceDic[@"content"] = message.slice.content;
     }else if (message.messageType == MMMessageType_Doc){//文件
         presliceDic[@"type"] = message.slice.type;
-        presliceDic[@"content"] = message.slice.content;//先上传,获取url
+        presliceDic[@"content"] = message.slice.content;
         presliceDic[@"length"] = message.slice.length;
-    }else if (message.messageType == MMMessageType_NTF){
-        
+    }else if (message.messageType == MMMessageType_linkman){//联系人
+        presliceDic[@"type"] = message.slice.type;
+        presliceDic[@"userID"] = message.slice.userID;
+        presliceDic[@"userName"] = message.slice.userName;
+        presliceDic[@"nickName"] = message.slice.nickName;
+        presliceDic[@"photo"] = message.slice.photo;
+    }else if (message.messageType == MMMessageType_Location){//联系人
+        presliceDic[@"type"] = message.slice.type;
+        presliceDic[@"jingDu"] = [NSString stringWithFormat:@"%f",message.slice.jingDu];
+        presliceDic[@"weiDu"] = [NSString stringWithFormat:@"%f",message.slice.weiDu];;
+        presliceDic[@"address"] = message.slice.address;
     }
     NSDictionary *sliceDic = @{
        @"slice":presliceDic
@@ -141,6 +150,7 @@ typedef struct {
     }else{
         [MMProgressHUD showHUD:@"未知消息类型!!!"];
     }
+    ZWWLog(@"发送消息发送消息发送消息发送消息=%@",parma)
     NSInteger SocketrequestTag = ZWGCDSocketTCPCmdTypeEnum(parma[@"cmd"]);
      NSString *body = [NSString stringWithFormat:@"<JoyIM>%@</JoyIM>",parma.innerXML];
     NSData *bodyData = [body dataUsingEncoding:NSUTF8StringEncoding];
@@ -292,7 +302,7 @@ typedef struct {
             {
                 //接收到对方的视频请求
                 NSString *fUId = [jsonDic.allKeys containsObject:@"frmUid"]?jsonDic[@"frmUid"]:jsonDic[@"fromId"];
-                NSString *userID = [ZWUserModel currentUser].userId;
+                NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
                 if (![fUId isEqualToString:userID]) {
                     //循环播放提示音，在接受或拒绝或超时时关闭播放
                     [YHUtils playVoiceForAudioAndVideo:^(AVAudioPlayer *_Nullable _avaudio) {
@@ -357,7 +367,7 @@ typedef struct {
                 [self stopAndReleaseAudioPlayer];
                 [YHUtils closeVoiceAudioAndVideo];
                 //如果对方挂断则通知对方已挂断
-                NSString *userID = [ZWUserModel currentUser].userId;
+                NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
                 if (![jsonDic[@"fromId"] isEqualToString:userID]) {
                     //...通知...
                     [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Refuse object:nil userInfo:jsonDic];
@@ -377,7 +387,7 @@ typedef struct {
             {
                 [self stopAndReleaseAudioPlayer];
                 NSString *fUId = [jsonDic.allKeys containsObject:@"frmUid"]?jsonDic[@"frmUid"]:jsonDic[@"fromId"];
-                NSString *userID = [ZWUserModel currentUser].userId;
+                NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
                 if (![fUId isEqualToString:userID]) {
                     //振动手机提示
                     [YHUtils vibratingCellphone];
@@ -473,7 +483,7 @@ typedef struct {
             //MARK:11.解散群回调 deleteGroup
             case GCDSocketTCPCmdTypeDeleteGroup:
             {
-                NSString *userID = [ZWUserModel currentUser].userId;
+                NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
                 if ([jsonDic[@"fromID"] isEqualToString:userID]) {
                     [self showAlertWithMessage:[NSString stringWithFormat:@"群主%@已将%@群解散", jsonDic[@"fromID"],jsonDic[@"groupID"]]];
                     [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTS_RELOAD object:nil userInfo:jsonDic];
@@ -484,7 +494,7 @@ typedef struct {
             case GCDSocketTCPCmdTypekickGroupMember:
             {//受到该消息,z说明群主提出了某一个群成员
                 if ([jsonDic[@"result"] intValue] == 1) {
-                    NSString *userID = [ZWUserModel currentUser].userId;
+                    NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
                     if ([jsonDic[@"memberID"] isEqualToString:userID]){
                         //.说明我被踢出群了
                         [ZWMessage message:@"你被群主踢出了群聊" title:@"群消息提醒:"];
@@ -509,7 +519,7 @@ typedef struct {
             {
                 if ([jsonDic[@"result"] intValue] == 1) {
                     //自己退出,需要做界面提醒
-                    NSString *userID = [ZWUserModel currentUser].userId;
+                    NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
                     if (![jsonDic[@"fromID"] isEqualToString:userID]) {
                         [self showAlertWithMessage:[NSString stringWithFormat:@"%@已退群出%@群",jsonDic[@"fromID"],jsonDic[@"groupID"]]];
                     }else{
@@ -568,10 +578,9 @@ typedef struct {
                         self.DidReadBlock(error, nil);
                     }
                 }
-                
             }
                 break;
-                //群主同意别人加入本群,无论是别人,还是自己,都需要接受这个z群消息
+                //群主同意别人加入本群,无论是别人,还是自己,都需要接受这个群消息
                 //
             case GCDSocketTCPCmdTypeagreeJoinGroup:
             {
@@ -622,7 +631,6 @@ typedef struct {
                 }
             }
               break;
-                
                 case GCDSocketTCPCmdTyperejectaddGroup:
             {//创建群
                 if ([jsonDic[@"result"] intValue] == 1) {

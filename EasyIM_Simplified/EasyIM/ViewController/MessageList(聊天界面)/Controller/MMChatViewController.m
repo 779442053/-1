@@ -21,6 +21,7 @@
 //转发
 #import "MMForwardViewController.h"
 #import "MMContactsViewController.h"
+#import "ZWMapLocationViewController.h"
 
 #import "ZWChartViewModel.h"
 static const CGFloat section_header_h = 60;
@@ -152,8 +153,10 @@ static const CGFloat section_header_h = 60;
     /** 联系人 */
     [self.tableView registerClass:[MMChatLinkManCell class] forCellReuseIdentifier:TypeLinkMan];
     //系统消息, 文字 在中间展示.文字,撤回消息等等
-    [self.tableView registerClass:[MMChatLinkManCell class] forCellReuseIdentifier:TypeLinkMan];
+    [self.tableView registerClass:[MMChatSystemCell class] forCellReuseIdentifier:TypeSystem];
     //定位
+    [self.tableView registerClass:[ZWChatLocationMessageCell class] forCellReuseIdentifier:TypeLocation];
+    
 }
 // 加载数据
 - (void)loadDataSource
@@ -395,6 +398,11 @@ static const CGFloat section_header_h = 60;
             ((MMChatLinkManCell *)cell).cellUserClick = ^(NSString * _Nonnull strUserId) {
                 [weakSelf headImageClicked:strUserId];
             };
+        }else if ([cell isKindOfClass:[ZWChatLocationMessageCell class]]){
+            WEAKSELF
+            ((ZWChatLocationMessageCell *)cell).AddeesscellUserClick = ^(NSString * _Nonnull address, float jingdu, float weidu) {
+                [weakSelf clickLocationCellWithJingdu:jingdu Weidu:weidu Address:address];
+            };
         }
         cell.longPressDelegate         = self;
         cell.modelFrame                = modelFrame;
@@ -457,11 +465,10 @@ static const CGFloat section_header_h = 60;
         UIView *placeholderView = [videoView viewWithTag:1001];
         [[MMVideoManager shareManager] setVideoPreviewLayer:videoLayerView];
         [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(videoPreviewLayerWillAppear:) userInfo:placeholderView repeats:NO];
-        
     }];
     
 }
-//MARK: - 发送联系人
+//MARK: - 发送联系人=======
 - (void) chatBoxViewController:(MMChatBoxViewController *_Nullable)chatboxViewController
             sendLinkmanMessage:(NSString *_Nonnull)strUserId
                    AndUserName:(NSString *_Nonnull)uName
@@ -469,6 +476,7 @@ static const CGFloat section_header_h = 60;
                       AndPhoto:(NSString *_Nullable)strPurl{
     
     //1.对内容模型赋值
+    ZWWLog(@"选择的联系人的用户id = %@",strUserId)
     MMChatContentModel *messageBody = [[MMChatContentModel alloc] init];
     messageBody.type = TypeLinkMan;
     messageBody.userID = strUserId;
@@ -497,7 +505,6 @@ static const CGFloat section_header_h = 60;
         [self sendTextMessageWithContent:messageStr];
     }
 }
-
 - (void)sendTextMessageWithContent:(NSString *)messageStr
 {
     WEAKSELF
@@ -511,6 +518,24 @@ static const CGFloat section_header_h = 60;
         [weakSelf updateSendStatusUIWithMessage:message];
     }];
     [self clientManager:nil didReceivedMessage:message];
+}
+-(void)chatBoxViewController:(MMChatBoxViewController *)chatboxViewController sendLocation:(CLLocationCoordinate2D)locationCoordinate locationText:(NSString *)locationText{
+    ZWWLog(@"将要发送的位置信息=%f, %f  locationText = %@",locationCoordinate.latitude,locationCoordinate.longitude,locationText)
+    if (locationCoordinate.longitude && locationCoordinate.latitude && locationText) {
+        //交给MMChatHandler进行s消息处理.
+        //封装成消息之后,开始插入本地界面展示发送中的消息
+        WEAKSELF
+        MMMessage *message = [[MMChatHandler shareInstance]
+                              sendLocationMessage:locationCoordinate Address:locationText
+                              toUser:_conversationModel.toUid
+                              toUserName:[_conversationModel getTitle]
+                              toUserPhotoUrl:_conversationModel.photoUrl
+                              cmd:_conversationModel.cmd
+                              completion:^(MMMessage * _Nonnull message) {
+            [weakSelf updateSendStatusUIWithMessage:message];
+        }];
+        [self clientManager:nil didReceivedMessage:message];
+    }
 }
 
 //MARK: - 发送图片信息
@@ -543,7 +568,6 @@ static const CGFloat section_header_h = 60;
 //MARK: - 发送文件消息
 - (void) chatBoxViewController:(MMChatBoxViewController *)chatboxViewController sendFileMessage:(NSString *)fileName
 {
-    
     WEAKSELF
     MMMessage *message = [[MMChatHandler shareInstance]
                           sendFileMessage:fileName
@@ -603,7 +627,6 @@ static const CGFloat section_header_h = 60;
         
         id object              = [self.dataSource objectAtIndex:indexPath.row];
         if (![object isKindOfClass:[MMMessageFrame class]]) return;
-        
         MMChatMessageBaseCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         [self showMenuViewController:cell.bubbleView
                         andIndexPath:indexPath
@@ -611,7 +634,12 @@ static const CGFloat section_header_h = 60;
 
     }
 }
-
+-(void)clickLocationCellWithJingdu:(float)jingdu Weidu:(float)weidu Address:(NSString *)address{
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:weidu longitude:jingdu];
+    ZWMapLocationViewController *mapView = [[ZWMapLocationViewController alloc]init];
+    mapView.location = location;
+    [self.navigationController pushViewController:mapView animated:YES];
+}
 
 //MARK: - 头像点击
 - (void)headImageClicked:(NSString *)eId
@@ -671,12 +699,11 @@ static const CGFloat section_header_h = 60;
         UIImageView *imageView = (UIImageView *)userInfo[VoiceIcon];
         UIView *redView        = (UIView *)userInfo[RedView];
         [self chatVoiceTaped:modelFrame voiceIcon:imageView redView:redView];
-        
+        //文件预览
     } else if ([eventName isEqualToString:GXRouterEventScanFile]){
         NSString *path = (NSString *)userInfo[@"filePath"];
         NSString *pathE = [path pathExtension];
         if ([pathE isEqualToString:@"mp4"]) {
-            
             [self playLocalFilePath:path];
         }else{
             MMFileScanController *scanVC = [[MMFileScanController alloc] init];
@@ -745,17 +772,13 @@ static const CGFloat section_header_h = 60;
     self.voiceHud.image = [UIImage imageNamed:@"voiceShort"];
     self.voiceHud.hidden = YES;
 }
-
 #pragma mark - 语音单机播放
-
 - (void)chatVoiceTaped:(MMMessageFrame *)messageFrame
              voiceIcon:(UIImageView *)voiceIcon
                redView:(UIView *)redView
 {
-    
     WEAKSELF
     __block NSString *voicePath;
-    
     // 文件路径
     NSString *tempFilePath = messageFrame.aMessage.slice.filePath;
     NSString *filePath;
@@ -768,7 +791,6 @@ static const CGFloat section_header_h = 60;
         [self playFilePath:voicePath andVoiceIcon:voiceIcon];
     }else{
         [[MMApiClient sharedClient] DOWNLOAD:messageFrame.aMessage.slice.content fileDir:kChatRecoderPath progress:nil success:^(NSString * _Nonnull filePath) {
-            
             //删除之前的后缀名并改写成wav格式
             voicePath = [[filePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"wav"];
             if ([VoiceConverter ConvertAmrToWav:filePath wavSavePath:voicePath]) {
@@ -889,8 +911,6 @@ static const CGFloat section_header_h = 60;
         MMLog(@"复制失败");
     }
 }
-
-//MARK: - 删除
 - (void)deleteMessage:(UIMenuItem *)deleteMenuItem
 {
     if (self.dataSource && _longIndexPath && [self.dataSource count] > _longIndexPath.row) {
@@ -954,9 +974,7 @@ static const CGFloat section_header_h = 60;
         //更新UI
         [self.tableView reloadData];
     }
-   
 }
-
 - (void)statusChanged:(MMMessageFrame *)messageF
 {
     [self.dataSource removeObject:messageF];
@@ -964,19 +982,13 @@ static const CGFloat section_header_h = 60;
     [self.tableView deleteRowsAtIndexPaths:@[_longIndexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView endUpdates];
 }
-//MARK: - 转发
 - (void)forwardMessage:(UIMenuItem *)forwardItem
 {
-//    NSLog(@"需要用到的数据库，等添加了数据库再做转发...");
     MMForwardViewController *forward = [[MMForwardViewController alloc] init];
     forward.delegate = (id <MMFAnyDataDelegate>) self;
-    
     BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:forward];
-    
     [self presentViewController:nav animated:YES completion:nil];
 }
-
-//MARK: - 更多
 - (void)moreMessage:(UIMenuItem *)moreItem
 {
     MMLog(@"更多");
@@ -1006,9 +1018,7 @@ static const CGFloat section_header_h = 60;
     }
     return _chatBoxVC;
 }
-
 #pragma mark - Getter
-
 -(UITableView *)tableView
 {
     if (! _tableView) {
@@ -1067,7 +1077,6 @@ static const CGFloat section_header_h = 60;
     }
     return _labSectionTime;
 }
-
 - (NSMutableArray *)dataSource
 {
     if (_dataSource == nil) {
@@ -1075,7 +1084,6 @@ static const CGFloat section_header_h = 60;
     }
     return _dataSource;
 }
-
 - (UIImageView *)presentImageView
 {
     if (!_presentImageView) {
@@ -1083,7 +1091,6 @@ static const CGFloat section_header_h = 60;
     }
     return _presentImageView;
 }
-
 - (MMVoiceHud *)voiceHud
 {
     if (!_voiceHud) {
@@ -1094,7 +1101,6 @@ static const CGFloat section_header_h = 60;
     }
     return _voiceHud;
 }
-
 - (NSTimer *)timer
 {
     if (!_timer) {

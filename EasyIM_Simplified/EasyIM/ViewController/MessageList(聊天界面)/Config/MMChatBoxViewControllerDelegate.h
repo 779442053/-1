@@ -19,7 +19,7 @@
 - (void) chatBoxViewController:(MMChatBoxViewController *_Nullable)chatboxViewController
         didChangeChatBoxHeight:(CGFloat)height;
 /**
- *  send text message
+ *  send 文字 message
  *
  *  @param chatboxViewController chatboxViewController
  *  @param messageStr            text
@@ -27,7 +27,7 @@
 - (void) chatBoxViewController:(MMChatBoxViewController *_Nullable)chatboxViewController
                sendTextMessage:(NSString *_Nullable)messageStr;
 /**
- *  send image message
+ *  send 图片 message
  *
  *  @param chatboxViewController MMChatBoxViewController
  *  @param image                 image
@@ -38,7 +38,7 @@
                      imagePath:(NSString *_Nullable)imgPath;
 
 /**
- *  send voice message
+ *  send 语音 message
  *
  *  @param chatboxViewController MMChatBoxViewController
  *  @param voicePath             voice path
@@ -79,7 +79,8 @@
 
 - (void) chatBoxViewController:(MMChatBoxViewController *_Nullable)chatboxViewController
                sendFileMessage:(NSString *_Nullable)fileName;
-
+//发送位置信息
+- (void)chatBoxViewController:(MMChatBoxViewController *_Nullable)chatboxViewController sendLocation:(CLLocationCoordinate2D)locationCoordinate locationText:(NSString *_Nullable)locationText;
 
 
 @end

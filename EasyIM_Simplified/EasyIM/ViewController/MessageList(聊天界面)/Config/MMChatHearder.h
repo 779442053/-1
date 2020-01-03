@@ -21,6 +21,7 @@
 #import "MMChatMessageFileCell.h"
 #import "MMChatLinkManCell.h"
 #import "MMChatSystemCell.h"
+#import "ZWChatLocationMessageCell.h"
 #import "MMMessageFrame.h"
 #import "MMMediaManager.h"
 #import "MMVideoView.h"

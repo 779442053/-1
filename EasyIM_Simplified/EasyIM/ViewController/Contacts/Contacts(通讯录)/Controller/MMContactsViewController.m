@@ -49,14 +49,10 @@ static MMContactsViewController *_shareInstance = nil;
 @property(nonatomic,strong) UITableView *listTableView;
 @property(nonatomic,strong) NSMutableArray<NSString *> *muArrSectionData;
 @property(nonatomic,strong) NSMutableDictionary *muDicListData;
-/** 索引视图 */
 @property(nonatomic,strong) JJTableViewIndexView *tabbleIndexView;
-//通讯录数据
 @property(nonatomic,strong) NSMutableArray *dataScoure;
-//空视图
+@property(nonatomic,strong) NSMutableArray *PushARR;
 @property(nonatomic,strong) UIView *emptyView;
-
-//好友消息
 @property (nonatomic, assign) NSInteger unReadCount;
 @property (nonatomic, strong) ZWContactsViewModel *ViewModel;
 @end
@@ -102,6 +98,30 @@ static MMContactsViewController *_shareInstance = nil;
     [rightSearch addTarget:self action:@selector(rightAction)forControlEvents:UIControlEventTouchUpInside];
     [rightSearch setImage:[UIImage imageNamed:@"contact_search"] forState:UIControlStateNormal];
     [self.navigationBgView addSubview:rightSearch];
+    [[self.ViewModel.GetPushdataCommand execute:nil] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            self.PushARR = x[@"res"];
+            if (self.PushARR.count) {
+                _unReadCount = self.PushARR.count;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+                    ContactsTableViewCell *cell = [self.listTableView cellForRowAtIndexPath:indexPath];
+                    if (cell) {
+                        [cell setRightBadgeForNO:_unReadCount];
+                    }
+                    KinTabBarController *tabbar = (KinTabBarController *)self.tabBarController;
+                    if (tabbar) {
+                        if (_unReadCount > 0) {
+                            [tabbar showBadgeOnItemIndex:1 withValue:_unReadCount];
+                        }
+                        else{
+                            [tabbar hideBadgeOnItemIndex:1];
+                        }
+                    }
+                });
+            }
+        }
+    }];
 }
 -(void)PushDataNotionfion:(NSNotification*)info{
     ZWWLog(@"受到的通知=%@",info)
@@ -123,13 +143,11 @@ static MMContactsViewController *_shareInstance = nil;
     
     return nil;
 }
-//MARK: - 搜索
 - (void)rightAction{
     SearchFriendsViewController *searchVC = [[SearchFriendsViewController alloc] init];
     searchVC.item = MMConGroup_Friend;
     [self.navigationController pushViewController:searchVC animated:YES];
 }
-//MARK: - 好友通知
 - (void)handleAddFriend:(NSNotification *_Nullable)notic{
     //1.如果通知没有object 直接返回
     if (!notic.object) {
@@ -519,6 +537,9 @@ static MMContactsViewController *_shareInstance = nil;
                         [tabbar hideBadgeOnItemIndex:1];
                     }
                     AddFriendStatusViewController *vc = [[AddFriendStatusViewController alloc] init];
+                    if (self.PushARR.count) {
+                        vc.newFriendsArr = self.PushARR;
+                    }
                     [self.navigationController pushViewController:vc animated:YES];
                 }
                     break;
@@ -756,5 +777,11 @@ static MMContactsViewController *_shareInstance = nil;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:FriendChangeNotifion object:nil];
+}
+-(NSMutableArray *)PushARR{
+    if (_PushARR == nil) {
+        _PushARR = [[NSMutableArray alloc]init];
+    }
+    return _PushARR;
 }
 @end

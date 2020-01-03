@@ -95,12 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
                                             callBack:(void(^)(NSInteger status,NSError *error))callBack;
 
 
-/**
- 检查自己的状态
 
- @param callBack 0-离线；1-在线；2-忙碌；3-离开；4-隐身
- */
-+ (void)checkUserStatusCallBack:(void(^)(NSInteger status,NSError *error))callBack;
 
 
 /**
@@ -182,19 +177,7 @@ NS_ASSUME_NONNULL_BEGIN
                    aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock;
 
 
-/**
- 邀请群成员
 
- @param groupId 群id
- @param friendId 好友id列表
- @param aCompletionBlock 结果返回
- */
-+ (void)inviteFrd2GroupWithGroupId:(NSString *)groupId
-                          friendId:(NSString *)friendId
-                       aCompletion:(void(^)(NSDictionary *dic, NSError *error))aCompletionBlock;
-
-//=====================================我是分割线==================================//
-//=====================================Model解析==================================//
 
 
 /**

@@ -17,7 +17,6 @@
         [self setupUI];
         self.backgroundColor = [UIColor clearColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        
         UILongPressGestureRecognizer *longRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressRecognizer:)];
         longRecognizer.minimumPressDuration = 0.8;//定义按的时间
         

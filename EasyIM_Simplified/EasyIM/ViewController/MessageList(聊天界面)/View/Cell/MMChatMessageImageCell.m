@@ -47,13 +47,17 @@
         UIImage *arrowImage = [manager arrowMeImage:image size:modelFrame.picViewF.size mediaPath:modelFrame.aMessage.slice.filePath isSender:modelFrame.aMessage.isSender];
         [self.imageBtn setBackgroundImage:arrowImage forState:UIControlStateNormal];
     } else {//接受别人的图片,将图片裁剪成别人图片箭头的样子
-        [self.imageBtn sd_setImageWithURL:[NSURL URLWithString:modelFrame.aMessage.slice.content] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"zhaopian"]];
+//        [self.imageBtn sd_setImageWithURL:[NSURL URLWithString:modelFrame.aMessage.slice.content] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"zhaopian"]];
+        NSData *iamgeData = [NSData dataWithContentsOfURL:[NSURL URLWithString:modelFrame.aMessage.slice.content]];
+        UIImage *image = [UIImage imageWithData:iamgeData];
+        [self.imageBtn setBackgroundImage:image forState:UIControlStateNormal];
     }
 }
 
 - (void)imageBtnClick:(UIButton *)btn
 {
     if (btn.currentBackgroundImage == nil) {
+        ZWWLog(@"点击的图片为空")
         return;
     }
     CGRect smallRect = [MMMessageHelper photoFramInWindow:btn];

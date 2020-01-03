@@ -58,7 +58,6 @@
                 [subscriber sendCompleted];
             }];
             return [RACDisposable disposableWithBlock:^{
-                
             }];
         }];
     }];

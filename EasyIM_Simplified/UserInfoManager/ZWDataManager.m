@@ -25,11 +25,8 @@ NSString * const kUserPath = @"Documents/user.plist";
 + (void)removeUserData
 {
     NSFileManager* fileManager=[NSFileManager defaultManager];
-    //NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-
     //文件名
     NSString *uniquePath = [NSHomeDirectory() stringByAppendingPathComponent:kUserPath];
-    //NSString *uniquePath=[[paths objectAtIndex:0] stringByAppendingPathComponent:kUserPath];
     BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:uniquePath];
     if (!blHave) {
         ZWWLog(@"没有这个文件");
@@ -66,8 +63,6 @@ NSString * const kUserPath = @"Documents/user.plist";
     });
 
 }
-
-
 // obj1所有属性赋值给obj2   利用runtime
 + (void)setObj:(id)toObj
        fromObj:(id)fromObj
@@ -77,10 +72,8 @@ NSString * const kUserPath = @"Documents/user.plist";
     for (int i = 0; i < count; i++)
     {
         objc_property_t pro = propertyList[i];
-
         const char *name = property_getName(pro);
         NSString *key = [NSString stringWithUTF8String:name];
-
         if ([fromObj valueForKey:key])
         {
             [toObj setValue:[fromObj valueForKey:key] forKey:key];

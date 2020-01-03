@@ -134,6 +134,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**文件的名称*/
 @property (nonatomic, copy) NSString *fileName;
 
+#pragma mark - 地图
+/**经度*/
+@property (nonatomic, assign) CGFloat jingDu;
+
+/**纬度 */
+@property (nonatomic, assign) CGFloat weiDu;
+/**街道地址*/
+@property (nonatomic, copy) NSString *address;
 
 #pragma mark - 联系人
 @property (nonatomic, copy) NSString *nickName;

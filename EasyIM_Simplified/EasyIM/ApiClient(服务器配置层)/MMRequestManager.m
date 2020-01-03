@@ -208,30 +208,6 @@
     }];
 }
 
-+ (void)checkUserStatusCallBack:(void(^)(NSInteger status,NSError *error))callBack
-{
-    
-    //1.构造参数
-    NSDictionary *param = @{
-                            @"cmd":@"userStatus",
-                            @"sessionid":[ZWUserModel currentUser].sessionID
-                            };
-    
-    //2.创建Get请求
-    [[MMApiClient sharedClient] GET:K_APP_REQUEST_API parameters:param success:^(id  _Nonnull responseObject) {
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            NSString *status = responseObject[@"status"];
-            callBack([status integerValue] ,nil);
-        }
-    } failure:^(NSError * _Nonnull error) {
-        callBack(0,error);
-    }];
-    
-}
-
-
-
-
 + (void)queryGroupCallBack:(void(^)(NSArray <MMGroupModel *>*groupList,NSError *error))callBack
 {
     
@@ -544,35 +520,6 @@
     }];
 
 }
-
-
-/**
- * 邀请好友入群
- */
-+ (void)inviteFrd2GroupWithGroupId:(NSString *)groupId
-                          friendId:(NSString *)friendId
-                       aCompletion:(void (^)(NSDictionary * dic, NSError * error))aCompletionBlock
-{
-    
-    //1.构建参数
-    NSDictionary *dic = @{
-                          @"cmd":@"inviteFrd2Group",
-                          @"sessionId":[ZWUserModel currentUser].sessionID,
-                          @"groupid":groupId,
-                          @"friendId":friendId
-                          };
-    
-    //2.构建Get请求
-    [[MMApiClient sharedClient] GET:K_APP_REQUEST_API parameters:dic success:^(id  _Nonnull responseObject) {
-        aCompletionBlock(responseObject, nil);
-    } failure:^(NSError * _Nonnull error) {
-        aCompletionBlock (nil, error);
-    }];
-    
-}
-
-
-
 
 //=====================================Model解析==================================/
 

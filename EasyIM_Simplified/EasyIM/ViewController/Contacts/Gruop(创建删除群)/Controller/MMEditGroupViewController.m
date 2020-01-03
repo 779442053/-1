@@ -126,7 +126,7 @@
 - (void)deleteFriend:(NSIndexPath *)indexPath
 {
     //判断当前身份,群主才能踢人
-    NSString *userID = [ZWUserModel currentUser].userId;
+   NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
     if (!self.creatorId.checkTextEmpty || ![self.creatorId isEqualToString:userID]) {
         [MMProgressHUD showHUD:@"非群主无法踢人"];
         return;

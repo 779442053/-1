@@ -98,7 +98,7 @@
     }
     //MARK:扫码添加用户
     if ([strInfo containsString:K_APP_QRCODE_USER]) {
-        NSString *userID = [ZWUserModel currentUser].userId;
+        NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
         if ([strId isEqualToString:userID]) {
             [MMProgressHUD showHUD:@"不能添加自己为好友"];
             return;
@@ -111,15 +111,7 @@
     }
     //MARK:扫码加群
     else if([strInfo containsString:K_APP_QRCODE_GROUP]){
-        [MMRequestManager inviteFrd2GroupWithGroupId:strId
-                                            friendId:[ZWUserModel currentUser].userId
-                                         aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
-                                             if (K_APP_REQUEST_OK(dic[K_APP_REQUEST_CODE])) {
-                                                 [MMProgressHUD showHUD:@"入群申请发送成功"];
-                                             }else{
-                                                 [MMProgressHUD showHUD:error?MMDescriptionForError(error):dic[K_APP_REQUEST_MSG]];
-                                             }
-                                         }];
+        [YJProgressHUD showMessage:@"扫码加入群聊"];
     }
 }
 

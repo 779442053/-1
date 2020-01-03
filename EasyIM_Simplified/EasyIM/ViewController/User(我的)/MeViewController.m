@@ -55,12 +55,12 @@ static NSString *const k_data_name = @"name";
             NSString *userName = [ZWUserModel currentUser].userName;
             NSString *mobil = [ZWUserModel currentUser].mobile;
             NSString *nickName = [ZWUserModel currentUser].nickName;
-            if (!ZWWOBJECT_IS_EMPYT(userName)) {
+            if (!ZWWOBJECT_IS_EMPYT(nickName)) {
+                self.labUserName.text = nickName;
+            }else if (!ZWWOBJECT_IS_EMPYT(userName)){
                 self.labUserName.text = userName;
             }else if (!ZWWOBJECT_IS_EMPYT(mobil)){
                 self.labUserName.text = mobil;
-            }else if (!ZWWOBJECT_IS_EMPYT(nickName)){
-                self.labUserName.text = nickName;
             }
             self.labAccount.text = [NSString stringWithFormat:@"账号:%@",[ZWUserModel currentUser].userId];
             [self.btnPic sd_setImageWithURL:[ZWUserModel currentUser].photoUrl.mj_url
@@ -75,16 +75,16 @@ static NSString *const k_data_name = @"name";
         [self.btnPic sd_setImageWithURL:[ZWUserModel currentUser].photoUrl.mj_url
                                forState:UIControlStateNormal
                        placeholderImage:K_DEFAULT_USER_PIC];
-        NSString *userName = [ZWUserModel currentUser].userName;
-        NSString *mobil = [ZWUserModel currentUser].mobile;
-        NSString *nickName = [ZWUserModel currentUser].nickName;
-        if (!ZWWOBJECT_IS_EMPYT(userName)) {
-            self.labUserName.text = userName;
-        }else if (!ZWWOBJECT_IS_EMPYT(mobil)){
-            self.labUserName.text = mobil;
-        }else if (!ZWWOBJECT_IS_EMPYT(nickName)){
-            self.labUserName.text = nickName;
-        }
+    }
+    NSString *userName = [ZWUserModel currentUser].userName;
+    NSString *mobil = [ZWUserModel currentUser].mobile;
+    NSString *nickName = [ZWUserModel currentUser].nickName;
+    if (!ZWWOBJECT_IS_EMPYT(nickName)) {
+        self.labUserName.text = nickName;
+    }else if (!ZWWOBJECT_IS_EMPYT(userName)){
+        self.labUserName.text = userName;
+    }else if (!ZWWOBJECT_IS_EMPYT(mobil)){
+        self.labUserName.text = mobil;
     }
 }
 //获取列数据
@@ -146,7 +146,7 @@ static NSString *const k_data_name = @"name";
         return;
     }
     if ([strInfo containsString:K_APP_QRCODE_USER]) {
-        NSString *userID = [ZWUserModel currentUser].userId;
+        NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
         if ([strId isEqualToString:userID]) {
             [MMProgressHUD showHUD:@"不能添加自己为好友"];
             return;
@@ -157,22 +157,13 @@ static NSString *const k_data_name = @"name";
             }
         }];
     }
-    //MARK:扫码加群
     else if([strInfo containsString:K_APP_QRCODE_GROUP]){
         [[self.ViewModel.add2GroupCommand execute:strId] subscribeNext:^(id  _Nullable x) {
             if ([x[@"code"] intValue] == 0) {
                 [MMProgressHUD showHUD: @"入群申请发送成功"];
             }
         }];
-        [MMRequestManager inviteFrd2GroupWithGroupId:strId
-                                            friendId:[ZWUserModel currentUser].userId
-                                         aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
-                                             if (K_APP_REQUEST_OK(dic[K_APP_REQUEST_CODE])) {
-                                                 [MMProgressHUD showHUD:@"入群申请发送成功"];
-                                             }else{
-                                                 [MMProgressHUD showHUD:error?MMDescriptionForError(error):dic[K_APP_REQUEST_MSG]];
-                                             }
-                                         }];
+        [YJProgressHUD showMessage:@"扫码加入群聊"];
     }
 }
 

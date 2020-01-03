@@ -236,5 +236,27 @@
             }];
         }];
     }];
+    
+    //搜搜群聊
+    self.SearchGroupCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+    return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+        @strongify(self)
+        NSMutableDictionary *Parma = [[NSMutableDictionary alloc]init];
+        Parma[@"keyword"] = input;
+        [self.request POST:searchgroup parameters:Parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+            ZWWLog(@"搜索群聊=%@",responseString)
+            if ([responseString[code] intValue] == 1) {
+                [subscriber sendNext:@{@"code":@"0"}];
+            }else{
+                [subscriber sendNext:@{@"code":@"1"}];
+            }
+            [subscriber sendCompleted];
+        } failure:^(ZWRequest *request, NSError *error) {
+            [subscriber sendCompleted];
+        }];
+        return [RACDisposable disposableWithBlock:^{
+        }];
+    }];
+  }];
 }
 @end

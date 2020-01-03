@@ -95,18 +95,10 @@
         _unReadLabel.backgroundColor = [UIColor redColor];
         _unReadLabel.textAlignment = NSTextAlignmentCenter;
         _unReadLabel.font = [UIFont systemFontOfSize:11];
-        
-        //        _unReadLabel.size = CGSizeMake(10, 10);
-        //        [_unReadLabel.layer setMasksToBounds:YES];
-        //        [_unReadLabel.layer setCornerRadius:5];
-        
         _unReadLabel.hidden = YES;
     }
     return _unReadLabel;
 }
-
-#pragma mark - Pravite
-
 - (void)setContactsModel:(ContactsModel *)contactsModel
 {
     [self.imageView setHidden:YES];
@@ -160,12 +152,8 @@
     [self.headImageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"contacts_group_icon"]];
     [self.nameLabel setText:recentContacts.targetNick.length?recentContacts.targetNick:recentContacts.targetName];
     [self.detailLabel setText:recentContacts.latestMsgStr];
-    
-    
     [self setCellFrame];
 }
-
-
 /** 设置*/
 - (void)recentContactsWithModel:(MMRecentContactsModel *)model
 {
@@ -178,7 +166,6 @@
     [self.nameLabel setHidden:NO];
     [self.detailLabel setHidden:NO];
     [self.timeLabel setHidden:NO];
-    
     NSURL *url = [NSURL URLWithString:[model.latestHeadImage containsString:@"http"]?model.latestHeadImage:@""];
     if ([model.latestHeadImage isEqualToString:@"tongzhi"]) {
         self.headImageView.image = [UIImage imageNamed:model.latestHeadImage];

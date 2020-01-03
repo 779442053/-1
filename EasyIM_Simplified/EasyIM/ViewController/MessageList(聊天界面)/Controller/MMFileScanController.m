@@ -26,11 +26,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.view.backgroundColor = [UIColor whiteColor];
-    
     [self setupNav];
-    
     self.fileURL = [NSURL fileURLWithPath:self.filePath];
     NSString *type = [self.filePath pathExtension];
     [self setupVew:type];
@@ -107,7 +104,6 @@
 
 - (void)makeOtherView
 {
-    
     UIImageView *imageV = [[UIImageView alloc] init];
     imageV.frame        = CGRectMake(KScreenWidth*0.5-40, 45, 80, 80);
     imageV.image        = [UIImage imageNamed:@"iconfont-wenjian"];

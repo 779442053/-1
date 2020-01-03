@@ -291,7 +291,7 @@ static MMChatDBManager *instance = nil;
         return;
     }
     //防止是自己的信息
-    NSString *userID = [ZWUserModel currentUser].userId;
+    NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
     if ([message.conversation isEqualToString:userID]) {
         return;
     }

@@ -13,12 +13,10 @@
 #import "ZWSocketManager.h"
 #import "YJProgressHUD.h"
 @interface MMAddMemberViewController ()<UITableViewDelegate,UITableViewDataSource>
-
 @property (nonatomic, strong) UITableView     *tableView;        //表格
 @property (nonatomic,   copy) NSArray         *dataSource;       //数据源
 @property (nonatomic, strong) UIButton        *inviteBtn;        //邀请按钮
-
-@property (nonatomic,strong) NSMutableArray   *selectArray;      //选中要添加的成员
+@property (nonatomic,strong) NSMutableArray   *selectArray;
 @property (nonatomic,strong) NSMutableArray   *userIDArr;        //ID数组
 @end
 @implementation MMAddMemberViewController
@@ -70,13 +68,10 @@
                                     };
                     }
                 }
-                
                 if (dicData && ![muarrTemp containsObject:dicData]) {
                     [muarrTemp addObject:dicData];
                 }
             }
-            
-            //发起人
             [muarrTemp addObject:@{
                                    @"userId":[ZWUserModel currentUser]?[ZWUserModel currentUser].userId:@"",
                                    @"photoUrl":[ZWUserModel currentUser]?[ZWUserModel currentUser].photoUrl:@"",
@@ -164,7 +159,7 @@
         cell.indexPath = indexPath;
         
         //MARK:群视频邀请判断
-        NSString *userID = [ZWUserModel currentUser].userId;
+        NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
         if ((self.isGroupVideo || self.isGroupAudio) && [ZWUserModel currentUser] && [userId isEqualToString:userID]) {
             //灰色不可选择
             cell.userInteractionEnabled = NO;
@@ -222,18 +217,17 @@
     }
     ContactsModel *model = self.dataSource[indexPath.row];
     if (![model isKindOfClass:[ContactsModel class]] && ![model isKindOfClass:[MemberList class]]) {
-        NSLog(@"数据不合法");
+        ZWWLog(@"数据不合法");
         return;
     }
     NSString *userId = [model isKindOfClass:[ContactsModel classForCoder]]?model.userId:((MemberList *)model).memberId;
     //联系人
     if (_isLinkman && self.delegate && [self.delegate respondsToSelector:@selector(mmDidSelectForLinkmanId:andUserName:andNickName:andPhoto:)]) {
-
+        ZWWLog(@"选择的账户信息=%@",model.userId)
         [self.delegate mmDidSelectForLinkmanId:model.userId
                                    andUserName:model.userName
                                    andNickName:model.nickName
                                       andPhoto:model.photoUrl];
-        
         [self.navigationController popViewControllerAnimated:YES];
         return;
     }

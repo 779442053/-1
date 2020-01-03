@@ -81,6 +81,7 @@ static MMClient *helper = nil;
             chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"msg"][@"slice"]];
         }
     }
+    receiveModel.slice = chatContentModel;
     NSString *fromID = [NSString stringWithFormat:@"%@",receiveModel.fromID];
     NSString *UserID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
     BOOL isSender  = [fromID isEqualToString:UserID] ? YES:NO;
@@ -103,12 +104,11 @@ static MMClient *helper = nil;
     message.deliveryState = isSender ? MMMessageDeliveryState_Delivered:MMMessageDeliveryState_Delivered;
     message.conversation = isSender ? message.toID :  message.fromID;//
     MMLog(@"========%d",message.isInsert);
-    MMLog(@"======%@",message.conversation);
+    MMLog(@"==数据库中可查询的会话对象====%@",message.conversation);
     message.isInsert = receiveModel.isInsert;
-   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // 消息插入数据库
+    //开启分享成,进行消息缓存操作
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[MMChatDBManager shareManager] addMessage:message];
-        // 会话插入数据库或者更新会话
         NSString *currentToId = isSender ? message.toID : message.fromID;
         BOOL isChatting = [currentToId isEqualToString:[MMClient sharedClient].chattingConversation.conversationModel.toUid];
         [[MMChatDBManager shareManager] addOrUpdateConversationWithMessage:message isChatting:isChatting];
@@ -124,14 +124,12 @@ static MMClient *helper = nil;
 
 - (void)addHandleGroupMessage:(NSDictionary *)aMessage
 {
-    MMLog(@"收到群聊消息==================%@",aMessage);
-    
+    ZWWLog(@"收到群聊消息==================%@",aMessage);
     NSDictionary *userDic = aMessage[@"list"][@"group"];
     if (![userDic isKindOfClass:[NSDictionary class]]) {
         MMLog(@"消息格式有误！详见：%@",userDic);
         return;
     }
-    
     MMReceiveMessageModel *receiveModel = [MMReceiveMessageModel mj_objectWithKeyValues:userDic];
     NSString * fromID = [NSString stringWithFormat:@"%@",receiveModel.fromID];
     NSString * userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];

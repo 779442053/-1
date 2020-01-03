@@ -13,6 +13,7 @@
 #import "GroupCompleteViewController.h"
 #import "MMContactsViewController.h"
 #import "ZWIMSearchBar.h"
+#import "ZWGroudDetailViewModel.h"
 @interface NewGroupViewController () <UITableViewDelegate,UITableViewDataSource,ZWIMSearchBarDelegate,NewGroupViewCellDelegate>
 {
     NSMutableArray *_searchResultArr;//搜索结果Arr
@@ -24,6 +25,7 @@
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (strong, nonatomic) UITableView *tableView;
 @property (nonatomic, strong) ZWIMSearchBar *searchBar;
+@property(nonatomic,strong)ZWGroudDetailViewModel *ViewModel;
 @end
 @implementation NewGroupViewController
 - (void)viewDidLoad {
@@ -112,6 +114,11 @@
 }
 - (void)updateSearchResultsForSearchBar:(ZWIMSearchBar *)searchBar {
     ZWWLog(@"===%@",searchBar.text)
+//    [[self.ViewModel.SearchGroupCommand execute:searchBar.text] subscribeNext:^(id  _Nullable x) {
+//        if ([x[@"code"] intValue] == 0) {
+//
+//        }
+//    }] ;
     // 刷新数据
     [self filterContentForSearchText:searchBar.text scope:@""];
 }
@@ -230,5 +237,11 @@
         _searchBar = searchBar;
     }
     return _searchBar;
+}
+-(ZWGroudDetailViewModel *)ViewModel{
+    if (_ViewModel == nil) {
+        _ViewModel = [[ZWGroudDetailViewModel alloc]init];
+    }
+    return _ViewModel;
 }
 @end

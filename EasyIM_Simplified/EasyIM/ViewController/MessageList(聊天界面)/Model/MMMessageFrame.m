@@ -154,6 +154,13 @@
             CGFloat x              = CGRectGetMinX(_bubbleViewF);
             _topViewF              = CGRectMake(x, cellMargin, topViewSize.width, topViewSize.height);
             _picViewF              = CGRectMake(x, cellMargin+topViewH, bubbleSize.width, bubbleSize.height);
+        }else if([aMessage.slice.type isEqualToString:TypeLocation]){//位置
+            CGSize bubbleSize = CGSizeMake(230, 127);
+            _bubbleViewF = CGRectMake(CGRectGetMinX(_headImageViewF)-headToBubble-bubbleSize.width, cellMargin+topViewH, bubbleSize.width, bubbleSize.height);
+            CGSize topViewSize     = CGSizeMake(bubbleSize.width-arrowWidth, topViewH);
+            CGFloat x              = CGRectGetMinX(_bubbleViewF);
+            _topViewF              = CGRectMake(x, cellMargin, topViewSize.width, topViewSize.height);
+            _picViewF              = CGRectMake(x, cellMargin+topViewH, bubbleSize.width, bubbleSize.height);
         }
         
         
@@ -252,6 +259,13 @@
         }
         else if([aMessage.slice.type isEqualToString:TypeLinkMan]){//联系人(名片)
             CGSize bubbleSize = CGSizeMake(230, 107);
+            _bubbleViewF = CGRectMake(CGRectGetMaxX(_headImageViewF)+headToBubble, cellMargin+topViewH, bubbleSize.width, bubbleSize.height);
+            CGSize topViewSize     = CGSizeMake(bubbleSize.width-arrowWidth, topViewH);
+            CGFloat x              = CGRectGetMinX(_bubbleViewF);
+            _topViewF              = CGRectMake(x+arrowWidth, cellMargin, topViewSize.width, topViewSize.height);
+            _picViewF              = CGRectMake(x, cellMargin+topViewH, bubbleSize.width, bubbleSize.height);
+        }else if([aMessage.slice.type isEqualToString:TypeLocation]){//位置
+            CGSize bubbleSize = CGSizeMake(230, 127);
             _bubbleViewF = CGRectMake(CGRectGetMaxX(_headImageViewF)+headToBubble, cellMargin+topViewH, bubbleSize.width, bubbleSize.height);
             CGSize topViewSize     = CGSizeMake(bubbleSize.width-arrowWidth, topViewH);
             CGFloat x              = CGRectGetMinX(_bubbleViewF);
