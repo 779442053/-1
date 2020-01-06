@@ -433,7 +433,7 @@ static const CGFloat section_header_h = 60;
 - (void) chatBoxViewController:(MMChatBoxViewController *)chatboxViewController
         didChangeChatBoxHeight:(CGFloat)height
 {
-    ZWWLog(@"键盘发生了变化===%f",height)// 上升了427   下降了49
+    //ZWWLog(@"键盘发生了变化===%f",height)// 上升了427   下降了49
     self.tableView.height = HEIGHT_SCREEN - height - ZWTabbarSafeBottomMargin - ZWStatusAndNavHeight;
     self.chatBoxVC.view.top = self.tableView.bottom;
     if (height == HEIGHT_TABBAR) {

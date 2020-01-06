@@ -7,7 +7,7 @@
 //
 
 #import "MMConversationHelper.h"
-
+#import "MMRecentContactsModel.h"
 @implementation MMConversationModel
 
 - (instancetype)initWithToUid:(NSString *)toUid

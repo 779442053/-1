@@ -8,6 +8,7 @@
 
 #import "MMMessage.h"
 
+#import "MMDateHelper.h"
 @implementation MMMessage
 {
     int msgid ;

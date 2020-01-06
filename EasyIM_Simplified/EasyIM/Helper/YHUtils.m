@@ -685,39 +685,6 @@ static void soundCompletionBlock(SystemSoundID SSID, void *mySelf){
         //}
     }
 }
-
-
-//MARK: - 网络请求
-+ (void)POSTWithURLString:(NSString *_Nonnull)URLString
-               parameters:(id _Nullable)parameters
-                  success:(void (^)(id _Nullable responseObject))success
-                  failure:(void (^)(NSError *error))failure
-{
-    AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
-    manger.requestSerializer = [AFJSONRequestSerializer serializer];
-    manger.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    manger.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/xml", @"text/plain", nil];
-    [manger.requestSerializer setValue:[ZWUserModel currentUser]?[ZWUserModel currentUser].token:@"" forHTTPHeaderField:@"token"];
-    ZWWLog(@"URLString:%@?%@",URLString,parameters);
-    
-    [manger.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [[manger POST:URLString
-       parameters:parameters
-         progress:nil
-          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-        if (success) {
-            success([NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil]);
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) {
-            failure(error);
-        }
-    }] resume];
-}
-
-
 //MARK: - 设置富文本
 /**! 设置富文本 */
 +(NSAttributedString *)setAttributeStringText:(NSString *)strFullText

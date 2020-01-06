@@ -8,7 +8,7 @@
 
 #import "MMBaseViewController.h"
 #import "CMInputView.h"
-
+#import "SearchFriendModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

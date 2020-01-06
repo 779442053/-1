@@ -13,11 +13,12 @@
 #import "MMVideoView.h"
 #import "MMMessageConst.h"
 #import "MMVideoManager.h"
+#import "MMVedioCallManager.h"
 #import "UIImage+Extension.h"
 #import "MMDocumentViewController.h"
 #import "MMTools.h"
 
-#import "MMDefines.h"
+
 #import "MMVedioCallEnum.h"
 
 #import "ZWPhotoHelper.h"
@@ -25,6 +26,8 @@
 #import "MMAddMemberViewController.h"
 //位置
 #import "ZWLocationViewController.h"
+
+#import "ZWChartViewModel.h"
 @interface MMChatBoxViewController ()<MMChatBoxDelegate,MMChatBoxMoreViewDelegate, UIImagePickerControllerDelegate,MMDocumentDelegate,UINavigationControllerDelegate,MMAddMemberViewControllerDelegate,LocationViewControllerDelegate>
 
 @property (nonatomic, assign) CGRect keyboardFrame;
@@ -38,6 +41,8 @@
 @property (nonatomic, strong) UIImagePickerController *imagePicker;
 
 @property (nonatomic, weak) MMVideoView *videoView;
+@property (nonatomic, weak) ZWChartViewModel *ViewMOdel;
+@property(nonatomic,strong)MMVedioCallManager *vedioCallManager;
 
 @end
 
@@ -48,9 +53,8 @@
     [self.view addSubview:self.chatBox];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    self.vedioCallManager = [MMVedioCallManager sharedManager];
 }
-
-#pragma mark - Public Methods
 
 - (BOOL)resignFirstResponder
 {
@@ -251,7 +255,11 @@ didSelectItem:(MMChatBoxItem)itemType
             //MARK:单聊视频
             else{
                 ZWWLog(@"张威威应该想后台获取通信地址,本地唤醒webrtc,进行呼叫")
-                [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio1V1 object:@{CALL_CHATTER:[MMManagerGlobeUntil sharedManager].toUid, CALL_TYPE:@(MMCallTypeVideo),CALL_CALLPARTY:@(MMCallParty_Calling)}];
+                NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+                parma[CALL_CHATTER] = [MMManagerGlobeUntil sharedManager].toUid;
+                parma[CALL_TYPE] = @(MMCallTypeVideo);
+                parma[CALL_CALLPARTY] = @(MMCallParty_Calling);
+                [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio1V1 object:parma];
             }
             
         }
@@ -264,7 +272,12 @@ didSelectItem:(MMChatBoxItem)itemType
             }
             //MARK:单聊语音
             else{
-                [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio1V1 object:@{CALL_CHATTER:[MMManagerGlobeUntil sharedManager].toUid, CALL_TYPE:@(MMCallTypeVoice),CALL_CALLPARTY:@(MMCallParty_Calling)}];
+                ZWWLog(@"张威威应该想后台获取通信地址,本地唤醒webrtc,进行呼叫")
+                NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+                parma[CALL_CHATTER] = [MMManagerGlobeUntil sharedManager].toUid;
+                parma[CALL_TYPE] = @(MMCallTypeVoice);
+                parma[CALL_CALLPARTY] = @(MMCallParty_Calling);
+                [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio1V1 object:parma];
             }
         }
             break;
@@ -320,57 +333,31 @@ didSelectItem:(MMChatBoxItem)itemType
             break;
     }
 }
-#pragma mark - XMLocationViewControllerDelegate
-- (UIViewController *)rootViewController
-{
-    return [[UIApplication sharedApplication] keyWindow].rootViewController;
-}
-- (void)cancelLocation
-{
-    [self.rootViewController dismissViewControllerAnimated:YES completion:nil];
-}
-- (void)sendLocation:(CLPlacemark *)placemark
-{
-    [self cancelLocation];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatBoxViewController:sendLocation:locationText:)])
-    {
-        [self.delegate chatBoxViewController:self sendLocation:placemark.location.coordinate locationText:placemark.name];
-    }
-}
+
 -(void)groupInvitation:(BOOL)isVideo{
     __weak typeof(self) weakSelf = self;
-    [MMRequestManager groupMemberWithtaggroupId:self.groupId
-                                           mode:self.mode
-                                    aCompletion:^(NSArray<MemberList *> * _Nullable memberList,
-                                                  NSString * _Nullable createId,
-                                                  NSError * _Nullable error) {
-                                        
-                                        if (createId) {
-                                            self.creatorId = createId;
-                                        }
-                                        
-                                        //如果有数据
-                                        if (memberList.count > 1) {
-                                            //邀请好友
-                                            MMAddMemberViewController *addMember = [[MMAddMemberViewController alloc] init];
-                                            addMember.memberData = memberList;
-                                            addMember.isGroupVideo = isVideo;
-                                            addMember.isGroupAudio = !isVideo;
-                                            addMember.groupId = self.groupId;
-                                            addMember.creatorId = self.creatorId;
-                                            addMember.delegate = (id<MMAddMemberViewControllerDelegate>)self;
-                                            
-                                            [weakSelf.navigationController pushViewController:addMember animated:YES];
-                                        }
-                                        else{
-                                            if (error == nil && memberList.count <= 1){
-                                                NSString *strinfo = [NSString stringWithFormat:@"请先邀请好友入群再发起%@",isVideo?@"视频":@"语音"];
-                                                [MMProgressHUD showHUD:strinfo];
-                                            }
-                                            else
-                                                [MMProgressHUD showHUD:MMDescriptionForError(error)];
-                                        }
-                                    }];
+    //先获取群内部成员
+    [[self.ViewMOdel.getGroupPeopleListCommand execute:self.groupId] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue]) {
+            NSArray<MemberList *> *memberList = [MemberList mj_objectArrayWithKeyValuesArray:x[@"res"]];
+           if ([[x allValues] containsObject:@"cid"]) {
+               self.creatorId = x[@"cid"];
+           }
+            if (memberList.count > 1) {
+                MMAddMemberViewController *addMember = [[MMAddMemberViewController alloc] init];
+                addMember.memberData = memberList;
+                addMember.isGroupVideo = isVideo;
+                addMember.isGroupAudio = !isVideo;
+                addMember.groupId = self.groupId;
+                addMember.creatorId = self.creatorId;
+                addMember.delegate = (id<MMAddMemberViewControllerDelegate>)self;
+                [weakSelf.navigationController pushViewController:addMember animated:YES];
+            }else{
+                NSString *strinfo = [NSString stringWithFormat:@"请先邀请好友入群再发起%@",isVideo?@"视频":@"语音"];
+                [MMProgressHUD showHUD:strinfo];
+            }
+        }
+    }];
 }
 //MARK: - MMAddMemberViewControllerDelegate(群音视频)
 -(void)mmInvitationMemberFinish:(NSArray *)arrMembersId
@@ -514,15 +501,12 @@ didSelectItem:(MMChatBoxItem)itemType
     }
     
 }
-
-
 - (void)chatBox:(MMChatBox *)chatBox sendTextMessage:(NSString *)textMessage
 {
     if (_delegate && [_delegate respondsToSelector:@selector(chatBoxViewController:sendTextMessage:)]) {
         [_delegate chatBoxViewController:self sendTextMessage:textMessage];
     }
 }
-
 /**
  *  输入框高度改变
  *
@@ -539,7 +523,6 @@ didSelectItem:(MMChatBoxItem)itemType
     }
     
 }
-
 - (void)chatBoxDidStartRecordingVoice:(MMChatBox *)chatBox
 {
     self.recordName = [self currentRecordFileName];
@@ -552,7 +535,6 @@ didSelectItem:(MMChatBoxItem)itemType
         }
     }];
 }
-
 - (void)chatBoxDidStopRecordingVoice:(MMChatBox *)chatBox
 {
     __weak typeof(self) weakSelf = self;
@@ -619,9 +601,30 @@ didSelectItem:(MMChatBoxItem)itemType
         [MMProgressHUD showHUD:@"Invalid room name."];
         return nil;
     }
-    
     return trimmedRoom;
 }
-
-
+#pragma mark - XMLocationViewControllerDelegate
+- (UIViewController *)rootViewController
+{
+    return [[UIApplication sharedApplication] keyWindow].rootViewController;
+}
+- (void)cancelLocation
+{
+    [self.rootViewController dismissViewControllerAnimated:YES completion:nil];
+}
+/**发送文职*/
+- (void)sendLocation:(CLPlacemark *)placemark
+{
+    [self cancelLocation];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatBoxViewController:sendLocation:locationText:)])
+    {
+        [self.delegate chatBoxViewController:self sendLocation:placemark.location.coordinate locationText:placemark.name];
+    }
+}
+-(ZWChartViewModel *)ViewMOdel{
+    if (_ViewMOdel == nil) {
+        _ViewMOdel = [[ZWChartViewModel alloc]init];
+    }
+    return _ViewMOdel;
+}
 @end

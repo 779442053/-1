@@ -16,6 +16,7 @@
 #import "NSDate+Extension.h"
 #import "VoiceConverter.h"
 #import "MMReceiveMessageModel.h"
+
 #define lastUpdateKey [NSString stringWithFormat:@"%@-%@",[MMUser currentUser].eId,@"LastUpdate"]
 #define groupInfoLastUpdateKey [NSString stringWithFormat:@"%@-%@",[MMUser currentUser].eId,@"groupInfoLastUpdate"]
 #define directLastUpdateKey [NSString stringWithFormat:@"%@-%@",[MMUser currentUser].eId,@"directLastUpdate"]

@@ -72,6 +72,7 @@
 		2841EC0923B47B7F00EA6C20 /* ZWIMSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2841EC0823B47B7F00EA6C20 /* ZWIMSearchBar.m */; };
 		2841EC0D23B497FD00EA6C20 /* GroupCompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2841EC0B23B497FC00EA6C20 /* GroupCompleteViewController.m */; };
 		2841EC0E23B497FD00EA6C20 /* GroupCompleteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2841EC0C23B497FD00EA6C20 /* GroupCompleteViewController.xib */; };
+		28517CF723C32049007BA934 /* MMApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 28517CF523C32048007BA934 /* MMApiClient.m */; };
 		2853924223B3A45A00012E73 /* ZWSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2853924123B3A45A00012E73 /* ZWSearch.m */; };
 		286A8A552398AC0B00B2A069 /* ZWAddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A542398AC0B00B2A069 /* ZWAddFriendViewController.m */; };
 		286A8A582398D76700B2A069 /* ZWAddFriendViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A572398D76700B2A069 /* ZWAddFriendViewModel.m */; };
@@ -408,10 +409,6 @@
 		FAD47F45226DA8DB0040B96E /* MMFileScanController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD47F44226DA8DB0040B96E /* MMFileScanController.m */; };
 		FAD47F48226DAB080040B96E /* MMPhotoBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD47F47226DAB080040B96E /* MMPhotoBrowserController.m */; };
 		FAE0BDF6226417BE0067A33A /* ContactsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE0BDF5226417BE0067A33A /* ContactsModel.m */; };
-		FAE0BDFE2265AB360067A33A /* MMGCDAsyncSocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE0BDFD2265AB360067A33A /* MMGCDAsyncSocketManager.m */; };
-		FAE0BE012265C54F0067A33A /* MMSocketModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE0BE002265C54F0067A33A /* MMSocketModel.m */; };
-		FAE0BE052265C5940067A33A /* MMConnectConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE0BE042265C5940067A33A /* MMConnectConfig.m */; };
-		FAE0BE082265C8D00067A33A /* MMGCDAsyncSocketCommunicationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE0BE072265C8D00067A33A /* MMGCDAsyncSocketCommunicationManager.m */; };
 		FAE0BE0D2265D3810067A33A /* MMErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE0BE0C2265D3810067A33A /* MMErrorManager.m */; };
 		FAE2095722D851D500357DBB /* MMCommonModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE2095622D851D500357DBB /* MMCommonModel.m */; };
 		FAE2095A22DC734700357DBB /* MMPopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE2095922DC734700357DBB /* MMPopoverViewController.m */; };
@@ -424,8 +421,6 @@
 		FAEA511C228154A6007EA6A7 /* MMCallSessionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEA511B228154A6007EA6A7 /* MMCallSessionModel.m */; };
 		FAEA511F22817F02007EA6A7 /* MMGlobalVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEA511E22817F02007EA6A7 /* MMGlobalVariables.m */; };
 		FAED64DE226F401400EBDFD2 /* MMReceiveMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAED64DD226F401400EBDFD2 /* MMReceiveMessageModel.m */; };
-		FAED64E32271480300EBDFD2 /* MMApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FAED64E22271480300EBDFD2 /* MMApiClient.m */; };
-		FAED64E622714CC700EBDFD2 /* MMRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FAED64E522714CC700EBDFD2 /* MMRequestManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -608,6 +603,8 @@
 		2841EC0C23B497FD00EA6C20 /* GroupCompleteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupCompleteViewController.xib; sourceTree = "<group>"; };
 		2841EC1423B5A64A00EA6C20 /* ZWNotificationEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWNotificationEnum.h; sourceTree = "<group>"; };
 		2841EC1523B5A73200EA6C20 /* ZWNotificationEnumTwo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWNotificationEnumTwo.h; sourceTree = "<group>"; };
+		28517CF523C32048007BA934 /* MMApiClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMApiClient.m; sourceTree = "<group>"; };
+		28517CF623C32049007BA934 /* MMApiClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMApiClient.h; sourceTree = "<group>"; };
 		2853924023B3A45A00012E73 /* ZWSearch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWSearch.h; sourceTree = "<group>"; };
 		2853924123B3A45A00012E73 /* ZWSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWSearch.m; sourceTree = "<group>"; };
 		286A8A532398AC0B00B2A069 /* ZWAddFriendViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWAddFriendViewController.h; sourceTree = "<group>"; };
@@ -1203,14 +1200,6 @@
 		FAD47F47226DAB080040B96E /* MMPhotoBrowserController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMPhotoBrowserController.m; sourceTree = "<group>"; };
 		FAE0BDF4226417BE0067A33A /* ContactsModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactsModel.h; sourceTree = "<group>"; };
 		FAE0BDF5226417BE0067A33A /* ContactsModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactsModel.m; sourceTree = "<group>"; };
-		FAE0BDFC2265AB360067A33A /* MMGCDAsyncSocketManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMGCDAsyncSocketManager.h; sourceTree = "<group>"; };
-		FAE0BDFD2265AB360067A33A /* MMGCDAsyncSocketManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMGCDAsyncSocketManager.m; sourceTree = "<group>"; };
-		FAE0BDFF2265C54F0067A33A /* MMSocketModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSocketModel.h; sourceTree = "<group>"; };
-		FAE0BE002265C54F0067A33A /* MMSocketModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMSocketModel.m; sourceTree = "<group>"; };
-		FAE0BE032265C5940067A33A /* MMConnectConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMConnectConfig.h; sourceTree = "<group>"; };
-		FAE0BE042265C5940067A33A /* MMConnectConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMConnectConfig.m; sourceTree = "<group>"; };
-		FAE0BE062265C8D00067A33A /* MMGCDAsyncSocketCommunicationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMGCDAsyncSocketCommunicationManager.h; sourceTree = "<group>"; };
-		FAE0BE072265C8D00067A33A /* MMGCDAsyncSocketCommunicationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMGCDAsyncSocketCommunicationManager.m; sourceTree = "<group>"; };
 		FAE0BE0B2265D3810067A33A /* MMErrorManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMErrorManager.h; sourceTree = "<group>"; };
 		FAE0BE0C2265D3810067A33A /* MMErrorManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMErrorManager.m; sourceTree = "<group>"; };
 		FAE2095422D8286E00357DBB /* MMForwardDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMForwardDelegate.h; sourceTree = "<group>"; };
@@ -1237,10 +1226,6 @@
 		FAEA511E22817F02007EA6A7 /* MMGlobalVariables.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMGlobalVariables.m; sourceTree = "<group>"; };
 		FAED64DC226F401400EBDFD2 /* MMReceiveMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMReceiveMessageModel.h; sourceTree = "<group>"; };
 		FAED64DD226F401400EBDFD2 /* MMReceiveMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMReceiveMessageModel.m; sourceTree = "<group>"; };
-		FAED64E12271480300EBDFD2 /* MMApiClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMApiClient.h; sourceTree = "<group>"; };
-		FAED64E22271480300EBDFD2 /* MMApiClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMApiClient.m; sourceTree = "<group>"; };
-		FAED64E422714CC700EBDFD2 /* MMRequestManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMRequestManager.h; sourceTree = "<group>"; };
-		FAED64E522714CC700EBDFD2 /* MMRequestManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMRequestManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1828,8 +1813,6 @@
 			isa = PBXGroup;
 			children = (
 				FAE0BE0A2265D3620067A33A /* Helper */,
-				FAE0BE022265C55A0067A33A /* Model */,
-				FAE0BDF82265AA4A0067A33A /* Manager */,
 			);
 			path = SocketGroup;
 			sourceTree = "<group>";
@@ -2272,6 +2255,7 @@
 		C4C662C22383DD8F0024C454 /* APPLibs */ = {
 			isa = PBXGroup;
 			children = (
+				FA022DD72286914700E25218 /* Category */,
 				286A8A592398EA2C00B2A069 /* ZWSearchBarView */,
 				28A75BCD238D0E1900281EF8 /* ZWPlaceholder(一句代码实现所有空占位图) */,
 				28233D54238664D60085D18B /* Message */,
@@ -3056,36 +3040,15 @@
 				FA0DEEBC226D7D49002A6E6A /* MMChatHandler.m */,
 				28A61E8D23AA1269003EC390 /* ZWChatHandlerViewModel.h */,
 				28A61E8E23AA1269003EC390 /* ZWChatHandlerViewModel.m */,
-				FA022DD72286914700E25218 /* Category */,
 			);
 			path = Helper;
-			sourceTree = "<group>";
-		};
-		FAE0BDF82265AA4A0067A33A /* Manager */ = {
-			isa = PBXGroup;
-			children = (
-				FAE0BDFC2265AB360067A33A /* MMGCDAsyncSocketManager.h */,
-				FAE0BDFD2265AB360067A33A /* MMGCDAsyncSocketManager.m */,
-				FAE0BE062265C8D00067A33A /* MMGCDAsyncSocketCommunicationManager.h */,
-				FAE0BE072265C8D00067A33A /* MMGCDAsyncSocketCommunicationManager.m */,
-			);
-			path = Manager;
-			sourceTree = "<group>";
-		};
-		FAE0BE022265C55A0067A33A /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				FAE0BDFF2265C54F0067A33A /* MMSocketModel.h */,
-				FAE0BE002265C54F0067A33A /* MMSocketModel.m */,
-				FAE0BE032265C5940067A33A /* MMConnectConfig.h */,
-				FAE0BE042265C5940067A33A /* MMConnectConfig.m */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		FAE0BE0A2265D3620067A33A /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				28517CF623C32049007BA934 /* MMApiClient.h */,
+				28517CF523C32048007BA934 /* MMApiClient.m */,
 				FAE0BE0B2265D3810067A33A /* MMErrorManager.h */,
 				FAE0BE0C2265D3810067A33A /* MMErrorManager.m */,
 			);
@@ -3114,10 +3077,6 @@
 				864CEC4F220639DD000DE5B2 /* SocketGroup */,
 				28233D4D2386626F0085D18B /* RequestTool */,
 				C49B35B52382BFD9008D38E1 /* API */,
-				FAED64E12271480300EBDFD2 /* MMApiClient.h */,
-				FAED64E22271480300EBDFD2 /* MMApiClient.m */,
-				FAED64E422714CC700EBDFD2 /* MMRequestManager.h */,
-				FAED64E522714CC700EBDFD2 /* MMRequestManager.m */,
 			);
 			path = "ApiClient(服务器配置层)";
 			sourceTree = "<group>";
@@ -3405,7 +3364,6 @@
 				FAC2FBE4232637E600FF8C10 /* MMNextAddBankViewController.m in Sources */,
 				289328B82394D91400EBF0C8 /* ZWChartViewModel.m in Sources */,
 				8682602521DE5DDC005CB171 /* KinTabBarController.m in Sources */,
-				FAED64E32271480300EBDFD2 /* MMApiClient.m in Sources */,
 				8689EC4E21E63B830024A6A0 /* ContactTableViewCell.m in Sources */,
 				FA05C76822A3FE91001E7B89 /* MMEditGroupCell.m in Sources */,
 				8689EC0621E5C7D90024A6A0 /* LoginVC.m in Sources */,
@@ -3420,7 +3378,6 @@
 				FA022DE62286BC8100E25218 /* MMConversationHelper.m in Sources */,
 				FA2765EB226D63490098D515 /* amrFileCodec.mm in Sources */,
 				181649D4230E9961009A9A66 /* MMPwdModifyViewController.m in Sources */,
-				FAE0BE082265C8D00067A33A /* MMGCDAsyncSocketCommunicationManager.m in Sources */,
 				C49B35902382B6E8008D38E1 /* UIImage+ZWWOriginImage.m in Sources */,
 				FAE2095A22DC734700357DBB /* MMPopoverViewController.m in Sources */,
 				282169A723BF1E760073A164 /* ZWChatLocationMessageCell.m in Sources */,
@@ -3525,7 +3482,6 @@
 				8689EBAA21E3A8D00024A6A0 /* YKHorizontalSelectView.m in Sources */,
 				28233D5A238664D60085D18B /* UIViewController+ZWUIViewController.m in Sources */,
 				FA615A2122D74F7A003C148A /* MMForward_FriendViewController.m in Sources */,
-				FAE0BE052265C5940067A33A /* MMConnectConfig.m in Sources */,
 				187EB1DA22CCEDBD00F1647F /* FriendInfoViewController.m in Sources */,
 				FA2765C9226D5F940098D515 /* MMVideoManager.m in Sources */,
 				C4C662DC2383DDCB0024C454 /* UIImage+wyhRadius.m in Sources */,
@@ -3567,7 +3523,6 @@
 				28743E2023BF513B00E404D2 /* ZWiCloudManager.m in Sources */,
 				8625B64B21EB7CD20050C023 /* UIResponder+GXRouter.m in Sources */,
 				FA0DEEC7226D8244002A6E6A /* MMVideoView.m in Sources */,
-				FAE0BDFE2265AB360067A33A /* MMGCDAsyncSocketManager.m in Sources */,
 				C49B35912382B6E8008D38E1 /* UIButton+ZWWBtn.m in Sources */,
 				188727EE230BD14700B34FE6 /* MMRecentContactsModel.m in Sources */,
 				28233D78238673B90085D18B /* ZWRegistViewModel.m in Sources */,
@@ -3597,6 +3552,7 @@
 				FA022DCA2286690900E25218 /* MMContactsViewController.m in Sources */,
 				28743E2323BF568600E404D2 /* ZWDocument.m in Sources */,
 				FAEA511C228154A6007EA6A7 /* MMCallSessionModel.m in Sources */,
+				28517CF723C32049007BA934 /* MMApiClient.m in Sources */,
 				28E9D8EF23949D2000EFD55E /* ZWProfilViewModel.m in Sources */,
 				28835429239A39090025A769 /* ZWSetUpViewModel.m in Sources */,
 				FA0DEED3226D87AB002A6E6A /* MMDetailHeadView.m in Sources */,
@@ -3609,7 +3565,6 @@
 				FA2E156622EAC48000147385 /* MFPageView.m in Sources */,
 				FAE0BDF6226417BE0067A33A /* ContactsModel.m in Sources */,
 				FA0E80C42283065C00BC18A7 /* MM1v1VideoViewController.m in Sources */,
-				FAE0BE012265C54F0067A33A /* MMSocketModel.m in Sources */,
 				2841EC0923B47B7F00EA6C20 /* ZWIMSearchBar.m in Sources */,
 				C4C662DB2383DDCB0024C454 /* UIView+wyhRadius.m in Sources */,
 				FAD47F0D226D98040040B96E /* MMChatSystemCell.m in Sources */,
@@ -3653,7 +3608,6 @@
 				289328BC2394DDEE00EBF0C8 /* ZWNotionName.m in Sources */,
 				FA2765B4226D52D00098D515 /* MMMessageFrame.m in Sources */,
 				FA6C3D43226814F6000C06F2 /* MMGroupModel.m in Sources */,
-				FAED64E622714CC700EBDFD2 /* MMRequestManager.m in Sources */,
 				28233D6D23866D0B0085D18B /* ZWBaseTableViewCell.m in Sources */,
 				EDB6F6A222242A72004CA268 /* GroupModel.m in Sources */,
 				FAD47F1F226D9C7C0040B96E /* MMChatBoxMoreView.m in Sources */,

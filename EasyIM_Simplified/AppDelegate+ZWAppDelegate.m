@@ -13,7 +13,7 @@
 #import "UINavigationBarSet.h"
 #import "LoginVC.h"
 #import "ZWDataManager.h"
-#import "ZWUserModel.h"
+
 #import "Bugly/Bugly.h"
 #import "MMCustomFormatter.h"
 #import "ZWSaveTool.h"

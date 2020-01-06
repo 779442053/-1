@@ -141,13 +141,6 @@ typedef void(^HHAlertCallback)(BOOL resultYes );
 
 /** 群聊音视频对方加入后振动手机提示 */
 +(void)vibratingCellphone;
-
-//MARK: - 网络请求
-+ (void)POSTWithURLString:(NSString *_Nonnull)URLString
-               parameters:(id _Nullable)parameters
-                  success:(void (^_Nullable)(id _Nullable responseObject))success
-                  failure:(void (^_Nullable)(NSError * _Nullable error))failure;
-
 /**! 设置富文本 */
 +(NSAttributedString *)setAttributeStringText:(NSString *_Nonnull)strFullText
                               andFullTextFont:(UIFont *_Nonnull)textFont

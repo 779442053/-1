@@ -8,6 +8,7 @@
 
 #import "ZWContactsViewModel.h"
 #import "ContactsModel.h"
+#import "NewFriendModel.h"
 @interface ZWContactsViewModel()
 @property(nonatomic,assign) NSInteger page;
 @end
@@ -114,7 +115,8 @@
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
             NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
-            parma[@"userid"] = [ZWUserModel currentUser].userId;
+            NSString *userid = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+            parma[@"userid"] = userid;
             parma[@"muserid"] = input[@"muserid"];
             parma[@"musername"] = input[@"musername"];;
             [self.request POST:setmemo parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
@@ -139,10 +141,9 @@
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
             NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
-            parma[@"id"] = input;
-//            parma[@"muserid"] = input[@"muserid"];
-//            parma[@"musername"] = input[@"musername"];
-            [self.request POST:delusernormal parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+            parma[@"userid"] = input;
+            parma[@"friendid"] = [ZWUserModel currentUser].userId;
+            [self.request POST:delfriend parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 if ([responseString[@"code"] intValue] == 1) {
                     [YJProgressHUD showSuccess:@"删除成功"];
                     [subscriber sendNext:@{@"code":@"0"}];

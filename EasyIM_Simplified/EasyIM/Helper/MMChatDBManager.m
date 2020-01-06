@@ -7,7 +7,7 @@
 //
 
 #import "MMChatDBManager.h"
-
+#import "MMRecentContactsModel.h"
 #import "MMConversationHelper.h"
 
 #import <fmdb/FMDB.h>

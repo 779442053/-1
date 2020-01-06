@@ -66,6 +66,7 @@
     }else{
         model = self.dataSource[indexPath.row];
     }
+    ZWWLog(@"群成员头像====%@",model.photoUrl)
     [cell.headImage sd_setImageWithURL:[NSURL URLWithString:model.photoUrl] placeholderImage:K_DEFAULT_USER_PIC];
     [cell.nameLbl setText:model.username];
     return cell;

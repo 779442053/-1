@@ -3,7 +3,8 @@
 #import "ZWRequest.h"
 #import "ZWMessage.h"
 #import "YJProgressHUD.h"
-#import "ZWUserModel.h"
+
+#import "ZWAPIConseKey.h"
 @implementation ZWRequest
 
 +(instancetype)request{

@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ContactsModel.h"
+#import "MMGroupModel.h"
 @class MMRecentContactsModel;
 NS_ASSUME_NONNULL_BEGIN
 

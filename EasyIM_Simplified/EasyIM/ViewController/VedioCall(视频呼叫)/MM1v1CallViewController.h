@@ -14,7 +14,7 @@
 #import "MMVedioCallManager.h"
 
 //Defines
-#import "MMDefines.h"
+
 #import "MMVedioCallEnum.h"
 
 //Model

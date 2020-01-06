@@ -9,7 +9,7 @@
 #import "MMVedioCallManager.h"
 
 //头文件
-#import "MMDefines.h"
+
 #import "MMGlobalVariables.h"
 #import "MMVedioCallEnum.h"
 
@@ -58,26 +58,20 @@ static MMVedioCallManager *vedioCallManager = nil;
 
 - (void)dealloc
 {
- 
-    MMLog(@"我销毁了......");
-    
+    ZWWLog(@"我销毁了......");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CALL_Vedio1V1 object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CALL_Vedio1VM object:nil];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CALL_Vedio_Accept object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CALL_Vedio_Request object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CALL_Vedio_Refuse object:nil];
 
 }
-
 #pragma mark - Private
-
 - (void)initManager
 {
     //当前Model,当前VC初始化
     _currenSession = nil;
     _currenViewCtr = nil;
-    
     _isEnter = NO;
 
     //监听实时视频消息通知
@@ -107,6 +101,7 @@ static MMVedioCallManager *vedioCallManager = nil;
 - (void)handleMake1v1Call:(NSNotification *)notify
 {
     //1.如果通知没有object 直接返回
+    ZWWLog(@"开始进行语音通话==%@",notify)
     if (!notify.object) {
         return;
     }
@@ -140,14 +135,14 @@ static MMVedioCallManager *vedioCallManager = nil;
     [self presentViewController:_currenViewCtr];
     self.currenViewCtr.callStatus = MMCallStatus_callIng;
     //6.判断对方是否在线:不在线则给出提示,在前就发起视频请求,同时更改从 (正在连接中)-->(呼叫等待中)
-    [MMRequestManager checkUserOnlineWithUserId:chatter callBack:^(NSInteger status, NSError * _Nonnull error) {
-        if (!error && status == 1) {
-            //6.1发起邀请
-            [self sendVedioRequestWithType:type chatter:chatter];
-        }else{
-            [self endCallWithId:@"对方不在线" callType:0 webrtcId:@"" isNeedHangup:NO];
-        }
-    }];
+//    [MMRequestManager checkUserOnlineWithUserId:chatter callBack:^(NSInteger status, NSError * _Nonnull error) {
+//        if (!error && status == 1) {
+//            //6.1发起邀请
+//            [self sendVedioRequestWithType:type chatter:chatter];
+//        }else{
+//            [self endCallWithId:@"对方不在线" callType:0 webrtcId:@"" isNeedHangup:NO];
+//        }
+//    }];
 
 }
 
@@ -337,40 +332,41 @@ static MMVedioCallManager *vedioCallManager = nil;
 - (void)sendVedioRequestWithType:(MMCallType)type
                          chatter:(NSString *)chatter
 {
+    //1v1视频呼叫
     
-    [MMRequestManager sendVedioRequestWithToId:chatter
-                                      callType:type
-                                      callBack:^(MMCallSessionModel * _Nonnull session, NSError * _Nonnull error) {
-        if (!error) {
-            MMLog(@"音视频邀请，session:%@",session);
-            
-            //邀请成功
-            if (session.result == 1) {
-                //6.2改变状态
-                self.currenViewCtr.callSessionModel = session;
-                self.currenSession = session;
-                self.currenSession.callStatus = MMCallStatus_ringBack;
-                self.currenViewCtr.callStatus = MMCallStatus_ringBack;//回铃中(等待对方摘机)
-                //6.3超时倒计时开启
-                [self startCallTimeoutTimer];
-            }else{
-                MMLog(@"请求失败 =>session:%@,result:%ld",session,(long)session.result);
-                //6.4延迟调用 不至于闪屏
-                /**
-                 延迟调用
-
-                 @param DISPATCH_TIME_NOW 时间参照,从此刻开始计时
-                 @param int64_t 延时多久,此处为秒级
-                 @return
-                 */
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [MMProgressHUD showHUD:@"请求失败"];
-                });
-            }
-        }else{
-            MMLog(@"音视频邀请异常！详见：%@",error);
-        }
-    }];
+//    [MMRequestManager sendVedioRequestWithToId:chatter
+//                                      callType:type
+//                                      callBack:^(MMCallSessionModel * _Nonnull session, NSError * _Nonnull error) {
+//        if (!error) {
+//            MMLog(@"音视频邀请，session:%@",session);
+//            
+//            //邀请成功
+//            if (session.result == 1) {
+//                //6.2改变状态
+//                self.currenViewCtr.callSessionModel = session;
+//                self.currenSession = session;
+//                self.currenSession.callStatus = MMCallStatus_ringBack;
+//                self.currenViewCtr.callStatus = MMCallStatus_ringBack;//回铃中(等待对方摘机)
+//                //6.3超时倒计时开启
+//                [self startCallTimeoutTimer];
+//            }else{
+//                MMLog(@"请求失败 =>session:%@,result:%ld",session,(long)session.result);
+//                //6.4延迟调用 不至于闪屏
+//                /**
+//                 延迟调用
+//
+//                 @param DISPATCH_TIME_NOW 时间参照,从此刻开始计时
+//                 @param int64_t 延时多久,此处为秒级
+//                 @return
+//                 */
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    [MMProgressHUD showHUD:@"请求失败"];
+//                });
+//            }
+//        }else{
+//            MMLog(@"音视频邀请异常！详见：%@",error);
+//        }
+//    }];
     
 }
 
@@ -379,50 +375,50 @@ static MMVedioCallManager *vedioCallManager = nil;
                          groupId:(NSString *)strGroup
 {
     
-    __block typeof(self) blockSelf = self;
-    __weak typeof(self) weakSelf = self;
-    [MMRequestManager sendVideoOrAudioWithGroupId:strGroup
-                                      andCallType:type
-                                         callBack:^(MMCallSessionModel * _Nonnull session, NSError * _Nonnull error) {
-                                             
-                                             
-                                             if (session.webrtcId.checkTextEmpty) {
-                                                 
-                                                 //6.2改变状态
-                                                 blockSelf.currenViewCtr.callSessionModel = session;
-                                                 blockSelf.currenSession = session;
-                                                 blockSelf.currenSession.callStatus = MMCallStatus_ringBack;
-                                                 blockSelf.currenViewCtr.callStatus = MMCallStatus_ringBack;//回铃中(等待对方摘机)
-                                                 
-                                                 //6.3超时倒计时开启
-                                                 if (!weakSelf.isEnter) {
-                                                     weakSelf.isEnter = YES;
-                                                     [weakSelf startCallTimeoutTimer];
-                                                 }
-                                                 
-                                             }else{
-                                                 
-                                                 if (!error) {
-                                                     
-                                                 }else{
-                                                     
-                                                     MMLog(@"请求失败 =>session:%@,result:%ld",session,(long)session.result);
-                                                     //6.4延迟调用 不至于闪屏
-                                                     /**
-                                                      延迟调用
-                                                      
-                                                      @param DISPATCH_TIME_NOW 时间参照,从此刻开始计时
-                                                      @param int64_t 延时多久,此处为秒级
-                                                      @return
-                                                      */
-                                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                         [MMProgressHUD showHUD:@"群音视频请求失败"];
-                                                     });
-                                                     
-                                                 }
-                                                
-                                             }
-                                         }];
+//    __block typeof(self) blockSelf = self;
+//    __weak typeof(self) weakSelf = self;
+//    [MMRequestManager sendVideoOrAudioWithGroupId:strGroup
+//                                      andCallType:type
+//                                         callBack:^(MMCallSessionModel * _Nonnull session, NSError * _Nonnull error) {
+//                                             
+//                                             
+//                                             if (session.webrtcId.checkTextEmpty) {
+//                                                 
+//                                                 //6.2改变状态
+//                                                 blockSelf.currenViewCtr.callSessionModel = session;
+//                                                 blockSelf.currenSession = session;
+//                                                 blockSelf.currenSession.callStatus = MMCallStatus_ringBack;
+//                                                 blockSelf.currenViewCtr.callStatus = MMCallStatus_ringBack;//回铃中(等待对方摘机)
+//                                                 
+//                                                 //6.3超时倒计时开启
+//                                                 if (!weakSelf.isEnter) {
+//                                                     weakSelf.isEnter = YES;
+//                                                     [weakSelf startCallTimeoutTimer];
+//                                                 }
+//                                                 
+//                                             }else{
+//                                                 
+//                                                 if (!error) {
+//                                                     
+//                                                 }else{
+//                                                     
+//                                                     MMLog(@"请求失败 =>session:%@,result:%ld",session,(long)session.result);
+//                                                     //6.4延迟调用 不至于闪屏
+//                                                     /**
+//                                                      延迟调用
+//                                                      
+//                                                      @param DISPATCH_TIME_NOW 时间参照,从此刻开始计时
+//                                                      @param int64_t 延时多久,此处为秒级
+//                                                      @return
+//                                                      */
+//                                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                                                         [MMProgressHUD showHUD:@"群音视频请求失败"];
+//                                                     });
+//                                                     
+//                                                 }
+//                                                
+//                                             }
+//                                         }];
     
 }
 
@@ -471,17 +467,17 @@ static MMVedioCallManager *vedioCallManager = nil;
     
     if (aIsNeedHangup) {
         //请求挂断
-        [MMRequestManager hangUpCallWithToId:aCallId webrtcId:webrtcId callType:callType callBack:^(MMCallSessionModel * _Nonnull session, NSError * _Nonnull error) {
-            self.currenSession = nil;
-            [self.currenViewCtr clearDataAndView];
-            [self.currenViewCtr dismissViewControllerAnimated:NO completion:nil];
-            self.currenViewCtr = nil;
-            
-            AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-            [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
-            [audioSession setActive:YES error:nil];
-
-        }];
+//        [MMRequestManager hangUpCallWithToId:aCallId webrtcId:webrtcId callType:callType callBack:^(MMCallSessionModel * _Nonnull session, NSError * _Nonnull error) {
+//            self.currenSession = nil;
+//            [self.currenViewCtr clearDataAndView];
+//            [self.currenViewCtr dismissViewControllerAnimated:NO completion:nil];
+//            self.currenViewCtr = nil;
+//            
+//            AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+//            [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
+//            [audioSession setActive:YES error:nil];
+//
+//        }];
     }
     else{
         [MMProgressHUD showHUD:aCallId];
@@ -503,23 +499,23 @@ static MMVedioCallManager *vedioCallManager = nil;
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     
-    
-    [MMRequestManager rejectCallWithToId:aCallId webrtcId:webrtcId callType:callType callBack:^(MMCallSessionModel * _Nonnull session, NSError * _Nonnull error) {
-        MMLog(@"%@",session);
-        [MMProgressHUD showHUD:@"已拒绝"];
-        
-        [self.currenViewCtr clearDataAndView];
-        [self.currenViewCtr dismissViewControllerAnimated:NO completion:nil];
-        
-        self.currenSession = nil;
-        self.currenViewCtr = nil;
-        
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
-        [audioSession setActive:YES error:nil];
-
-        
-    }];
+    //拒绝别人的视屏通话请求
+//    [MMRequestManager rejectCallWithToId:aCallId webrtcId:webrtcId callType:callType callBack:^(MMCallSessionModel * _Nonnull session, NSError * _Nonnull error) {
+//        MMLog(@"%@",session);
+//        [MMProgressHUD showHUD:@"已拒绝"];
+//        
+//        [self.currenViewCtr clearDataAndView];
+//        [self.currenViewCtr dismissViewControllerAnimated:NO completion:nil];
+//        
+//        self.currenSession = nil;
+//        self.currenViewCtr = nil;
+//        
+//        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+//        [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
+//        [audioSession setActive:YES error:nil];
+//
+//        
+//    }];
 
     
     

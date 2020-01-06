@@ -66,35 +66,39 @@
 }
 - (void)loadData
 {
-    //[self.ViewModel.GetGroupChartLishDataCommand ];
-    WEAKSELF
-    [MMRequestManager queryGroupCallBack:^(NSArray<MMGroupModel *> * _Nonnull groupList, NSError * _Nonnull error) {
-        if (!error) {
-            [groupList enumerateObjectsUsingBlock:^(MMGroupModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                MMCommonModel *model = [[MMCommonModel alloc] init];
-                model.userId = obj.groupID;
-                model.name = obj.name;
-                model.photoUrl = @"contacts_group_icon";
-                [weakSelf.dataSource addObject:model];
-
-            }];
-            [weakSelf.selectDataArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                MMCommonModel *rcMode = (MMCommonModel *)obj;
-                NSString *userId = rcMode.userId;
-                [weakSelf.dataSource enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    MMCommonModel *cModel = (MMCommonModel *)obj;
-                    if ([userId isEqualToString:cModel.userId]) {
-                        cModel.isSelect = YES;
-                    }
-                }];
-            }];
-
-            [weakSelf.tableView reloadData];
+    [[self.ViewModel.GetGroupChartLishDataCommand execute:nil] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"res"] intValue] == 0) {
             
-        }else{
-            [MMProgressHUD showHUD: MMDescriptionForError(error)];
         }
     }];
+//    WEAKSELF
+//    [MMRequestManager queryGroupCallBack:^(NSArray<MMGroupModel *> * _Nonnull groupList, NSError * _Nonnull error) {
+//        if (!error) {
+//            [groupList enumerateObjectsUsingBlock:^(MMGroupModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                MMCommonModel *model = [[MMCommonModel alloc] init];
+//                model.userId = obj.groupID;
+//                model.name = obj.name;
+//                model.photoUrl = @"contacts_group_icon";
+//                [weakSelf.dataSource addObject:model];
+//
+//            }];
+//            [weakSelf.selectDataArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                MMCommonModel *rcMode = (MMCommonModel *)obj;
+//                NSString *userId = rcMode.userId;
+//                [weakSelf.dataSource enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                    MMCommonModel *cModel = (MMCommonModel *)obj;
+//                    if ([userId isEqualToString:cModel.userId]) {
+//                        cModel.isSelect = YES;
+//                    }
+//                }];
+//            }];
+//
+//            [weakSelf.tableView reloadData];
+//            
+//        }else{
+//            [MMProgressHUD showHUD: MMDescriptionForError(error)];
+//        }
+//    }];
     
 }
 -(void)leftAction:(UIButton *)sender

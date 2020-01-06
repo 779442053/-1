@@ -7,6 +7,7 @@
 //
 
 #import "MMForwardViewController.h"
+#import "MMRecentContactsModel.h"
 //MARK: - View
 #import "AppDelegate.h"
 

@@ -7,6 +7,7 @@
 //
 
 #import "ZWSocketConfig.h"
+
 @interface ZWSocketConfig()
 @property(nonatomic,readwrite)NSString * ip;
 @property(nonatomic,readwrite)uint16_t port;

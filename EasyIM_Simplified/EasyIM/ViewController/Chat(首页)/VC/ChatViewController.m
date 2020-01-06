@@ -27,6 +27,7 @@
 #import "SweepViewController.h"
 #import "ZWChatViewModel.h"
 #import "LoginVC.h"
+#import "NewFriendModel.h"
 static NSString *const identifier = @"ContactTableViewCell";
 @interface ChatViewController ()<UITableViewDelegate,UITableViewDataSource,MMChatManager,YBPopupMenuDelegate,SweepViewControllerDelegate>
 @property (nonatomic, strong) NSMutableArray *laterPersonDataArr;

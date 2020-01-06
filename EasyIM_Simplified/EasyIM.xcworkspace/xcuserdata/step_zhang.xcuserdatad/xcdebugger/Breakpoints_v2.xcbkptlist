@@ -95,5 +95,53 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8F92AF3A-F74C-48B5-BABD-01AB6D302ED7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "EasyIM/ViewController/Contacts/Contacts(&#x901a;&#x8baf;&#x5f55;)/ViewModel/ZWFriendViewModel.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "-zw_initialize"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "8F92AF3A-F74C-48B5-BABD-01AB6D302ED7 - ecba4fe02c457fc5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__34-[ZWFriendViewModel zw_initialize]_block_invoke_7"
+                  moduleName = "EasyIM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/step_zhang/Desktop/EasyIM_Simplified2/Code/EasyIM_Simplified/EasyIM/ViewController/Contacts/Contacts(%E9%80%9A%E8%AE%AF%E5%BD%95)/ViewModel/ZWFriendViewModel.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "108"
+                  endingLineNumber = "108"
+                  offsetFromSymbolStart = "496">
+               </Location>
+               <Location
+                  uuid = "8F92AF3A-F74C-48B5-BABD-01AB6D302ED7 - ecba4fe02ca57fc6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__34-[ZWFriendViewModel zw_initialize]_block_invoke_8"
+                  moduleName = "EasyIM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/step_zhang/Desktop/EasyIM_Simplified2/Code/EasyIM_Simplified/EasyIM/ViewController/Contacts/Contacts(%E9%80%9A%E8%AE%AF%E5%BD%95)/ViewModel/ZWFriendViewModel.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "109"
+                  endingLineNumber = "109"
+                  offsetFromSymbolStart = "160">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

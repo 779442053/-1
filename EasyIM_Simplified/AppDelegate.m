@@ -10,7 +10,7 @@
 #import "AppDelegate+ZWAppDelegate.h"
 #import<CoreTelephony/CTCellularData.h>
 #import "ZWDataManager.h"
-#import "ZWUserModel.h"
+
 #import <AFNetworking/AFNetworking.h>
 
 //Bugly Bug鐩戞帶

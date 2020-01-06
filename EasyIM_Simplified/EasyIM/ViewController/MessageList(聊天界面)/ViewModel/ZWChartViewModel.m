@@ -208,6 +208,37 @@
             }];
         }];
     }];
+    //获取c群成员
+    self.getGroupPeopleListCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+        return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+             @strongify(self)
+            NSMutableDictionary *parma  = [[NSMutableDictionary alloc]init];
+            parma[@"groupid"] = input;
+            parma[@"page"] = @"0";
+            parma[@"perpage"] = @"100";
+            [self.request POST:groupmember parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+                ZWWLog(@"==群成员=%@",responseString)
+                if (responseString && [responseString[@"code"] integerValue] == 1){
+                    NSDictionary *_dicTemp = responseString[@"data"][@"data"];
+                    //设置创建者编号
+                    NSString *cid;
+                    if (_dicTemp && [[_dicTemp allKeys] containsObject:@"createID"]) {
+                        cid = [NSString stringWithFormat:@"%@",_dicTemp[@"createID"]];
+                        [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp[@"list"],@"cid":cid}];
+                    }
+                    if (_dicTemp && [[_dicTemp allKeys] containsObject:@"list"]) {
+                        [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp[@"list"]}];
+                    }
+                }
+                [subscriber sendCompleted];
+            } failure:^(ZWRequest *request, NSError *error) {
+                [subscriber sendCompleted];
+            }];
+            return [RACDisposable disposableWithBlock:^{
+                
+            }];
+        }];
+    }];
     
     
 }

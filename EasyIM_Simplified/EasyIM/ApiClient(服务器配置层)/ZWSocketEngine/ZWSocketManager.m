@@ -9,12 +9,15 @@
 #import "ZWSocketManager.h"
 #import "GCDAsyncSocket.h"
 #import "XMLDictionary.h"
-
+#import "AFNetworkReachabilityManager.h"
 #import "ZWDataManager.h"
-//Defines
-#import "MMDefines.h"
+
+
 #import "NSObject+MMAlert.h"
 #import "YJProgressHUD.h"
+#import "YHUtils.h"
+#import "AppDelegate.h"
+#import "LoginVC.h"
 @interface ZWSocketManager()<GCDAsyncSocketDelegate>
 
 @property (nonatomic,strong)GCDAsyncSocket * socket;
@@ -715,7 +718,7 @@ typedef struct {
     dispatch_once(&onceToken, ^{
         if (_instance == nil) {
             _instance = [super allocWithZone:zone];
-            ///初始化管理对象的时候即初始化socket对象，这样可以保证永远只有一个管理对象和socket对象
+    ///初始化管理对象的时候即初始化socket对象，这样可以保证永远只有一个管理对象和socket对象
             ///!注意这里delegate给的是_instance实例对象，不能是self
             _instance.socket = [[GCDAsyncSocket alloc] initWithDelegate:_instance delegateQueue:dispatch_get_main_queue()];
             _instance.connectState = SGSocketConnectState_NotConnect;
@@ -774,13 +777,53 @@ typedef struct {
     _reconnectTimer = nil;
     _reconnectNum = 0;
 }
+// 通知下线
+- (void)alert:(NSDictionary *)dic
+{
+    AppDelegate *appDelegate =  [AppDelegate shareAppDelegate];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"下线通知" message:dic[@"err"] preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *exitAction = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        exit(1);//推出程序
+    }];
+    
+    UIAlertAction *reloginAction = [UIAlertAction actionWithTitle:@"重新登录" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [ZWSocketManager DisConnectSocket];
+        appDelegate.window.rootViewController = [LoginVC new];
+    }];
+    
+    [alert addAction:exitAction];
+    
+    [alert addAction:reloginAction];
+    
+    [appDelegate.window.rootViewController  presentViewController:alert animated:YES completion:nil];
+    
+}
 /** 停止播放并销毁 */
 -(void)stopAndReleaseAudioPlayer{
     if (_avAudioPlayer) {
         [_avAudioPlayer stop];
         _avAudioPlayer = nil;
     }
-    
     ZWWLog(@"音视频邀请声音播放对象已移除");
+}
+- (void)startMonitoringNetwork
+{
+    AFNetworkReachabilityManager *networkManager = [AFNetworkReachabilityManager sharedManager];
+    [networkManager startMonitoring];
+    __weak __typeof(&*self) weakSelf = self;
+    [networkManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        switch (status) {
+            case AFNetworkReachabilityStatusNotReachable:
+                if (weakSelf.connectState != -1) {
+                    [ZWSocketManager DisConnectSocket];//没有网,就断开连接
+                }
+                break;
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+            default:
+                break;
+        }
+    }];
 }
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "MMBaseViewController.h"
-#import "ZWUserModel.h"
+
 #import "LoginVC.h"
 
 @interface MMBaseViewController ()

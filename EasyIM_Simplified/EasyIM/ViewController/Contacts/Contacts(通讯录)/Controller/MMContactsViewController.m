@@ -6,7 +6,7 @@
 //  Copyright © 2019年 Looker. All rights reserved.
 //
 #import "MMContactsViewController.h"
-
+#import "YHUtils.h"
 /** 通讯录 */
 #import <Contacts/Contacts.h>
 
@@ -349,7 +349,7 @@ static MMContactsViewController *_shareInstance = nil;
             NSMutableDictionary *myDict = [[NSMutableDictionary alloc] init];
             NSString *givenName = contact.givenName;
             NSString *familyName = contact.familyName;
-            NSLog(@"givenName=%@, familyName=%@", givenName, familyName);
+            ZWWLog(@"givenName=%@, familyName=%@", givenName, familyName);
             NSString *nameStr = [NSString stringWithFormat:@"%@%@",contact.familyName,contact.givenName];
             if (!nameStr) { nameStr = @"";}
             NSArray *phoneNumbers = contact.phoneNumbers;
@@ -360,9 +360,7 @@ static MMContactsViewController *_shareInstance = nil;
                 phoneNumbers = labelValue.value;
                 CNPhoneNumber *phoneNumber = labelValue.value;
                 NSLog(@"label=%@ 电话:%@\n", label,phoneNumber.stringValue);
-                
                 [myDict setObject:phoneNumber.stringValue forKey:@"cellphone"];
-                
                 isTel = YES;
             }
             if (isTel == NO) {[myDict setObject:@"" forKey:@"cellphone"];}
@@ -397,12 +395,10 @@ static MMContactsViewController *_shareInstance = nil;
 //MARK: - 修改备注
 - (void)remarkFriend:(NSIndexPath *)indexPath
 {
-    //MARK: 备注好友
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"修改备注" preferredStyle:UIAlertControllerStyleAlert];
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"备注";
     }];
-    
     UIAlertAction *confimAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *remarkField = alert.textFields.firstObject;
         if (!remarkField.text.length) {
@@ -442,7 +438,6 @@ static MMContactsViewController *_shareInstance = nil;
                 WEAKSELF
                 [[self.ViewModel.deleteUserCommand execute:model.userId] subscribeNext:^(id  _Nullable x) {
                     if ([x[@"code"] intValue] == 0) {
-                        [MMProgressHUD showHUD:@"删除成功"];
                         [weakSelf.listTableView beginUpdates];
                     }
                 }];

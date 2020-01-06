@@ -7,7 +7,7 @@
 //
 
 #import "MMEasyIMHelper.h"
-
+#import "MMRecentContactsModel.h"
 //Helper
 #import "MMConversationHelper.h"
 

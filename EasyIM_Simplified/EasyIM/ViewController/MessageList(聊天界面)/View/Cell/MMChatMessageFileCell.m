@@ -78,18 +78,13 @@
     
     //如果文件不存在,则去下载
     if (!isExists) {
-        
         self.fileButton.progressView.hidden = NO;
-        
         [[MMApiClient sharedClient] DOWNLOAD:self.modelFrame.aMessage.slice.content fileDir:@"Chat/File" progress:^(NSProgress * _Nonnull progress) {
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.fileButton.progressView.progress = (double)progress.completedUnitCount/(double)progress.totalUnitCount;
             });
             
         } success:^(NSString * _Nonnull filePath) {
-            
-            
             // 获取文件 如视频.MP4
            NSString * lastPathComponent  = [filePath lastPathComponent];
             

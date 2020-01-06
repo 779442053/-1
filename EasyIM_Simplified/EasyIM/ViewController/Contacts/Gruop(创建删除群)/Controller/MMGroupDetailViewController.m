@@ -19,6 +19,7 @@
 //二维码
 #import "QRCodeViewController.h"
 #import "ZWGroudDetailViewModel.h"
+#import "YHUtils.h"
 static const NSInteger max_cell = 4;
 static const CGFloat foot_view_h = 48;
 @interface MMGroupDetailViewController ()<UITableViewDelegate,UITableViewDataSource,AddGroupMemberDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,MMEditGroupViewControllerDelegate,MMAddMemberViewControllerDelegate>

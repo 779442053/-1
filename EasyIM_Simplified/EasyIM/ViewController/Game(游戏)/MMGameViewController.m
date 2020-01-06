@@ -11,6 +11,7 @@
 //Views
 #import "MMGameCell.h"
 
+
 //Model
 #import "MMGameModel.h"
 #import "MMGameLoginModel.h"
@@ -281,29 +282,29 @@ static NSString *const identifier = @"gameCell";
     [MMProgressHUD showHUD];
     [[MMApiClient sharedClient] POSTFormData:url parameters:dic success:^(id  _Nonnull responseObject) {
         if ([responseObject[@"code"] integerValue] == 1) {
-            
-            
+
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MMProgressHUD hideHUD];
             });
 
             NSString *blance = responseObject[@"blance"];
-            
+
             ZWUserModel *info = [ZWUserModel currentUser];
             info.money = [blance doubleValue];
             [ZWDataManager saveUserData];
-            
+
             self.isLogout = YES;
-            
+
         }else{
-            
+
             self.isLogout = NO;
-            
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MMProgressHUD showHUD:responseObject[@"msg"] withDelay:0.38];
             });
         }
-        
+
     } failure:^(NSError * _Nonnull error) {
         self.isLogout = NO;
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -54,7 +54,7 @@ FOUNDATION_EXTERN NSString *const getmsghis;
 FOUNDATION_EXTERN NSString *const pushmsgtouser;
 FOUNDATION_EXTERN NSString *const offlineGroupMsg;
 FOUNDATION_EXTERN NSString *const getgroupmsghis;
-//FOUNDATION_EXTERN NSString *const kickGroupMember;
+
 FOUNDATION_EXTERN NSString *const groupmember;
 FOUNDATION_EXTERN NSString *const inviteFrd2Group;
 FOUNDATION_EXTERN NSString *const addgroup;
@@ -63,7 +63,7 @@ FOUNDATION_EXTERN NSString *const deletegroup;
 FOUNDATION_EXTERN NSString *const searchgroup;
 FOUNDATION_EXTERN NSString *const setusergroupnotify;
 FOUNDATION_EXTERN NSString *const SetGroupBackground;
-
+FOUNDATION_EXTERN NSString *const delfriend;
 FOUNDATION_EXTERN NSString *const getgroup;
 FOUNDATION_EXTERN NSString *const focusRoomMember;
 FOUNDATION_EXTERN NSString *const unfocusRoomMember;

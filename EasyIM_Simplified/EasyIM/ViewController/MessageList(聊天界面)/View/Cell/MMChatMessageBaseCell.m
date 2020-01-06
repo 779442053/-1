@@ -8,7 +8,7 @@
 
 #import "MMChatMessageBaseCell.h"
 #import "MMMessageTopView.h"
-#import "ZWUserModel.h"
+
 @implementation MMChatMessageBaseCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier

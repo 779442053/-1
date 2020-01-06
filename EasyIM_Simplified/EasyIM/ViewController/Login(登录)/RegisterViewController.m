@@ -6,6 +6,7 @@
 #import "RegisterViewController.h"
 #import "ANCustomTextField.h"
 #import "ZWRegistViewModel.h"
+#import "YHUtils.h"
 static CGFloat const txt_height = 44;
 #define ktextColor [UIColor colorWithHexString:@"#3b3b3b"]
 #define K_APP_CODE_LENGTH 6

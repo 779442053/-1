@@ -133,11 +133,6 @@
             break;
     }
 }
-
-#pragma mark - Request
-
-#pragma mark - Request
-
 - (void)checkVersion
 {
     NSDictionary *dict = @{
@@ -193,79 +188,11 @@
             else if(sureAction){
                 [alertCtr addAction:sureAction];
             }
-            
             [self presentViewController:alertCtr animated:YES completion:nil];
         }
     } failure:^(NSError * _Nonnull error) {
         [MMProgressHUD showHUD:MMDescriptionForError(error)];
     }];
 }
-
-
-//- (void)checkVersion
-//{
-//
-//    NSDictionary *dict = @{
-//                           @"api_token":K_APP_FIR_IM_TOKEN,
-//                           };
-//
-//    [[MMApiClient sharedClient] GET:K_APP_FIR_IM_URL parameters:dict success:^(id  _Nonnull responseObject) {
-//        MMLog(@"FIR返回的请求数据:%@",responseObject);
-//
-//        if (responseObject) {
-//            NSString *onlineBuild = [NSString stringWithFormat:@"%@",responseObject[@"build"]];
-//
-//            NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-//            NSString *appBuild = [infoPlist objectForKey:@"CFBundleVersion"];
-//
-//            NSString *message;
-//            UIAlertAction *preAction;
-//            UIAlertAction *sureAction;
-//
-//            if ([appBuild floatValue] < [onlineBuild floatValue] ) {
-//                message = [NSString stringWithFormat:@"\n%@",responseObject[@"changelog"]];
-//                preAction = [UIAlertAction actionWithTitle:@"更新" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//
-//                    NSString *str = responseObject[@"installUrl"];
-//                    NSString *encodedString = [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//
-//                    NSString *urlStr = [NSString stringWithFormat:@"itms-services://?action=download-manifest&url=%@",encodedString];
-//
-//                    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:urlStr]]) {
-//                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
-//                    }
-//                }];
-//            }
-//            else{
-//                message = @"\n当前已是最新版本";
-//                sureAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-//
-//                }];
-//            }
-//
-//            UIAlertController *alertCtr = [UIAlertController alertControllerWithTitle:@"版本检测"
-//                                                                              message:@"" preferredStyle:UIAlertControllerStyleAlert];
-//            //样式调整
-//            NSMutableAttributedString *alertControllerMessageStr = [[NSMutableAttributedString alloc] initWithString:message];
-//            NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
-//            paragraph.alignment = NSTextAlignmentLeft;
-//            [alertControllerMessageStr setAttributes:@{NSParagraphStyleAttributeName:paragraph} range:NSMakeRange(0, alertControllerMessageStr.length)];
-//
-//            [alertCtr setValue:alertControllerMessageStr forKey:@"attributedMessage"];
-//
-//            if (preAction) {
-//                [alertCtr addAction:preAction];
-//            }
-//            else if(sureAction){
-//                [alertCtr addAction:sureAction];
-//            }
-//
-//            [self presentViewController:alertCtr animated:YES completion:nil];
-//        }
-//    } failure:^(NSError * _Nonnull error) {
-//        [MMProgressHUD showHUD:MMDescriptionForError(error)];
-//    }];
-//}
-
 
 @end

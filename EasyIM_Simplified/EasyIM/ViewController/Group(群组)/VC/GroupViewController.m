@@ -84,12 +84,12 @@ static NSString *const identifier = @"ContactTableViewCell";
     if ([strInfo containsString:K_APP_QRCODE_USER]) {
         NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
         if ([strId isEqualToString:userID]) {
-            [MMProgressHUD showHUD:@"不能添加自己为好友"];
+            [YJProgressHUD showMessage:@"不能添加自己为好友"];
             return;
         }
         [[self.ViewModel.addFriendCommand execute:strId] subscribeNext:^(id  _Nullable x) {
             if ([x[@"code"] intValue] == 0) {
-                [MMProgressHUD showHUD: @"请求成功"];
+                [YJProgressHUD showSuccess: @"请求成功"];
             }
         }];
     }
@@ -131,10 +131,12 @@ static NSString *const identifier = @"ContactTableViewCell";
     [[self.ViewModel.requestMoreCommand execute:nil] subscribeNext:^(id  _Nullable x) {
         [self.tableView.mj_footer endRefreshing];
         if ([x[@"code"] intValue] == 0) {
-            BOOL IsMore = [x[@"isMore"] boolValue];
-            self.groupDataList = x[@"res"];
-            [self.tableView reloadData];
-            if (!IsMore) {
+            NSArray *arr = x[@"res"];
+            if (arr.count) {
+                [self.groupDataList addObjectsFromArray:arr];
+                [self.tableView reloadData];
+                [self.tableView.mj_footer endRefreshing];
+            }else{
                 [self.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }

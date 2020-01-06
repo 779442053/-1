@@ -255,20 +255,20 @@
 - (void)answerAction
 {
     
-    [MMRequestManager acceptCallWithModel:self.callSessionModel
-                                 callType:self.callSessionModel.callType
-                                 aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
-        
-        NSLog(@"接受RSP%@",dic);
-        
-        self.callStatus = MMCallStatus_talkIng;
-        self.callSessionModel.callStatus = MMCallStatus_talkIng;
-        ARDSettingsModel* settingModel = [[ARDSettingsModel alloc] init];
-        
-        [self initForRoom:dic[@"webrtcId"]
-                  roomUrl:[settingModel currentRoomUrlSettingFromStore]];
-        [self.avConf join:[dic[@"webrtcId"] longLongValue]];
-    }];
+//    [MMRequestManager acceptCallWithModel:self.callSessionModel
+//                                 callType:self.callSessionModel.callType
+//                                 aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
+//        
+//        NSLog(@"接受RSP%@",dic);
+//        
+//        self.callStatus = MMCallStatus_talkIng;
+//        self.callSessionModel.callStatus = MMCallStatus_talkIng;
+//        ARDSettingsModel* settingModel = [[ARDSettingsModel alloc] init];
+//        
+//        [self initForRoom:dic[@"webrtcId"]
+//                  roomUrl:[settingModel currentRoomUrlSettingFromStore]];
+//        [self.avConf join:[dic[@"webrtcId"] longLongValue]];
+//    }];
     
 }
 
