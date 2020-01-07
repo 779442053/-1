@@ -82,21 +82,5 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 }
-//- (UIImageView *)headImageView
-//{
-//    if (!_headImageView) {
-//        _headImageView = [[UIImageView alloc] init];
-//    }
-//
-//    return _headImageView;
-//}
-//- (UILabel *)nameLabel
-//{
-//    if (!_nameLabel) {
-//        _nameLabel = [[UILabel alloc] init];
-//        _nameLabel.font = [UIFont systemFontOfSize:13];
-//        _nameLabel.textColor = MMColor(242, 242, 242);
-//    }
-//    return _nameLabel;
-//}
+
 @end

@@ -7,8 +7,9 @@
 //
 
 #import "MM1v1CallViewController.h"
-
-
+#import "MMDateHelper.h"
+#import "ZWSocketManager.h"
+#import "YJProgressHUD.h"
 @class MM1v1CallViewController;
 
 @interface ARDConfEvents ()
@@ -53,33 +54,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];//设置不锁屏
-    
     [self setup1v1CallControllerSubviews];//创建UI
-    
     self.timeLabel.hidden = YES;//隐藏计时器
     self.answerButton.enabled = NO;//反应按钮不可用
     self.callStatus = self.callSessionModel.callStatus;
-    
     if (self.callSessionModel.callParty == MMCallParty_Called) {
         self.remoteNameLabel.text = self.callSessionModel.nickName.length ? self.callSessionModel.nickName:self.callSessionModel.fromName;
     }else{
         self.remoteNameLabel.text = [MMManagerGlobeUntil sharedManager].userName;
     }
-    
     //监测耳机状态，如果是插入耳机状态，不显示扬声器按钮
     self.speakerButton.hidden = isHeadphone();
 }
-
 #pragma mark - Subviews
-
 - (void)setup1v1CallControllerSubviews
 {
     self.view.backgroundColor = [UIColor whiteColor];
-    
     self.statusLabel.text = @"正在建立连接...";
-    
     self.timeLabel = [[UILabel alloc] init];
     self.timeLabel.backgroundColor = [UIColor clearColor];
     self.timeLabel.font = [UIFont systemFontOfSize:25];
@@ -145,10 +137,8 @@
 }
 
 #pragma mark - Status
-
 - (void)setCallStatus:(MMCallStatus)callStatus
 {
-    
     if (_callStatus>=callStatus) {//如果大于当前状态直接返回
         return;
     }
@@ -254,25 +244,32 @@
 //接受邀请
 - (void)answerAction
 {
-    
-//    [MMRequestManager acceptCallWithModel:self.callSessionModel
-//                                 callType:self.callSessionModel.callType
-//                                 aCompletion:^(NSDictionary * _Nonnull dic, NSError * _Nonnull error) {
-//        
-//        NSLog(@"接受RSP%@",dic);
-//        
-//        self.callStatus = MMCallStatus_talkIng;
-//        self.callSessionModel.callStatus = MMCallStatus_talkIng;
-//        ARDSettingsModel* settingModel = [[ARDSettingsModel alloc] init];
-//        
-//        [self initForRoom:dic[@"webrtcId"]
-//                  roomUrl:[settingModel currentRoomUrlSettingFromStore]];
-//        [self.avConf join:[dic[@"webrtcId"] longLongValue]];
-//    }];
-    
+    NSMutableDictionary *Parma = [[NSMutableDictionary alloc]init];
+    Parma[@"type"] = @"req";
+    Parma[@"xns"] = @"xns_user";
+    Parma[@"timeStamp"] = [MMDateHelper getNowTime];
+    Parma[@"cmd"] = @"AcceptCall";
+    Parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+    //Parma[@"fromId"] = [ZWUserModel currentUser].userId;
+    Parma[@"toId"] = self.callSessionModel.fromId;
+    //Parma[@"startId"] = @"会话发起人";
+    Parma[@"webrtcId"] = self.callSessionModel.webrtcId;
+    Parma[@"media"] = @"本地的音视频编码信息，要告知对方";
+    Parma[@"callType"] = @(self.callSessionModel.callType);
+    [ZWSocketManager SendDataWithData:Parma complation:^(NSError * _Nullable error, NSDictionary *  _Nullable data) {
+        if (!error) {
+            ZWWLog(@"接通音视频通话返回的结果=%@",data)
+            self.callStatus = MMCallStatus_talkIng;
+            self.callSessionModel.callStatus = MMCallStatus_talkIng;
+            ARDSettingsModel* settingModel = [[ARDSettingsModel alloc] init];
+            [self initForRoom:data[@"webrtcId"]
+                      roomUrl:[settingModel currentRoomUrlSettingFromStore]];
+            [self.avConf join:[data[@"webrtcId"] longLongValue]];
+        }else{
+            [YJProgressHUD showError:data[@"desc"]];
+        }
+    }];
 }
-
-
 #pragma mark - Private
 
 - (void)startVedio
@@ -300,12 +297,10 @@
     });
     
 }
-
 - (void)clearDataAndView
 {
     [self stopCallDurationTimer];
 }
-
 - (void)dealloc
 {
     [self clearDataAndView];
@@ -313,13 +308,9 @@
 
 - (void)hangupAction
 {
-    
     [self clearDataAndView];
-    
     //挂断或者拒绝请求
-    
     if (self.callSessionModel.callParty == MMCallParty_Called && self.needRefuseUp != YES ) {//如果是被叫方,拒绝
-        
         //拒绝
         [[MMVedioCallManager sharedManager] refuseCallWithId:self.callSessionModel.fromId callType:self.callSessionModel.callType webrtcId:self.callSessionModel.webrtcId];
         
@@ -332,12 +323,10 @@
             toId = self.callSessionModel.toId;
         }
         [[MMVedioCallManager sharedManager] endCallWithId:toId
-                                                 callType:self.callSessionModel.callType
+                                                callType:self.callSessionModel.callType
                                                  webrtcId:self.callSessionModel.webrtcId
                                              isNeedHangup:YES];
     }
-    
-    
     _callSessionModel = nil;
     [_avConf leave];
 }
@@ -359,28 +348,19 @@
 
     }
 }
-
-
 #pragma mark - WebRtcInit
-
 - (void)initForRoom:(NSString*)room
             roomUrl:(NSString*)roomUrl
 {
-    
-    MMLog(@"roomUrl=============%@",roomUrl);
-    
+    ZWWLog(@"roomUrl=============%@",roomUrl);
     self.settingsModel = [[ARDSettingsModel alloc] init];
     self.uid = [_settingsModel currentUidSettingFromStore];
     self.roomId = room.longLongValue;
-    
     int videoWidth = [_settingsModel currentVideoResolutionWidthFromStore];
     int videoHeight = [_settingsModel currentVideoResolutionHeightFromStore];
-    
     CFConfConfigBuilder* configBuilder = [CFConfConfig builder];
-    
     //Room Server URL 地址
     [configBuilder rs_url:roomUrl];
-    
     /*
      *运行模式
      *MODE_APPRTC
@@ -457,9 +437,7 @@
     int smallWindowWidth = (fullscreen.width - horizontalMargin * 4) / 3;
     int smallWindowHeight = smallWindowWidth * videoWidth / videoHeight;
     int smallWindowTop = bottomMargin;
-    
     CFLayoutConfig* layoutConfig = [[CFLayoutConfig alloc] init];
-    
     if (self.callSessionModel.callType == MMCallTypeVoice ||
         self.callSessionModel.callType == 3) {
         layoutConfig.rootLayout = self.view;
@@ -545,31 +523,23 @@
     }
     
 }
-
 - (void)handleSingleTap:(UITapGestureRecognizer*)recognizer
 {
-    
     MM1v1CallViewController* callVc = _controller;
     if (callVc == nil) {
         return;
     }
-    
     self.currentFullscreen = recognizer.view.userWindow.uid;
     [callVc.avConf toggleFullscreen:self.currentFullscreen];
 }
-
-
 - (void)onErrorWithInt:(jint)code withNSString:(NSString*)data
 {
-    
     __weak MM1v1CallViewController* weakVC = _controller;
     MM1v1CallViewController* callVc = weakVC;
     if (callVc == nil) {
         return;
     }
-    
     if (code == ERR_RETRYING) {
-        
         [MMProgressHUD showHUD:@"重连"];
         return;
     }

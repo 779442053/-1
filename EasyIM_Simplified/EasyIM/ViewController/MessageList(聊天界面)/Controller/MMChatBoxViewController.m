@@ -43,9 +43,7 @@
 @property (nonatomic, weak) MMVideoView *videoView;
 @property (nonatomic, weak) ZWChartViewModel *ViewMOdel;
 @property(nonatomic,strong)MMVedioCallManager *vedioCallManager;
-
 @end
-
 @implementation MMChatBoxViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -88,12 +86,10 @@
     }
     return [super resignFirstResponder];
 }
-
 - (BOOL)becomeFirstResponder
 {
     return [super becomeFirstResponder];
 }
-
 - (void)routerEventWithName:(NSString *)eventName userInfo:(NSDictionary *)userInfo
 {
     if ([eventName isEqualToString:GXRouterEventVideoRecordExit]) {
@@ -108,16 +104,13 @@
         NSLog(@"record cancel");
     }
 }
-
 #pragma mark - Private Methods
-
 - (NSString *)currentRecordFileName
 {
     NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970];
     NSString *fileName = [NSString stringWithFormat:@"%ld",(long)timeInterval];
     return fileName;
 }
-
 - (void)keyboardWillHide:(NSNotification *)notification
 {
     self.keyboardFrame = CGRectZero;
@@ -126,7 +119,6 @@
         _chatBox.status = MMChatBoxStatusNothing;
     }
 }
-
 - (void)keyboardFrameWillChange:(NSNotification *)notification
 {
     self.keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
@@ -141,7 +133,6 @@
         _chatBox.status = MMChatBoxStatusShowKeyboard; // 状态改变
     }
 }
-
 // 将要弹出视频视图
 - (void)videoViewWillAppear
 {
@@ -153,7 +144,6 @@
         [_delegate chatBoxViewController:self didVideoViewAppeared:videoView];
     }
 }
-
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -254,7 +244,7 @@ didSelectItem:(MMChatBoxItem)itemType
             }
             //MARK:单聊视频
             else{
-                ZWWLog(@"张威威应该想后台获取通信地址,本地唤醒webrtc,进行呼叫")
+                ZWWLog(@"张威威应该想后台获取通信地址,本地唤醒webrtc,视频")
                 NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
                 parma[CALL_CHATTER] = [MMManagerGlobeUntil sharedManager].toUid;
                 parma[CALL_TYPE] = @(MMCallTypeVideo);

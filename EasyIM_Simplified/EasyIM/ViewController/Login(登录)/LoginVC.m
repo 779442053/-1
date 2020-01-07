@@ -10,7 +10,6 @@
 #import "KinTabBarController.h"
 #import "AppDelegate.h"
 
-#import "MMVedioCallManager.h"
 #import "ANCustomTextField.h"
 #import "FindPwdViewController.h"
 #import "YHUtils.h"
@@ -230,14 +229,11 @@
                         
                         KinTabBarController *kinTabBarController = [[KinTabBarController alloc] initWithSelectVCIndex:0];
                         BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:kinTabBarController];
-                        
                         appDelegate.window.rootViewController = nav;
                         appDelegate.tabBarController = kinTabBarController;
-                        
                         [UIView setAnimationsEnabled:oldState];
                     }
                     completion:^(BOOL finished) {
-                         [MMVedioCallManager sharedManager];
                     }];
 }
 

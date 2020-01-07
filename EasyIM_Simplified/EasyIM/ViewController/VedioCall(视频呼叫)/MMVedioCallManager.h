@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refuseCallWithId:(NSString *)aCallId
              callType:(NSInteger)callType
              webrtcId:(NSString *)webrtcId;
-
+//呼叫超时
 - (void)stopCallTimeoutTimer;
 
 @end

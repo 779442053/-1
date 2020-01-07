@@ -25,14 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSInteger result;//0 呼叫失败，1呼叫成功
 @property (nonatomic, assign) NSInteger callType;
-
-
-@property (nonatomic, assign) MMCallParty callParty;
-
+@property (nonatomic, assign) MMCallParty callParty;//主叫和被叫
 @property (nonatomic, assign) NSInteger toStatus;
 @property (nonatomic, assign) NSInteger toCallStatus;
-
-@property (nonatomic) MMCallStatus callStatus;
+@property (nonatomic) MMCallStatus callStatus;//呼叫状态(与服务器相对应)
 
 @end
 

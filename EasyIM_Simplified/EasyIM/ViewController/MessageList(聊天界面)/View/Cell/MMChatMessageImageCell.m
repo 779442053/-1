@@ -43,7 +43,6 @@
     self.bubbleView.userInteractionEnabled = _imageBtn.imageView.image != nil;
     self.bubbleView.image = nil;
     if (modelFrame.aMessage.isSender&&image) {    // 发送者
-        ZWWLog(@"我是发送图片者")
         UIImage *arrowImage = [manager arrowMeImage:image size:modelFrame.picViewF.size mediaPath:modelFrame.aMessage.slice.filePath isSender:modelFrame.aMessage.isSender];
         [self.imageBtn setBackgroundImage:arrowImage forState:UIControlStateNormal];
     } else {//接受别人的图片,将图片裁剪成别人图片箭头的样子
@@ -53,7 +52,6 @@
         [self.imageBtn setBackgroundImage:image forState:UIControlStateNormal];
     }
 }
-
 - (void)imageBtnClick:(UIButton *)btn
 {
     if (btn.currentBackgroundImage == nil) {

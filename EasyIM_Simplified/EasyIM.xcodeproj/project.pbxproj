@@ -73,12 +73,14 @@
 		2841EC0D23B497FD00EA6C20 /* GroupCompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2841EC0B23B497FC00EA6C20 /* GroupCompleteViewController.m */; };
 		2841EC0E23B497FD00EA6C20 /* GroupCompleteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2841EC0C23B497FD00EA6C20 /* GroupCompleteViewController.xib */; };
 		28517CF723C32049007BA934 /* MMApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 28517CF523C32048007BA934 /* MMApiClient.m */; };
+		28517CFB23C32A11007BA934 /* ZWCallViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 28517CFA23C32A11007BA934 /* ZWCallViewModel.m */; };
 		2853924223B3A45A00012E73 /* ZWSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2853924123B3A45A00012E73 /* ZWSearch.m */; };
 		286A8A552398AC0B00B2A069 /* ZWAddFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A542398AC0B00B2A069 /* ZWAddFriendViewController.m */; };
 		286A8A582398D76700B2A069 /* ZWAddFriendViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A572398D76700B2A069 /* ZWAddFriendViewModel.m */; };
 		286A8A5C2398EA5900B2A069 /* ZWSearchBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A5B2398EA5900B2A069 /* ZWSearchBarView.m */; };
 		286A8A5F2398EF3700B2A069 /* ZWSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A5E2398EF3700B2A069 /* ZWSearchBar.m */; };
 		286A8A622398F01600B2A069 /* UITextField+TextLeftOffset_ffset.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A8A612398F01600B2A069 /* UITextField+TextLeftOffset_ffset.m */; };
+		286D5EE223C475C800E2C969 /* ZWWebRTCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 286D5EE123C475C800E2C969 /* ZWWebRTCHelper.m */; };
 		2870E40923965A2600FF37B4 /* ZWProfileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2870E40823965A2600FF37B4 /* ZWProfileCell.m */; };
 		28743E2023BF513B00E404D2 /* ZWiCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 28743E1F23BF513B00E404D2 /* ZWiCloudManager.m */; };
 		28743E2323BF568600E404D2 /* ZWDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 28743E2223BF568600E404D2 /* ZWDocument.m */; };
@@ -419,7 +421,6 @@
 		FAEA511622814BEB007EA6A7 /* MMCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEA511522814BEB007EA6A7 /* MMCallViewController.m */; };
 		FAEA5119228152FA007EA6A7 /* MM1v1CallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEA5118228152FA007EA6A7 /* MM1v1CallViewController.m */; };
 		FAEA511C228154A6007EA6A7 /* MMCallSessionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEA511B228154A6007EA6A7 /* MMCallSessionModel.m */; };
-		FAEA511F22817F02007EA6A7 /* MMGlobalVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEA511E22817F02007EA6A7 /* MMGlobalVariables.m */; };
 		FAED64DE226F401400EBDFD2 /* MMReceiveMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAED64DD226F401400EBDFD2 /* MMReceiveMessageModel.m */; };
 /* End PBXBuildFile section */
 
@@ -605,6 +606,8 @@
 		2841EC1523B5A73200EA6C20 /* ZWNotificationEnumTwo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWNotificationEnumTwo.h; sourceTree = "<group>"; };
 		28517CF523C32048007BA934 /* MMApiClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMApiClient.m; sourceTree = "<group>"; };
 		28517CF623C32049007BA934 /* MMApiClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMApiClient.h; sourceTree = "<group>"; };
+		28517CF923C32A11007BA934 /* ZWCallViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWCallViewModel.h; sourceTree = "<group>"; };
+		28517CFA23C32A11007BA934 /* ZWCallViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWCallViewModel.m; sourceTree = "<group>"; };
 		2853924023B3A45A00012E73 /* ZWSearch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWSearch.h; sourceTree = "<group>"; };
 		2853924123B3A45A00012E73 /* ZWSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWSearch.m; sourceTree = "<group>"; };
 		286A8A532398AC0B00B2A069 /* ZWAddFriendViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWAddFriendViewController.h; sourceTree = "<group>"; };
@@ -617,6 +620,8 @@
 		286A8A5E2398EF3700B2A069 /* ZWSearchBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWSearchBar.m; sourceTree = "<group>"; };
 		286A8A602398F01600B2A069 /* UITextField+TextLeftOffset_ffset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITextField+TextLeftOffset_ffset.h"; sourceTree = "<group>"; };
 		286A8A612398F01600B2A069 /* UITextField+TextLeftOffset_ffset.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITextField+TextLeftOffset_ffset.m"; sourceTree = "<group>"; };
+		286D5EE023C475C800E2C969 /* ZWWebRTCHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWWebRTCHelper.h; sourceTree = "<group>"; };
+		286D5EE123C475C800E2C969 /* ZWWebRTCHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWWebRTCHelper.m; sourceTree = "<group>"; };
 		2870E40723965A2600FF37B4 /* ZWProfileCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWProfileCell.h; sourceTree = "<group>"; };
 		2870E40823965A2600FF37B4 /* ZWProfileCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWProfileCell.m; sourceTree = "<group>"; };
 		28743E1E23BF513B00E404D2 /* ZWiCloudManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWiCloudManager.h; sourceTree = "<group>"; };
@@ -1222,8 +1227,6 @@
 		FAEA5118228152FA007EA6A7 /* MM1v1CallViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MM1v1CallViewController.m; sourceTree = "<group>"; };
 		FAEA511A228154A6007EA6A7 /* MMCallSessionModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCallSessionModel.h; sourceTree = "<group>"; };
 		FAEA511B228154A6007EA6A7 /* MMCallSessionModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMCallSessionModel.m; sourceTree = "<group>"; };
-		FAEA511D22817F02007EA6A7 /* MMGlobalVariables.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMGlobalVariables.h; sourceTree = "<group>"; };
-		FAEA511E22817F02007EA6A7 /* MMGlobalVariables.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMGlobalVariables.m; sourceTree = "<group>"; };
 		FAED64DC226F401400EBDFD2 /* MMReceiveMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMReceiveMessageModel.h; sourceTree = "<group>"; };
 		FAED64DD226F401400EBDFD2 /* MMReceiveMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMReceiveMessageModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1288,6 +1291,7 @@
 		14A1FA12222530E600007F82 /* VedioCall(视频呼叫) */ = {
 			isa = PBXGroup;
 			children = (
+				28517CF823C329E8007BA934 /* ViewModel(callViewmodel) */,
 				FAEA511022814945007EA6A7 /* Helper */,
 				FA0E80BF2283004C00BC18A7 /* MM1v1AudioViewController.h */,
 				FA0E80C02283004C00BC18A7 /* MM1v1AudioViewController.m */,
@@ -1298,6 +1302,8 @@
 				FAEA510F228126B7007EA6A7 /* MMVedioCallEnum.h */,
 				FA91A8BB22811AA30031D647 /* MMVedioCallManager.h */,
 				FA91A8BC22811AA30031D647 /* MMVedioCallManager.m */,
+				286D5EE023C475C800E2C969 /* ZWWebRTCHelper.h */,
+				286D5EE123C475C800E2C969 /* ZWWebRTCHelper.m */,
 				1404A675222629E200581890 /* Models */,
 				14A1FA2222253AFE00007F82 /* Views */,
 			);
@@ -1623,6 +1629,15 @@
 				2841EC0823B47B7F00EA6C20 /* ZWIMSearchBar.m */,
 			);
 			path = ZWSearchBar;
+			sourceTree = "<group>";
+		};
+		28517CF823C329E8007BA934 /* ViewModel(callViewmodel) */ = {
+			isa = PBXGroup;
+			children = (
+				28517CF923C32A11007BA934 /* ZWCallViewModel.h */,
+				28517CFA23C32A11007BA934 /* ZWCallViewModel.m */,
+			);
+			path = "ViewModel(callViewmodel)";
 			sourceTree = "<group>";
 		};
 		2853937A238D533F0083F072 /* ViewModel */ = {
@@ -3064,8 +3079,6 @@
 				FAEA511522814BEB007EA6A7 /* MMCallViewController.m */,
 				FAEA511A228154A6007EA6A7 /* MMCallSessionModel.h */,
 				FAEA511B228154A6007EA6A7 /* MMCallSessionModel.m */,
-				FAEA511D22817F02007EA6A7 /* MMGlobalVariables.h */,
-				FAEA511E22817F02007EA6A7 /* MMGlobalVariables.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -3352,6 +3365,7 @@
 				28A75BD0238D0EDF00281EF8 /* NSObject+ZWSwizzling.m in Sources */,
 				28233D6723866B7F0085D18B /* ZWWebViewController.m in Sources */,
 				FAD47F45226DA8DB0040B96E /* MMFileScanController.m in Sources */,
+				28517CFB23C32A11007BA934 /* ZWCallViewModel.m in Sources */,
 				FA319D7B225E19AB009E8B44 /* SearchFriendsViewController.m in Sources */,
 				28A75BD6238D108900281EF8 /* UICollectionView+ZWSure_Placeholder.m in Sources */,
 				8689EBA621E3A8D00024A6A0 /* YKUnit.m in Sources */,
@@ -3428,7 +3442,6 @@
 				FAD47EFE226D92750040B96E /* MMChatMessageFileCell.m in Sources */,
 				C49B35B22382B979008D38E1 /* ZWDataManager.m in Sources */,
 				FAD47F28226D9E8C0040B96E /* MMChatBoxFaceView.m in Sources */,
-				FAEA511F22817F02007EA6A7 /* MMGlobalVariables.m in Sources */,
 				EDB6F69C22241B48004CA268 /* GroupMemberModel.m in Sources */,
 				18DD55CB230C3E0500C17D54 /* FindPwdViewController.m in Sources */,
 				FAA90900232255450054EDFD /* MMGameModel.m in Sources */,
@@ -3542,6 +3555,7 @@
 				185097CE230A737900325FFC /* MMChatLinkManCell.m in Sources */,
 				8689EC6D21E63B830024A6A0 /* JSONHTTPClient.m in Sources */,
 				181649C1230E2591009A9A66 /* SetUpViewController.m in Sources */,
+				286D5EE223C475C800E2C969 /* ZWWebRTCHelper.m in Sources */,
 				286A8A5C2398EA5900B2A069 /* ZWSearchBarView.m in Sources */,
 				FAEA5119228152FA007EA6A7 /* MM1v1CallViewController.m in Sources */,
 				28A75BDC238D128400281EF8 /* UITableView+PlaceholderView.m in Sources */,

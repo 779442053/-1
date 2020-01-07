@@ -38,14 +38,18 @@ static NSString *const identifier = @"ContactTableViewCell";
 @implementation ChatViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //此处,逻辑需要修改.链接socket
-    [[self.ViewModel.socketContactCommand execute:nil] subscribeNext:^(id  _Nullable x) {
-        if ([x intValue] == 0) {
-            //[YJProgressHUD showSuccess:@"连接成功"];
-        }else{
-            [YJProgressHUD showError:@"Tcp连接失败"];
-        }
-    }];
+    //if (ZWWOBJECT_IS_EMPYT([ZWUserModel currentUser].sessionID)) {
+        [[self.ViewModel.socketContactCommand execute:nil] subscribeNext:^(id  _Nullable x) {
+            if ([x intValue] == 0) {
+                //[YJProgressHUD showSuccess:@"连接成功"];
+            }else{
+                [YJProgressHUD showError:@"Tcp连接失败"];
+            }
+        }];
+//    }else{
+//        ZWWLog(@"登录的时候,已经进行了登录IMw服务器操作啦\n登录的时候,已经进行了登录IMw服务器操作啦 ")
+//    }
+    
 }
 -(ZWChatViewModel *)ViewModel{
     if (_ViewModel == nil) {

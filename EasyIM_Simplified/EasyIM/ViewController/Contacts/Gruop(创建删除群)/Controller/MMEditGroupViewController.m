@@ -28,7 +28,7 @@
 -(void)zw_bindViewModel{
     [self.dataSource enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         MemberList *member = self.dataSource[idx];
-        if ([member.memberId isEqualToString:self.creatorId]) {
+        if ([member.groupmembertype isEqualToString:@"creator"]) {
             [self.creatorData addObject:member];
             [self.dataSource removeObject:member];
             [self.tableView reloadData];
@@ -66,9 +66,10 @@
     }else{
         model = self.dataSource[indexPath.row];
     }
-    ZWWLog(@"群成员头像====%@",model.photoUrl)
     [cell.headImage sd_setImageWithURL:[NSURL URLWithString:model.photoUrl] placeholderImage:K_DEFAULT_USER_PIC];
-    [cell.nameLbl setText:model.username];
+    [cell.headImage wyh_autoSetImageCornerRedius:5 ConrnerType:UIRectCornerAllCorners];
+    NSString *name = ZWWOBJECT_IS_EMPYT(model.nickname) ? model.username : model.nickname;
+    [cell.nameLbl setText:name];
     return cell;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section

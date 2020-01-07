@@ -9,23 +9,14 @@
 #import "GroupMemberModel.h"
 
 @implementation GroupMemberModel
-
 + (NSDictionary *)modelContainerPropertyGenericClass {
-    
     return @{@"list":[MemberList class]};
-    
 }
 @end
 @implementation MemberList
-
 +(NSDictionary *)mj_replacedKeyFromPropertyName{
     return @{
-             @"memberId":@"id",
-             @"userName":@"username",
-             @"photoUrl":@"pic",
-             @"userSig":@"usersig",
-             @"nickName":@"nickname",
+             @"memberId":@"id"
     };
 }
-
 @end

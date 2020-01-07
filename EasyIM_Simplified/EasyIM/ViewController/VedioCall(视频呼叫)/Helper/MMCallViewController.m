@@ -13,7 +13,6 @@
 @end
 
 @implementation MMCallViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -142,17 +141,15 @@
 
 - (void)microphoneButtonAction
 {
-    
+    ZWWLog(@"麦克风")
 }
-
 - (void)minimizeAction
 {
-    
+    ZWWLog(@"最小化按钮")
 }
-
 - (void)hangupAction
 {
-    
+    ZWWLog(@"挂断按钮被点击啦")
 }
 
 

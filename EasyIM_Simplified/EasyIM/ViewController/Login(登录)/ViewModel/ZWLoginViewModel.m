@@ -7,7 +7,7 @@
 //
 
 #import "ZWLoginViewModel.h"
-
+#import "MMVedioCallManager.h"
 @implementation ZWLoginViewModel
 -(void)zw_initialize{
     @weakify(self);
@@ -137,7 +137,14 @@
     ZWWLog(@"登录IM= \n %@",parma)
     [ZWSocketManager ConnectSocketWithConfigM:[ZWSocketConfig ShareInstance] complation:^(NSError * _Nonnull error) {
         if (!error) {
-            [ZWSocketManager SendDataWithData:parma];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    //监听音视频通话
+                    [MMVedioCallManager sharedManager];
+                }else{
+                    
+                }
+            }];
         }
     }];
     

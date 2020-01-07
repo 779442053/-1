@@ -29,8 +29,6 @@
     }
     return self;
 }
-
-
 - (void)setSubView:(CGRect)frame
 {
     UIImageView *imageV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconfont-luyin"]];

@@ -22,9 +22,7 @@ static NSString *const cell_identify = @"collection_cell_identify";
 #define k_collection_left_right ((G_SCREEN_WIDTH - 4 * collection_cell_w - 3 * margin_row_column) * 0.5)
 
 @interface MM1v1AudioViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
-
 @property (nonatomic, strong) UICollectionView *collectionList;
-
 @end
 
 @implementation MM1v1AudioViewController
@@ -121,13 +119,7 @@ static NSString *const cell_identify = @"collection_cell_identify";
         labUserName.tag = tag;
         [cell.contentView addSubview:labUserName];
     }
-    
-    /**
-     initiator = 0;//BOOL 值 YES 发起人,NO 被邀请者
-     photoUrl = "http://sw.joyvc.com/user_files/551255/20190613/5d0210bfc0351.jpg";
-     userId = 551255;
-     userName = lw002;
-     */
+
     if (self.arrUserDatas && [self.arrUserDatas count] > indexPath.row) {
         NSDictionary *dicData = self.arrUserDatas[indexPath.row];
         

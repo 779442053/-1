@@ -294,14 +294,31 @@ typedef struct {
                 //通知类型,有很多种
                 [[NSNotificationCenter defaultCenter] postNotificationName:FriendChangeNotifion object:jsonDic];
                 return;
-            //MARK:视频呼叫返回状态(对方等待通知界面)
-            //callUser  1v1音视频呼叫
-            //CallGroup 1vM群组音视频呼叫
             case  GCDSocketTCPCmdTypeCallUser:
-            {
-                ZWWLog(@"视频呼叫返回状态")
+            {ZWWLog(@"音视频呼叫对方,状态放回=%@",jsonDic)
+                /**在这里,在block 出去之后,进行界面修改,声音提醒*/
+                NSString *fUId = [jsonDic.allKeys containsObject:@"frmUid"]?jsonDic[@"frmUid"]:jsonDic[@"fromId"];
+                if (![fUId isEqualToString:[ZWUserModel currentUser].userId]){
+                    ZWWLog(@"别人呼叫我")
+                    [YHUtils playVoiceForAudioAndVideo:^(AVAudioPlayer *_Nullable _avaudio) {
+                        _avAudioPlayer = _avaudio;
+                    }];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Request object:nil userInfo:jsonDic];
+                }else{
+            ZWWLog(@"我正在呼叫别人.这个时候,才是我发起的请求,需要告知我d发送请求的状态")
+                    if ([jsonDic[@"result"] isEqualToString:@"1"]){
+                        if (self.DidReadBlock) {
+                            self.DidReadBlock(nil,jsonDic);
+                          }
+                    }else{
+                        if (self.DidReadBlock) {
+                            self.DidReadBlock(error,nil);
+                        }
+                    }
+                }
             }
-            case  GCDSocketTCPCmdTypeCallGroup:
+               break;
+            case  GCDSocketTCPCmdTypeCallGroup://群呼叫
             {
                 //接收到对方的视频请求
                 NSString *fUId = [jsonDic.allKeys containsObject:@"frmUid"]?jsonDic[@"frmUid"]:jsonDic[@"fromId"];
@@ -311,13 +328,19 @@ typedef struct {
                     [YHUtils playVoiceForAudioAndVideo:^(AVAudioPlayer *_Nullable _avaudio) {
                         _avAudioPlayer = _avaudio;
                     }];
-                    
+                    ZWWLog(@"群里面,有人呼叫我 = %@",jsonDic)
                     [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Request object:nil userInfo:jsonDic];
-                }
-                //发起人(不播放声音，否则无法关闭)
-                else{
-                    //发视频邀请的Response
-
+                }else{
+                    ZWWLog(@"发视频邀请的Response=%@",jsonDic)
+                    if ([jsonDic[@"result"] isEqualToString:@"1"]){
+                        if (self.DidReadBlock) {
+                            self.DidReadBlock(nil,jsonDic);
+                          }
+                    }else{
+                        if (self.DidReadBlock) {
+                            self.DidReadBlock(error,nil);
+                        }
+                    }
                 }
             }
                 return;
@@ -346,7 +369,6 @@ typedef struct {
                 //ZWWLog(@"聊天发送消息发送成功,修改消息状态,发送成功,就存储在本地")
                 if ([jsonDic[@"result"] isEqualToString:@"1"]) {
                     if (self.DidReadBlock) {
-                        ZWWLog(@"发送成功 1")
                         self.DidReadBlock(nil,jsonDic);
                     }
                 }else{
@@ -360,32 +382,64 @@ typedef struct {
             case GCDSocketTCPCmdTypeFetchMsg:
             {
                 [YHUtils playVoiceForMessage];
-                //交给聊天桥接 工具进行消息的处理
                 [[MMClient  sharedClient] addHandleChatMessage:jsonDic];
             }
                 break;
             //MARK:4.挂断
             case GCDSocketTCPCmdTypeHangUpCall:
-            {
+            {ZWWLog(@"究竟是谁挂断谁的操作操作===%@",jsonDic)
                 [self stopAndReleaseAudioPlayer];
                 [YHUtils closeVoiceAudioAndVideo];
                 //如果对方挂断则通知对方已挂断
                 NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
-                if (![jsonDic[@"fromId"] isEqualToString:userID]) {
-                    //...通知...
+                if (![jsonDic[@"643444"] isEqualToString:userID]) {
+                    ZWWLog(@"别人挂断我")
                     [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Refuse object:nil userInfo:jsonDic];
                 }else{
-                    //挂断的Response
+                    ZWWLog(@"我主动挂断别人")
                     if (![jsonDic[@"webrtcId"] isEqualToString:userID]) {
+                        ZWWLog(@"我主动挂断正在进行的通话")
                         [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Refuse object:nil userInfo:jsonDic];
                     }else{
-
+                        ZWWLog(@"我主动挂断正在呼叫中的音视频邀请")
+                        if ([jsonDic[@"result"] isEqualToString:@"1"]) {
+                            if (self.DidReadBlock) {
+                                self.DidReadBlock(nil,jsonDic);
+                            }
+                        }else{
+                           if (self.DidReadBlock) {
+                                self.DidReadBlock(error,nil);
+                            }
+                        }
                     }
                 }
             }
                 break;
             //MARK:5.接受音视频邀请(AcceptCall 1v1、AcceptGroupCall 1vM)
             case GCDSocketTCPCmdTypeAcceptCall:
+            {
+                ZWWLog(@"私聊,别人接受我,或者我接受别人的音视频邀请")
+                [self stopAndReleaseAudioPlayer];
+                NSString *fUId = [jsonDic.allKeys containsObject:@"frmUid"]?jsonDic[@"frmUid"]:jsonDic[@"fromId"];
+                 NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+                if (![fUId isEqualToString:userID]) {
+                    //振动手机提示
+                    [YHUtils vibratingCellphone];
+                    ZWWLog(@"对方接受邀请,通知发请求者改变此时状态")
+                    [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Accept object:nil userInfo:jsonDic];
+                }else{
+                    ZWWLog(@"我接受别人的私聊音视频邀请")
+                    if ([jsonDic[@"result"] isEqualToString:@"1"]) {
+                           if (self.DidReadBlock) {
+                               self.DidReadBlock(nil,jsonDic);
+                           }
+                       }else{
+                          if (self.DidReadBlock) {
+                               self.DidReadBlock(error,nil);
+                           }
+                       }
+                }
+            }
             case GCDSocketTCPCmdTypeAcceptGroupCall:
             {
                 [self stopAndReleaseAudioPlayer];
@@ -399,19 +453,33 @@ typedef struct {
                 }
                 //发起人
                 else{
-                    //发起请求的Response
-                    //接受邀请,返回Rsp回调
-
+                   if ([jsonDic[@"result"] isEqualToString:@"1"]) {
+                       if (self.DidReadBlock) {
+                           self.DidReadBlock(nil,jsonDic);
+                       }
+                   }else{
+                      if (self.DidReadBlock) {
+                           self.DidReadBlock(error,nil);
+                       }
+                   }
                 }
             }
                 break;
             //MARK:6.拒绝视频邀请(RejectCall 1v1、RejectGroupCall 1vM)
             case GCDSocketTCPCmdTypeRejectCall:
-            case GCDSocketTCPCmdTypeRejectGroupCall:
             {
+                ZWWLog(@"我主动拒绝别人的单聊音视频邀请 = %@",jsonDic)
                 [self stopAndReleaseAudioPlayer];
                 [YHUtils closeVoiceAudioAndVideo];
-                //6.1拒绝邀请的Rsp
+                [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Refuse object:nil userInfo:jsonDic];
+            }
+             break;
+            case GCDSocketTCPCmdTypeRejectGroupCall:
+            {
+                ZWWLog(@"我主动拒绝群里面的音视频邀请=%@",jsonDic)
+                [self stopAndReleaseAudioPlayer];
+                [YHUtils closeVoiceAudioAndVideo];
+                
                 [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Refuse object:nil userInfo:jsonDic];
             }
                 break;
@@ -452,7 +520,6 @@ typedef struct {
 
             }
                 break;
-                
             //MARK:9.发群消息回调 groupMsg
             case GCDSocketTCPCmdTypeGroupMsg:
             {
@@ -466,7 +533,6 @@ typedef struct {
                         self.DidReadBlock(error,nil);
                     }
                 }
-
             }
                 break;
             //MARK:10.加好友回调 addFriend
@@ -805,7 +871,7 @@ typedef struct {
         [_avAudioPlayer stop];
         _avAudioPlayer = nil;
     }
-    ZWWLog(@"音视频邀请声音播放对象已移除");
+    //ZWWLog(@"音视频邀请声音播放对象已移除");
 }
 - (void)startMonitoringNetwork
 {

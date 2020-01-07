@@ -23,11 +23,11 @@
                 if (responseString && [responseString[@"code"] integerValue] == 1){
                     NSDictionary *_dicTemp = responseString[@"data"][@"data"];
                     //设置创建者编号
-                    NSString *cid;
-                    if (_dicTemp && [[_dicTemp allKeys] containsObject:@"createID"]) {
-                        cid = [NSString stringWithFormat:@"%@",_dicTemp[@"createID"]];
-                        [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp[@"list"],@"cid":cid}];
-                    }
+                    //NSString *cid;
+//                    if (_dicTemp && [[_dicTemp allKeys] containsObject:@"createID"]) {
+//                        cid = [NSString stringWithFormat:@"%@",_dicTemp[@"createID"]];
+//                        [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp[@"list"],@"cid":cid}];
+//                    }
                     if (_dicTemp && [[_dicTemp allKeys] containsObject:@"list"]) {
                         [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp[@"list"]}];
                     }

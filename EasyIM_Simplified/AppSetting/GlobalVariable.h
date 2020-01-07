@@ -169,7 +169,9 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     /**忽略通知*/
     GCDSocketTCPCmdTypeignoreBulletin,
     /**delFriend 删除好友*/
-    GCDSocketTCPCmdTypedelFriend
+    GCDSocketTCPCmdTypedelFriend,
+    /**呼叫会话心跳（会话建立后发送，每隔60s）*/
+    GCDSocketTCPCmdTypecallHeartbeat
     
 };
 
@@ -207,7 +209,8 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
 @"rejectFriend",\
 @"joinGroup",\
 @"ignoreBulletin",\
-@"delFriend"]
+@"delFriend",\
+@"callHeartbeat"]
 
 /** 枚举 to 字串 */
 #define ZWGCDSocketTCPCmdTypeString(type) ([ZWGCDSocketTCPCmdTypeGet objectAtIndex:type])

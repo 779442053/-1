@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MemberList : NSObject
 @property (nonatomic, copy) NSString *memberId; //用户id
 @property (nonatomic, copy) NSString *type; //该人身份creator 、manager 、normal
+@property (nonatomic, copy) NSString *groupmembertype;
 @property (nonatomic, copy) NSString *username; //
 @property (nonatomic, copy) NSString *photoUrl; //
 @property (nonatomic, copy) NSString *usersig; //用户签名

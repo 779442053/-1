@@ -8,7 +8,7 @@
 
 #import "ZWChatViewModel.h"
 #import "MMRecentContactsModel.h"
-
+#import "MMVedioCallManager.h"
 #import "NewFriendModel.h"
 @interface ZWChatViewModel()
 @property (nonatomic,assign)NSInteger *Currentpage;
@@ -41,8 +41,17 @@
                     parma[@"oem"] = @"xire";
                     parma[@"enc"] = @"0";
                     parma[@"zip"] = @"0";
-                    [ZWSocketManager SendDataWithData:parma] ;
-                    [subscriber sendNext:@"0"];
+                    [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                        if (!error) {
+                            //登录成功之后,就去监听是否有人向我发送音视频邀请
+                            [MMVedioCallManager sharedManager];
+                            [subscriber sendNext:@"0"];
+                        }else{
+                            [subscriber sendNext:@"1"];
+                            [MMProgressHUD showError:@"socket 连接出现错误"];
+                        }
+                    }];
+                    
                 }else{
                     [subscriber sendNext:@"1"];
                     [MMProgressHUD showError:@"socket 连接出现错误"];
