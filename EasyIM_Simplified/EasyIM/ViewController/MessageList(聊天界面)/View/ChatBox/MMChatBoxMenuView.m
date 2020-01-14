@@ -25,7 +25,6 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        
         [self setupBtn:@"Custom" buttonType:MMEmotionMenuButtonTypeCuston];
         //        [self setupBtn:[@"0x1f603" emoji] buttonType:MMEmotionMenuButtonTypeEmoji];
         //        [self setupBtn:@"Gif" buttonType:ICEmotionMenuButtonTypeGif];
@@ -59,10 +58,6 @@
     [btn setBackgroundImage:[UIImage gxz_imageWithColor:MMColor(241, 241, 244)] forState:UIControlStateSelected];
     return btn;
 }
-
-
-
-
 
 #pragma mark - Private
 

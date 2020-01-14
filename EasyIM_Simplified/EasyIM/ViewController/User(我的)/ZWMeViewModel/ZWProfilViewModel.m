@@ -121,5 +121,38 @@
             }];
         }];
     }];
+    
+    //修改群名称
+    self.UpdateGroupNameCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+        return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+            @strongify(self)
+            [YJProgressHUD showLoading:@"修改中..."];
+            NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+            parma[@"groupid"] = input[@"groupid"];
+            if ([input[@"code"] isEqualToString:@"name"]) {
+                parma[@"groupname"] = input[@"groupname"];
+            }else{
+                parma[@"bulletin"] = input[@"bulletin"];
+            }
+            [self.request POST:modifygroup parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+                [YJProgressHUD hideHUD];
+                ZWWLog(@"修改群信息=%@",responseString)
+                if ([responseString[code] intValue] == 1) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [YJProgressHUD showError:responseString[msg]];
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
+                [subscriber sendCompleted];
+                
+            } failure:^(ZWRequest *request, NSError *error) {
+                [YJProgressHUD showError:ZWerror];
+                [subscriber sendCompleted];
+            }];
+            return [RACDisposable disposableWithBlock:^{
+                
+            }];
+        }];
+    }];
 }
 @end

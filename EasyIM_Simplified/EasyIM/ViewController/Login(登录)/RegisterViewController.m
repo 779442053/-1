@@ -43,14 +43,14 @@ static CGFloat const txt_height = 44;
 {
     NSString *msg = @"";
     if (!_txtPhone.text.checkTextEmpty) {
-        msg = @"请输入手机号";
+        msg = @"请输入账号或手机号";
         [MMProgressHUD showHUD:msg];
         return;
     }
-    else if(!_txtPhone.text.checkPhoneNo){
-        [MMProgressHUD showHUD:@"手机号格式有误"];
-        return;
-    }
+//    else if(!_txtPhone.text.checkPhoneNo){
+//        [MMProgressHUD showHUD:@"手机号格式有误"];
+//        return;
+//    }
     if (!_txtCode.text.checkTextEmpty) {
         msg = @"请输入短信验证码";
         [MMProgressHUD showHUD:msg];
@@ -87,8 +87,8 @@ static CGFloat const txt_height = 44;
             }
             [weakSelf performSelector:@selector(delayAction) withObject:nil afterDelay:1.0f];
         }else{
-            ZWWLog(@"=======")
-            [MMProgressHUD showError:@"该手机号已经注册"];
+            //ZWWLog(@"=======")
+            //[MMProgressHUD showError:@"该手机号已经注册"];
         }
     }];
 }

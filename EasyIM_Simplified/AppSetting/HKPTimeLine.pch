@@ -9,11 +9,12 @@
 #import "ReactiveObjC.h"
 #import "UIScrollView+FDFullscreenPopGesture.h"
 #import "wyhCornerRadius.h"//高性能圆角处理
+/*  在需要展示空 展位图的  .m 文件  导入下面三个类  即可自动展示
 #import "UICollectionView+ZWSure_Placeholder.h"
 #import "UITableView+ZWSure_Placeholder.h"
 #import "UITableView+PlaceholderView.h"
+ */
 #import "ZWNotionName.h"
-
 #import "GlobalVariable.h"
 
 

@@ -89,8 +89,8 @@ static CGFloat const txt_height = 44;
             }
             [weakSelf performSelector:@selector(delayAction) withObject:nil afterDelay:1.0f];
         }else{
-            ZWWLog(@"=======")
-            [MMProgressHUD showError:@"该手机号已经注册"];
+//            ZWWLog(@"=======")
+//            [MMProgressHUD showError:@"该手机号已经注册"];
         }
     }];
     

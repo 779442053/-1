@@ -20,8 +20,6 @@
 
 
 #import "MMVedioCallEnum.h"
-
-#import "ZWPhotoHelper.h"
 //邀请好友
 #import "MMAddMemberViewController.h"
 //位置

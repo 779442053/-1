@@ -15,6 +15,8 @@
 #import "FriDetailViewController.h"//发消息
 #import "ZWChatViewModel.h"
 #import "ZWSocketManager.h"
+
+
 @interface AddFriendStatusViewController ()<UITableViewDataSource, UITableViewDelegate, NSXMLParserDelegate,AddFriendAgreeDelegate,AddFriendAgreeDelegate2>
 @property (nonatomic, weak)   UITableView *resultListView;
 @property (nonatomic, strong) NSString *startTag;
@@ -53,7 +55,6 @@
     resultListView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     resultListView.backgroundColor = [UIColor whiteColor];
     resultListView.tableFooterView = [UIView new];
-    resultListView.firstReload = NO;
     [self.view addSubview:resultListView];
     self.resultListView = resultListView;
 }
@@ -75,7 +76,11 @@
         parma[@"bulletinIds"] = Model.uid;
         [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
             if (!error) {
+                ZWWLog(@"忽略通知成功!")
                 [self.newFriendsArr removeObject:Model];
+                if (self.changeStatusBlock) {
+                    self.changeStatusBlock(self.newFriendsArr);
+                }
                 [self.resultListView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             }
         }];
@@ -130,6 +135,10 @@
     }else if (NFModel.bulletinType == 2) {
         [MMProgressHUD showHUD:@"对方已拒绝您的请求"];
         return;
+    }else if (NFModel.bulletinType == 6) {
+        //别人申请加入群聊
+        
+        return;
     }
 //    MMFriendAppViewController *fApp = [[MMFriendAppViewController alloc] init];
 //    fApp.model = self.newFriendsArr[indexPath.row];
@@ -168,7 +177,7 @@
             ZWWLog(@"接受别人请求加入群")
             NSMutableDictionary *Parma = [[NSMutableDictionary alloc] init];
             Parma[@"type"] = @"req";
-            Parma[@"cmd"] = @"acceptFriend";
+            Parma[@"cmd"] = @"acceptJoinGroup";
             Parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
             Parma[@"toID"] = model.fromID;
             Parma[@"groupID"] = model.groupID;
@@ -186,6 +195,50 @@
         case 1:
         {
             ZWWLog(@"不进行操作")
+        }
+            break;
+        case 6:
+        {
+            [self AlertWithTitle:@"申请加入群聊" message:@"是否同意对方加入群聊" andOthers:@[@"同意",@"拒绝"] animated:YES action:^(NSInteger index) {
+                if (index == 0) {
+                    ZWWLog(@"同意")
+                    NSMutableDictionary *Parma = [[NSMutableDictionary alloc] init];
+                    Parma[@"type"] = @"req";
+                    Parma[@"cmd"] = @"acceptJoinGroup";
+                    Parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+                    Parma[@"toID"] = model.fromID;
+                    Parma[@"groupID"] = model.groupID;
+                    Parma[@"time"] = [MMDateHelper getNowTime];
+                    Parma[@"msg"] = @"接受";
+                    [ZWSocketManager SendDataWithData:Parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                        if (!error) {
+                            model.bulletinType = BULLETIN_TYPE_ACCEPT_FRIEND;
+                            [self.resultListView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                        }else{
+                            [YJProgressHUD showError:@"请求失败"];
+                        }
+                    }];
+                    
+                }else{
+                    ZWWLog(@"拒绝")
+                    NSMutableDictionary *Parma = [[NSMutableDictionary alloc] init];
+                    Parma[@"type"] = @"req";
+                    Parma[@"cmd"] = @"rejectJoinGroup";
+                    Parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+                    Parma[@"touID"] = model.fromID;
+                    Parma[@"groupID"] = model.groupID;
+                    Parma[@"time"] = [MMDateHelper getNowTime];
+                    Parma[@"msg"] = @"我就是要拒绝你";
+                    [ZWSocketManager SendDataWithData:Parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                        if (!error) {
+                            model.bulletinType = BULLETIN_TYPE_REJECT_FRIEND;
+                            [self.resultListView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                        }else{
+                            [YJProgressHUD showError:@"请求失败"];
+                        }
+                    }];
+                }
+            }];
         }
             break;
             

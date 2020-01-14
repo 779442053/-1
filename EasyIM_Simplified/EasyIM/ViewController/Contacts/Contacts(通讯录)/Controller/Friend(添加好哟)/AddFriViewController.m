@@ -17,6 +17,7 @@
 @property (strong, nonatomic)  UILabel *desLable;
 @property (strong, nonatomic)  UILabel *fromLable;
 @property (strong, nonatomic)  UIButton *addBtn;
+@property (strong, nonatomic)  UIButton *deleBtn;
 @property (strong, nonatomic)  ZWFriendViewModel *ViewModel;
 @end
 
@@ -33,12 +34,34 @@
             self.nickLable.text = self.model.nickname?self.model.nickname:self.model.username;
             self.desLable.text = [NSString stringWithFormat:@"账号:%@",self.model.userid];
             if ([self.model.is_fr intValue] == 1) {
-                [self.addBtn setTitle:@"对方已经是你的好友" forState:UIControlStateNormal];
-                self.addBtn.enabled = NO;
+                [self.addBtn setTitle:@"发消息" forState:UIControlStateNormal];
+                self.deleBtn.hidden = YES;
             }
         }
     }];
+    
+    [[self.addBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
+        if ([self.model.is_fr intValue] == 1) {
+            //发送消息
+            [self sendMsgEvent];
+        }else{
+            //添加朋友
+            SendMsgViewController *vc = [[SendMsgViewController alloc]init];
+            vc.model = _model;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    }];
+    
 }
+- (void)sendMsgEvent{
+    ContactsModel *model = [[ContactsModel alloc] init];
+    model.photoUrl = self.model.photoUrl;
+    model.userId = self.model.userid;//self.userId;
+    model.cmd = @"sendMsg";
+    model.userName = self.model.nickname.length ? self.model.nickname: self.model.username;
+    [[NSNotificationCenter defaultCenter] postNotificationName:CHAT_PUSHVIEWCONTROLLER object:model];
+}
+
 -(void)zw_addSubviews{
     [self setTitle:@"添加好友"];
     [self showLeftBackButton];
@@ -90,12 +113,6 @@
     self.addBtn.frame = CGRectMake(10, CGRectGetMaxY(bottomView.frame) + 38, KScreenWidth - 20, 40);
     [self.view addSubview:self.addBtn];
     [self.addBtn setLayerBorderWidth:0 borderColor:nil cornerRadius:5];
-    
-    [[self.addBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
-         SendMsgViewController *vc = [[SendMsgViewController alloc]init];
-           vc.model = _model;
-           [self.navigationController pushViewController:vc animated:YES];
-    }];
 }
 -(UIImageView *)imageV{
     if (_imageV == nil) {
@@ -137,6 +154,16 @@
         _addBtn.titleLabel.font = [UIFont zwwNormalFont:13];
     }
     return _addBtn;
+}
+-(UIButton *)deleBtn{
+    if (_deleBtn == nil) {
+        _deleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _deleBtn.frame = CGRectMake(10,CGRectGetMaxY(self.addBtn.frame)+20, SCREEN_WIDTH - 20, 45);
+        [_deleBtn setTitle:@"对方已经是你的好友" forState:UIControlStateNormal];
+        [_deleBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        _deleBtn.backgroundColor = [UIColor whiteColor];
+    }
+    return _deleBtn;
 }
 -(ZWFriendViewModel *)ViewModel{
     if (_ViewModel == nil) {

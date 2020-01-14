@@ -120,7 +120,6 @@
             parma[@"muserid"] = input[@"muserid"];
             parma[@"musername"] = input[@"musername"];;
             [self.request POST:setmemo parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
-                ZWWLog(@"修改好友备注以及设置好友推送=%@",responseString)
                 if ([responseString[@"code"] intValue] == 1) {
                     [YJProgressHUD showSuccess:@"修改成功"];
                     [subscriber sendNext:@{@"code":@"0"}];
@@ -141,10 +140,17 @@
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
             NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
-            parma[@"userid"] = input;
-            parma[@"friendid"] = [ZWUserModel currentUser].userId;
+            parma[@"friendid"] = input;
+            parma[@"userid"] = [ZWUserModel currentUser].userId;
             [self.request POST:delfriend parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 if ([responseString[@"code"] intValue] == 1) {
+                    [[MMChatDBManager shareManager] deleteConversation:input completion:^(NSString * _Nonnull aConversationId, NSError * _Nonnull aError) {
+                        if (!aError) {
+                            ZWWLog(@"成功")
+                        }else{
+                            ZWWLog(@"失败")
+                        }
+                    }];
                     [YJProgressHUD showSuccess:@"删除成功"];
                     [subscriber sendNext:@{@"code":@"0"}];
                 }else{

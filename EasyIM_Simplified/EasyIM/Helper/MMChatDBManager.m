@@ -53,19 +53,14 @@ static MMChatDBManager *instance = nil;
 
 - (FMDatabaseQueue *)DBQueue
 {
-    
     NSString *dbName = [NSString stringWithFormat:@"%@.db", [ZWUserModel currentUser].userId];
     NSString *path = _DBQueue.path;
-    
     if (!_DBQueue || ![path containsString:dbName]) {
         NSString *tablePath = [[self DBMianPath] stringByAppendingPathComponent:dbName];
-        
         _DBQueue = [FMDatabaseQueue databaseQueueWithPath:tablePath];
         [_DBQueue inDatabase:^(FMDatabase * _Nonnull db) {
-            
             // 打开数据库
             if ([db open]) {
-                
                 // 会话数据库表
                 //id:消息id,conversation:聊天对象(如果当前是单聊则为聊天对方,如果是群聊则是群号等),unreadcount:消息未读数,latestmsgtext:最后的文字消息,latestmsgtimestamp:最后的消息时间
                 BOOL success = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS conversation (id TEXT NOT NULL, latestHeadImage TEXT, unreadcount Integer, latestmsgtext TEXT, latestmsgtimestamp INT32,latestnickname TEXT,chattype TEXT)"];
@@ -150,15 +145,14 @@ static MMChatDBManager *instance = nil;
         exist(e, db);
     }];
 }
-//获取最近联系人 versations  聊天类型  chat  groupchat
 - (void)getAllConversations:(void(^)(NSArray<MMRecentContactsModel *> *))versations
-{
+{ZWWLog(@"获取最近联系人 versations  聊天类型  chat  groupchat")
     NSMutableArray *conversations = [NSMutableArray array];
     [self.DBQueue inDatabase:^(FMDatabase * _Nonnull db) {
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM conversation WHERE chattype = 'chat' "];
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM conversation WHERE chattype = 'groupchat' or chattype = 'chat' "];
         while (result.next) {
-            //int culomcount = result.columnCount;
-            //ZWWLog(@"结果集的字段个数=%d",culomcount)//7个
+            int culomcount = result.columnCount;
+            ZWWLog(@"结果集的字段个数=%d",culomcount)//7个
             MMRecentContactsModel *conversation = [[MMRecentContactsModel alloc] init];
             conversation.userId = [result stringForColumnIndex:0];
             conversation.latestHeadImage = [result stringForColumnIndex:1];
@@ -166,6 +160,7 @@ static MMChatDBManager *instance = nil;
             conversation.latestMsgStr = [result stringForColumnIndex:3];
             conversation.latestMsgTimeStamp = [result longLongIntForColumnIndex:4];
             conversation.targetType=[result stringForColumnIndex:6]; //聊天类型
+            //ZWWLog(@"聊天类型 = %@",conversation.targetType)
             conversation.latestnickname = [result stringForColumnIndex:5];
             [conversations addObject:conversation];
         }
@@ -180,7 +175,7 @@ static MMChatDBManager *instance = nil;
             NSString *msgId = message.msgID;
             BOOL success = [db executeUpdate:@"DELETE from message WHERE id = ?",msgId];
             if (success) {
-                ZWWLog(@"删除成功被撤回的消息成功");
+                ZWWLog(@"删除成功被撤回的消息或者主动删除消息成功");
             }else{
                 ZWWLog(@"删除失败被撤回的消息失败");
             }
@@ -224,9 +219,9 @@ static MMChatDBManager *instance = nil;
             }
             BOOL success = [db executeUpdate:@"INSERT INTO message (id, localtime, timestamp, conversation, msgdirection, chattype, bodies, status,toUserId,toUserName,fromUserName,fromUserId,fromPhoto) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)", msgId, @(locTime),@(time), conversation, isSender?@1:@0, chatType, bodies, status,toUserId,toUserName,fromUserName,fromUserId,fromPhoto];
             if (success) {
-                MMLog(@"消息加入成功!");
+                MMLog(@"消息加入成功!在聊天界面,最近聊天消息展示数据库");
             }else{
-                MMLog(@"消息加入失败!");
+                MMLog(@"消息加入失败!聊天界面消息记录加入失败!");
             }
         }
     }];
@@ -290,7 +285,6 @@ static MMChatDBManager *instance = nil;
     if (!message) {
         return;
     }
-    //防止是自己的信息
     NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
     if ([message.conversation isEqualToString:userID]) {
         return;
@@ -317,6 +311,7 @@ static MMChatDBManager *instance = nil;
                 latestHeadImage = message.fromPhoto;
                 latestnickname =  message.fromUserName;
             }
+            ZWWLog(@"更新最近联系人或者最近联系群参数conversationID=%@\n latestHeadImage = %@\n unreadCount = %ld\n latestMsgStr = %@\n timestamp = %lld\n latestnickname = %@\n chatType = %@",conversationID,latestHeadImage,(long)unreadCount,latestMsgStr,timestamp,latestnickname,chatType)
           BOOL success =  [db executeUpdate:@"INSERT INTO conversation (id,latestHeadImage, unreadcount, latestmsgtext, latestmsgtimestamp,latestnickname,chatType) VALUES (?, ?, ?, ?,?,?,?)", conversationID,latestHeadImage,@(unreadCount), latestMsgStr, @(timestamp),latestnickname,chatType];
             if (success) {
                 ZWWLog(@"插入最近联系人列表成功");
@@ -329,6 +324,7 @@ static MMChatDBManager *instance = nil;
             // 如果是在会话中则未读数为0条 如果不是则+1条
             //更新最近列表的时候,如果是群,需要将群的头像添加进去
             unreadCount = isChatting ? 0 : (unreadCount + 1);
+            ZWWLog(@"之前聊过更新最近联系人或者最近联系群参数conversationID=%@\n  unreadCount = %ld\n latestMsgStr = %@\n timestamp = %lld\n chatType = %@",conversationID,(long)unreadCount,latestMsgStr,timestamp,chatType)
             BOOL success = [db executeUpdate:@"UPDATE conversation SET  latestmsgtext = ?, unreadcount = ?, latestmsgtimestamp = ? WHERE id = ?", latestMsgStr, @(unreadCount), @(timestamp),conversationID];
             if (success) {
                 ZWWLog(@"更新最近列表成功");
@@ -348,12 +344,14 @@ static MMChatDBManager *instance = nil;
             BOOL success = [db executeUpdate:@"DELETE from conversation WHERE id = ?",aConversationId];
             NSError *error;
             if (success) {
-                MMLog(@"删除成功");
+                ZWWLog(@"删除最近联系人活着群成功");
                 aCompletionBlock(aConversationId, nil);
             }else{
-                MMLog(@"删除失败");
+                ZWWLog(@"删除最近联系人活着群失败");
                 aCompletionBlock(aConversationId, error);
             }
+        }else{
+            ZWWLog(@"你要删除的最近联系人或者群不在表中")
         }
     }];
 }
@@ -363,16 +361,17 @@ static MMChatDBManager *instance = nil;
         if (isExist) {
             BOOL success = [db executeUpdate:@"UPDATE conversation SET unreadcount = ? WHERE id = ?", @(unreadCount),aConversationId];
             if (success) {
-                MMLog(@"更新成功");
+                ZWWLog(@"最近联系人活着群更新成功");
             }
             else {
-                MMLog(@"更新失败");
+                ZWWLog(@"最近联系人活着群更新失败");
             }
         }
     }];
 }
 - (MMMessage *)makeMessageWithFMResult:(FMResultSet *)result
 {
+    ZWWLog(@"进到聊天界面,先获取本地数据库里面的最近10条的聊天记录")
     NSString *bodies = [result stringForColumnIndex:6];
     MMChatContentModel *body = [MMChatContentModel yy_modelWithJSON:[bodies stringToJsonDictionary]];
     BOOL isSender = [result boolForColumnIndex:4];
@@ -390,12 +389,18 @@ static MMChatDBManager *instance = nil;
     MMConversationType cType;
     NSString *cmd = @"";
     if ([chat_type isEqualToString:@"chat"]) {
+        ZWWLog(@"本地获取单聊数据")
         cType = MMConversationType_Chat;
         cmd = @"sendMsg";
-    }else{
+    }
+    if ([chat_type isEqualToString:@"groupchat"]){
+        ZWWLog(@"本地获取群聊数据")
         cType = MMConversationType_Group;
         cmd = @"groupMsg";
         toUserName = fromUserName;
+    }else{
+        ZWWLog(@"其他渠道聊天===%@",chat_type)
+        cType = MMConversationType_Meet;
     }
     MMMessage *message = [[MMMessage alloc] initWithToUser:toUser
                                                 toUserName:toUserName
@@ -410,7 +415,7 @@ static MMChatDBManager *instance = nil;
     message.msgID = msgId;
     message.localtime = localTime;
     message.deliveryState = status?MMMessageDeliveryState_Delivered:MMMessageDeliveryState_Failure;
-    message.fromPhoto = fromPhoto;
+    message.fromPhoto = fromPhoto; 
     message.conversation = conversation;
     return message;
 }

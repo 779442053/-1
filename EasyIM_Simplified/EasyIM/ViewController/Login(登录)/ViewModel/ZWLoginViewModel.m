@@ -63,9 +63,8 @@
             NSDictionary *parmay = input;
             [self.request POST:Login parameters:parmay success:^(ZWRequest *request, NSDictionary *responseString,NSDictionary *data) {
                 [YJProgressHUD hideHUD];
-                ZWWLog(@"=登录==%@",responseString[@"data"])
+                ZWWLog(@"APP登录==%@",responseString)
                 if ([responseString[@"code"] intValue] == 1) {
-                    [YJProgressHUD hideHUD];
                     //预登陆成功,待用户登录成功之后,开始配置socket环境.保存本地变量
                     if ([responseString[@"data"] isKindOfClass:[NSDictionary class]]) {
                         NSDictionary *dict = responseString[@"data"];
@@ -76,19 +75,55 @@
                             userModel.userName = dict[@"username"];
                         }else if (dict[@"nickName"] && !ZWWOBJECT_IS_EMPYT(dict[@"nickName"])) {
                             userModel.nickName = dict[@"nickName"];
-                                
+                            userModel.userName = @"";
                             }
-                         
                          userModel.userPsw = parmay[@"userPsw"];
                          userModel.domain = parmay[@"domain"];
                          userModel.isLogin = YES;
                          userModel.mobile = parmay[@"username"];
                         [ZWDataManager saveUserData];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:appLogin object:nil];
-                        [ZWSaveTool setBool:YES forKey:@"IMislogin"];
-                        [self LoginIMSever];
-                        [subscriber sendNext:@{@"code":@"0"}];
-                        [subscriber sendCompleted];
+                        NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+                        parma[@"type"] = @"req";
+                        parma[@"cmd"] = @"login";
+                        parma[@"xns"] = @"xns_user";
+                        parma[@"loginType"] = @"410";
+                        parma[@"deviceDesc"] = [UIDevice currentDevice].name;
+                        NSString *userName = [ZWUserModel currentUser].userName;
+                        NSString *mobil = [ZWUserModel currentUser].mobile;
+                        if (!ZWWOBJECT_IS_EMPYT(userName)) {
+                            parma[@"userName"] = userName;
+                        }else if (!ZWWOBJECT_IS_EMPYT(mobil)){
+                            parma[@"mobile"] = mobil;
+                        }else{
+                            [YJProgressHUD showError:@"缺少用户昵称,名字,账号"];
+                        }
+                        parma[@"userPsw"] = [ZWUserModel currentUser].userPsw;
+                        parma[@"domain"] = @"9000";
+                        parma[@"timeStamp"] = [MMDateHelper getNowTime];
+                        parma[@"oem"] = @"";
+                        parma[@"enc"] = @"0";
+                        parma[@"zip"] = @"0";
+                        parma[@"netstatus"] = @"0";
+                        ZWWLog(@"登录IM= \n %@",parma)
+                        [ZWSocketManager ConnectSocketWithConfigM:[ZWSocketConfig ShareInstance] complation:^(NSError * _Nonnull error) {
+                            if (!error) {
+                                [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                                    [YJProgressHUD hideHUD];
+                                    if (!error) {
+                                        ZWWLog(@"IM登录成功,监听音视频通话,界面开始跳转")
+                                        [MMVedioCallManager sharedManager];
+                                        [[NSNotificationCenter defaultCenter] postNotificationName:appLogin object:nil];
+                                        [ZWSaveTool setBool:YES forKey:@"IMislogin"];
+                                        [YJProgressHUD showSuccess:@"登录成功"];
+                                        [subscriber sendNext:@{@"code":@"0"}];
+                                    }else{
+                                        [YJProgressHUD showSuccess:@"登录IM失败"];
+                                        [subscriber sendNext:@{@"code":@"1"}];
+                                    }
+                                    [subscriber sendCompleted];
+                                }];
+                            }
+                        }];
                     }else{
                         NSString *message = [NSString stringWithFormat:@"登陆失败,原因:%@",responseString[@"message"]];
                         [YJProgressHUD showError:message];
@@ -113,40 +148,7 @@
 }
 
 -(void)LoginIMSever{
-    NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
-    parma[@"type"] = @"req";
-    parma[@"cmd"] = @"login";
-    parma[@"xns"] = @"xns_user";
-    parma[@"loginType"] = @"410";
-    parma[@"deviceDesc"] = [UIDevice currentDevice].name;
-    NSString *userName = [ZWUserModel currentUser].userName;
-    NSString *mobil = [ZWUserModel currentUser].mobile;
-    if (!ZWWOBJECT_IS_EMPYT(userName)) {
-        parma[@"userName"] = userName;
-    }else if (!ZWWOBJECT_IS_EMPYT(mobil)){
-        parma[@"mobile"] = mobil;
-    }else{
-        [YJProgressHUD showError:@"缺少用户昵称,名字,账号"];
-    }
-    parma[@"userPsw"] = [ZWUserModel currentUser].userPsw;
-    parma[@"domain"] = @"9000";
-    parma[@"timeStamp"] = [MMDateHelper getNowTime];
-    parma[@"oem"] = @"111";
-    parma[@"enc"] = @"0";
-    parma[@"zip"] = @"0";
-    ZWWLog(@"登录IM= \n %@",parma)
-    [ZWSocketManager ConnectSocketWithConfigM:[ZWSocketConfig ShareInstance] complation:^(NSError * _Nonnull error) {
-        if (!error) {
-            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
-                if (!error) {
-                    //监听音视频通话
-                    [MMVedioCallManager sharedManager];
-                }else{
-                    
-                }
-            }];
-        }
-    }];
+    
     
 
 }

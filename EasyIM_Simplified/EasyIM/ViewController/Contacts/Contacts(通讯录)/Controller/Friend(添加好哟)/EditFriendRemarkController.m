@@ -41,6 +41,7 @@ static NSInteger const name_length = 30;
     }
     [[self.ViewModel.setmemoFriendCommand execute:@{@"muserid":self.strRemarkId,@"musername":strRemark,@"musernotice":@"1"}] subscribeNext:^(id  _Nullable x) {
         if ([x[@"code"] intValue] == 0) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:ChangeFriendName object:strRemark];
             [self.navigationController popViewControllerAnimated:YES];
         }
     }];

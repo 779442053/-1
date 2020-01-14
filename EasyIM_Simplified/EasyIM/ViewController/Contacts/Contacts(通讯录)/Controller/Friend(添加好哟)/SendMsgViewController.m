@@ -69,10 +69,18 @@
         [MMProgressHUD showHUD:@"不能添加自己为好友"];
         return;
     }
-    [[self.ViewModel.addFriendMsgCommand execute:@{@"tid":tagUserid,@"msg":msg}] subscribeNext:^(id  _Nullable x) {
-        if ([x[@"code"] intValue] == 0) {
-            [MMProgressHUD showHUD: @"请求成功"];
+    NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+     parma[@"type"] = @"req";
+     parma[@"cmd"] = @"addFriend";
+     parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+     parma[@"toID"] = tagUserid;
+     parma[@"msg"] = msg;
+     ZWWLog(@"添加朋友=%@",parma)
+    [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+        if (!error) {
             [self.navigationController popToRootViewControllerAnimated:YES];
+        }else{
+            
         }
     }];
 }

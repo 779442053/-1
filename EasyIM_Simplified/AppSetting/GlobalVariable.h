@@ -102,11 +102,13 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     /** heartBeat 心跳包 */
     GCDSocketTCPCmdTypeHeartBeat = 0,
     /** updateuserstate 下线通知 */
-    GCDSocketTCPCmdTypeUpdateuserstate,
+    GCDSocketTCPCmdTypeupdateUserStatus,
     /** friendStatus 好友上线通知 */
     GCDSocketTCPCmdTypeFriendStatus,
     /** inviteFrd2Group 邀请好友入群 */
     GCDSocketTCPCmdTypeInviteFrd2Group,
+    /**邀请好友之后,其他成员受到消息*/
+    GCDSocketTCPCmdTypenewMember2Group,
     /** hasBulletin 好友通知 */
     GCDSocketTCPCmdTypeHasBulletin,
     /**
@@ -171,14 +173,17 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
     /**delFriend 删除好友*/
     GCDSocketTCPCmdTypedelFriend,
     /**呼叫会话心跳（会话建立后发送，每隔60s）*/
-    GCDSocketTCPCmdTypecallHeartbeat
+    GCDSocketTCPCmdTypecallHeartbeat,
+    /**接受邀请*/
+    GCDSocketTCPCmdTypeacceptJoinGroup,
     
 };
 
 #define ZWGCDSocketTCPCmdTypeGet @[@"heartBeat",\
-@"updateuserstate",\
+@"updateUserStatus",\
 @"friendStatus",\
 @"inviteFrd2Group",\
+@"newMember2Group",\
 @"hasBulletin",\
 @"callUser",\
 @"CallGroup",\
@@ -210,7 +215,8 @@ typedef NS_ENUM(NSInteger,GCDSocketTCPCmdType){
 @"joinGroup",\
 @"ignoreBulletin",\
 @"delFriend",\
-@"callHeartbeat"]
+@"callHeartbeat",\
+@"acceptJoinGroup"]
 
 /** 枚举 to 字串 */
 #define ZWGCDSocketTCPCmdTypeString(type) ([ZWGCDSocketTCPCmdTypeGet objectAtIndex:type])

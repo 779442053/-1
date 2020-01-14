@@ -28,7 +28,7 @@
     [self setTitle:_isLinkman?@"联系人":@"邀请成员"];
     [self showLeftBackButton];
     [self.view addSubview:self.tableView];
-    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-77-64, SCREEN_WIDTH, 77)];
+    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-77, SCREEN_WIDTH, 77)];
     bottomView.hidden = _isLinkman?YES:NO;
     [bottomView addSubview:self.inviteBtn];
     [self.view addSubview:bottomView];
@@ -88,8 +88,8 @@
         
         [weakSelf.navigationController popViewControllerAnimated:YES];
     }
-    //MARK:邀请好友加群
     else{
+        ZWWLog(@"邀请好友加群")
         NSString *friendId = [_userIDArr componentsJoinedByString:@","];
         NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
         parma[@"cmd"] = @"inviteFrd2Group";
@@ -207,11 +207,12 @@
     return 60.0f;
 }
 #pragma mark - NewGroupViewCellDelegate
-// 选中成员
+
 -(void)selectCellWithSelectText:(NSString *)selectText
                        isSelect:(BOOL)isSelect
                       indexPath:(NSIndexPath *)indexPath
 {
+    ZWWLog(@"========%@   %d   %@",selectText,isSelect,indexPath)
     if (!self.dataSource || [self.dataSource count] <= indexPath.row) {
         MMLog(@"索引越界");
         return;
@@ -234,13 +235,14 @@
     }
     else if (model.isSelect && [_selectArray containsObject:selectText]) {
         model.isSelect = NO;
+        ZWWLog(@"111")
         if ([self.selectArray containsObject:selectText]) {
             [self.selectArray removeObject:selectText];
             [self.userIDArr removeObject:userId];
         }
     }
     else{
-        //群视频邀请人数限制
+        ZWWLog(@"群视频邀请人数限制或者邀请好友入群")
         if (self.isGroupVideo && [self.selectArray count] >= CALL_VEDIO1VM_MAX) {
             [MMProgressHUD showHUD:[NSString stringWithFormat:@"群视频一次最多邀请%d人",CALL_VEDIO1VM_MAX]];
             return;
@@ -263,7 +265,7 @@
 - (UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, ZWStatusAndNavHeight, SCREEN_WIDTH, SCREEN_HEIGHT-ZWStatusAndNavHeight) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, ZWStatusAndNavHeight, SCREEN_WIDTH, SCREEN_HEIGHT-ZWStatusAndNavHeight - ZWTabbarSafeBottomMargin) style:UITableViewStylePlain];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorColor = G_EEF0F3_COLOR;
         _tableView.showsVerticalScrollIndicator = NO;

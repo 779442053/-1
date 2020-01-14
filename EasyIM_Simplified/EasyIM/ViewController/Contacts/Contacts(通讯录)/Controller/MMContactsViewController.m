@@ -80,6 +80,7 @@ static MMContactsViewController *_shareInstance = nil;
     [super viewDidLoad];
     [self initView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(PushDataNotionfion:) name:IMPushData object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleFriendNotionfion:) name:delfriend object:nil];
     //MARK:下拉刷新
     WEAKSELF
     self.listTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
@@ -126,6 +127,12 @@ static MMContactsViewController *_shareInstance = nil;
 -(void)PushDataNotionfion:(NSNotification*)info{
     ZWWLog(@"受到的通知=%@",info)
 }
+-(void)deleFriendNotionfion:(NSNotification*)info{
+    ZWWLog(@"删除好友id=%@",info.object)
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self loadContactDataForRefresh:YES andAnimation:YES];
+    });
+}
 //MARK: - initView
 -(void)initView{
     [self.view addSubview:self.listTableView];
@@ -170,6 +177,8 @@ static MMContactsViewController *_shareInstance = nil;
             }
         }
     });
+    //需要区分什么通知,进而改变通讯录 数据源
+    
 }
 -(void)loadMoreData{
     WEAKSELF
@@ -207,7 +216,6 @@ static MMContactsViewController *_shareInstance = nil;
                     [muArrTemp addObject:model];
                     [blockSelf.muDicListData setValue:muArrTemp forKey:strKey];
                 }
-                
                 //[S] 索引排序(升序)
                 [blockSelf.muArrSectionData removeObject:kdefault_section_title];
                 
@@ -413,7 +421,7 @@ static MMContactsViewController *_shareInstance = nil;
                 if ([model isKindOfClass:[ContactsModel class]]) {
                     WEAKSELF
                     [[self.ViewModel.restUserNameCommand execute:@{@"muserid":model.userId,@"musername":remarkField.text}] subscribeNext:^(id  _Nullable x) {
-                        if ([x[@"code"] intValue] == 1) {
+                        if ([x[@"code"] intValue] == 0) {
                             model.remarkName = remarkField.text;
                             [weakSelf.listTableView reloadRowsAtIndexPaths:@[indexPath]
                                                             withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -435,10 +443,20 @@ static MMContactsViewController *_shareInstance = nil;
         if (arrTemp && [arrTemp count] > indexPath.row){
             ContactsModel *model = arrTemp[indexPath.row];
             if ([model isKindOfClass:[ContactsModel class]]) {
-                WEAKSELF
+                ZW(weakself)
                 [[self.ViewModel.deleteUserCommand execute:model.userId] subscribeNext:^(id  _Nullable x) {
                     if ([x[@"code"] intValue] == 0) {
-                        [weakSelf.listTableView beginUpdates];
+                        //删除最近联系人
+                        [[MMChatDBManager shareManager] deleteConversation:model.userId completion:^(NSString * _Nonnull aConversationId, NSError * _Nonnull aError) {
+                            if (!aError) {
+                                ZWWLog(@"成功")
+                            }else{
+                                ZWWLog(@"失败")
+                            }
+                        }];
+                        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                            [weakself loadContactDataForRefresh:YES andAnimation:YES];
+                        });
                     }
                 }];
             }
@@ -535,6 +553,28 @@ static MMContactsViewController *_shareInstance = nil;
                     if (self.PushARR.count) {
                         vc.newFriendsArr = self.PushARR;
                     }
+                    ZW(weakself)
+                    vc.changeStatusBlock = ^(NSMutableArray * _Nonnull arr) {
+                        weakself.PushARR = arr;
+                        ZWWLog(@"修改界面提示通知的数量")
+                        NSInteger mcount = weakself.PushARR.count;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+                            ContactsTableViewCell *cell = [self.listTableView cellForRowAtIndexPath:indexPath];
+                            if (cell) {
+                                [cell setRightBadgeForNO:mcount];
+                            }
+                            KinTabBarController *tabbar = (KinTabBarController *)weakself.tabBarController;
+                            if (tabbar) {
+                                if (mcount > 0) {
+                                    [tabbar showBadgeOnItemIndex:0 withValue:mcount];
+                                }
+                                else{
+                                    [tabbar hideBadgeOnItemIndex:0];
+                                }
+                            }
+                        });
+                    };
                     [self.navigationController pushViewController:vc animated:YES];
                 }
                     break;

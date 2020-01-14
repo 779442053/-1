@@ -117,7 +117,8 @@ static MMConversationHelper *shared = nil;
     
     //MARK:联系人
     MMConversationModel *model;
-    if (!aRecenContact.targetId.checkTextEmpty) {
+    if ([aRecenContact.targetType isEqualToString:@"chat"]) {
+        ZWWLog(@"当前聊天为一对一的单人聊天")
          model = [[MMConversationModel alloc] initWithToUid:aRecenContact.userId
                                                  toUserName:aRecenContact.latestnickname
                                                    nickName:aRecenContact.targetNick
@@ -127,9 +128,10 @@ static MMConversationHelper *shared = nil;
     }
     //MARK:联系群
     else{
-        model = [[MMConversationModel alloc] initWithGroupId:aRecenContact.targetId
-                                                   groupName:aRecenContact.targetName
-                                                   creatorId:aRecenContact.targetType
+        ZWWLog(@"当前聊天为群里面的聊天")
+        model = [[MMConversationModel alloc] initWithGroupId:aRecenContact.userId
+                                                   groupName:aRecenContact.latestnickname
+                                                   creatorId:aRecenContact.userId
                                                         mode:@"0"
                                                         time:aRecenContact.lastTime
                                                       notify:@""

@@ -69,6 +69,7 @@ FOUNDATION_EXTERN NSString *const focusRoomMember;
 FOUNDATION_EXTERN NSString *const unfocusRoomMember;
 FOUNDATION_EXTERN NSString *const getgrouptype;
 FOUNDATION_EXTERN NSString *const queryFileUpApiUrl;
+FOUNDATION_EXTERN NSString *const delMsgHis;
 @end
 
 NS_ASSUME_NONNULL_END

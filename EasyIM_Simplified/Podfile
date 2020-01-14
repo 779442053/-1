@@ -1,7 +1,7 @@
 # Uncomment this line to define a global platform for your project
 platform :ios, '10.0'
-target 'EasyIM' do
 #source 'https://github.com/CocoaPods/Specs.git'
+target 'EasyIM' do
 # Pods for EasyIM
  pod 'AFNetworking', '~>3.1.0'
  pod 'SDAutoLayout', '~> 2.1.7'
@@ -13,8 +13,8 @@ target 'EasyIM' do
  pod 'XMLDictionary', '~> 1.4.1'
  
  pod 'MJExtension'
- pod 'HTHorizontalSelectionList', '~> 0.7.4'
- pod 'ZFPlayer'
+ #pod 'HTHorizontalSelectionList', '~> 0.7.4'
+ #pod 'ZFPlayer'
  
  #约束布局
  pod 'Masonry'

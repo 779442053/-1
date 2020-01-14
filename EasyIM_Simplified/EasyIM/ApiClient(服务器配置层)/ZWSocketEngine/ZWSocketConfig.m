@@ -80,13 +80,6 @@ static ZWSocketConfig * _instance = nil;
 {
     return _instance;
 }
-#pragma mark - privatelyMethod
-/**
- 检查字符串是否可使用
-
- @param str <#str description#>
- @return <#return value description#>
- */
 + (BOOL)p_checkStringVaildWithStr:(NSString*)str{
     if (!str || [str isEqualToString:@""]) {
         return NO;

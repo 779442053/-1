@@ -121,6 +121,9 @@ NS_ASSUME_NONNULL_BEGIN
 toUserPhotoUrl:(NSString *)photoUrl
            cmd:(NSString *)cmd
     completion:(void(^) (MMMessage *message))aCompletionBlock;
+
+/**删除消息*/
+-(void)handleMessage:(MMMessage *)aMessage WithHandle:(NSInteger )handle;
 @end
 
 NS_ASSUME_NONNULL_END

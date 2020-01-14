@@ -54,7 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** 群是否免打扰*/
 @property (nonatomic, copy) NSString *notify;
 
-
+/** 群公告*/
+@property (nonatomic, copy) NSString *bulletin;
 - (NSString *)getTitle;
 
 

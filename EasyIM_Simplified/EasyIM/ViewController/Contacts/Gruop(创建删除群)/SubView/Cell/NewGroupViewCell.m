@@ -36,6 +36,7 @@
 }
 - (void)clickSelBtn:(UIButton *)sender
 {
+    sender.selected = !sender.selected;
     if (self.delegate && [self.delegate respondsToSelector:@selector(selectCellWithSelectText:isSelect:indexPath:)]) {
         [self.delegate selectCellWithSelectText:self.name.text
                                        isSelect:sender.isSelected

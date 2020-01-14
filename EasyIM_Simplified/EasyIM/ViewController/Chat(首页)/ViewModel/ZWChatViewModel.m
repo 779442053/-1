@@ -38,9 +38,10 @@
                     parma[@"userPsw"] = [ZWUserModel currentUser].userPsw;
                     parma[@"domain"] = @"9000";
                     parma[@"timeStamp"] = [MMDateHelper getNowTime];
-                    parma[@"oem"] = @"xire";
+                    parma[@"oem"] = @"";
                     parma[@"enc"] = @"0";
                     parma[@"zip"] = @"0";
+                    parma[@"netstatus"] = @"0";
                     [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
                         if (!error) {
                             //登录成功之后,就去监听是否有人向我发送音视频邀请
@@ -73,7 +74,7 @@
             parma[@"page"] = [NSString stringWithFormat:@"%ld",(long)self.Currentpage];
             parma[@"perpage"] = @"20";
             [self.request POST:getusernormal parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
-               // ZWWLog(@"最近联系人=%@",responseString)
+                ZWWLog(@"最近联系人=%@",responseString)
                 if ([responseString[code] intValue] == 1) {
                     //获取到最近联系人,将s本地数据库进行更新操作
                     //targettype 2最近联系人(默认) 12常用联系人 3最近群组 13常用群组4最近会议 14 常用会议
@@ -138,7 +139,14 @@
             parma[@"toID"] = input;
             parma[@"msg"] = [NSString stringWithFormat:@"你好!我是%@，请求加您为好友",[ZWUserModel currentUser].nickName];
             ZWWLog(@"添加朋友=%@",parma)
-           [ZWSocketManager SendDataWithData:parma];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
+                [subscriber sendCompleted];
+            }];
             [subscriber sendCompleted];
             return [RACDisposable disposableWithBlock:^{
                 

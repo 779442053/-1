@@ -170,7 +170,14 @@
     if ([model.latestHeadImage isEqualToString:@"tongzhi"]) {
         self.headImageView.image = [UIImage imageNamed:model.latestHeadImage];
     }else{
-        [self.headImageView sd_setImageWithURL:url placeholderImage:K_DEFAULT_USER_PIC];
+        if ([model.targetType isEqualToString:@"chat"]) {
+            [self.headImageView sd_setImageWithURL:url placeholderImage:K_DEFAULT_USER_PIC];
+        }else if ([model.targetType isEqualToString:@"groupchat"]){
+            self.headImageView.image = [UIImage imageNamed:@"contacts_group_icon"];;
+        }else{
+            ZWWLog(@"可能是其他类型")
+        }
+        
     }
     [self.nameLabel setText:model.latestnickname];
     [self.detailLabel setText:model.latestMsgStr];

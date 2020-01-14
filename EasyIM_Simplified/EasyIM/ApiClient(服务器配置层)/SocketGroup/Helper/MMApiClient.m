@@ -263,14 +263,12 @@ static NSMutableArray *_allSessionTask;
 #pragma mark - 内外部URL处理
 - (NSString *)urlControlWithURL:(NSString *)url param:(NSDictionary *)param
 {
-    
     NSLog(@"当前请求网址:%@",url);
-    
     if ([url rangeOfString:@"http:"].location != NSNotFound || [url rangeOfString:@"https:"].location != NSNotFound) {
         return url;
     }
-    NSLog(@"当前请求网址%@",[NSString stringWithFormat:@"%@%@",G_HTTP_URL,url]);
-    return [NSString stringWithFormat:@"%@%@",G_HTTP_URL,url];
+    NSLog(@"当前请求网址%@",[NSString stringWithFormat:@"%@%@",HTURL,url]);
+    return [NSString stringWithFormat:@"%@%@",HTURL,url];
 }
 
 

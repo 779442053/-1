@@ -31,14 +31,14 @@
                            [subscriber sendNext:@{@"code":@"0"}];
                            [subscriber sendCompleted];
                        }else{
-                           NSString *message = [NSString stringWithFormat:@"预登陆失败,原因:%@",responseString[@"message"]];
+                           NSString *message = [NSString stringWithFormat:@"注册失败,原因:%@",responseString[msg]];
                            [YJProgressHUD showError:message];
                            [subscriber sendNext:@{@"code":@"1"}];
                            [subscriber sendCompleted];
                        }
                    }else{
                        ZWWLog(@"注册失败方法")
-                       [MMProgressHUD showError:@"手机号已经存在"];
+                       [MMProgressHUD showError:responseString[msg]];
                        [subscriber sendNext:@{@"code":@"1"}];
                        [subscriber sendCompleted];
                    }

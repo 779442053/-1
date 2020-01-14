@@ -58,7 +58,7 @@
        // _accountField.keyboardType = UIKeyboardTypePhonePad;
         _accountField.returnKeyType = UIReturnKeyNext;
         _accountField.delegate = self;
-        _accountField.placeholder = @"手机号码";
+        _accountField.placeholder = @"账号或手机号";
         //显示清除按钮
         _accountField.clearButtonMode = UITextFieldViewModeWhileEditing;
         _accountField.leftPadding = 0;
@@ -199,7 +199,7 @@
         return;
     }
     NSDictionary *dict = @{
-       @"loginType":@"2",
+       @"loginType":@"410",
        @"deviceDesc":[UIDevice currentDevice].name,
        @"username":_accountField.text,
        @"domain":@"9000",

@@ -28,6 +28,7 @@
 #import "ZWChatViewModel.h"
 #import "LoginVC.h"
 #import "NewFriendModel.h"
+#import "MMRecentConVersationModel.h"
 static NSString *const identifier = @"ContactTableViewCell";
 @interface ChatViewController ()<UITableViewDelegate,UITableViewDataSource,MMChatManager,YBPopupMenuDelegate,SweepViewControllerDelegate>
 @property (nonatomic, strong) NSMutableArray *laterPersonDataArr;
@@ -346,12 +347,10 @@ static NSString *const identifier = @"ContactTableViewCell";
     
     collectRowAction.backgroundColor = [UIColor grayColor];
     topRowAction.backgroundColor     = [UIColor orangeColor];
-    
     NSMutableArray *rowActionArr = [[NSMutableArray alloc] init];
     [rowActionArr addObject:deleteRowAction];
     [rowActionArr addObject:collectRowAction];
     [rowActionArr addObject:topRowAction];
-    
     return  rowActionArr;
 }
     
@@ -367,6 +366,27 @@ static NSString *const identifier = @"ContactTableViewCell";
             ZWWLog(@"进到通知界面")
             AddFriendStatusViewController *vc = [[AddFriendStatusViewController alloc]init];
             vc.newFriendsArr = self.pushListARR;
+            ZW(weakself)
+            vc.changeStatusBlock = ^(NSMutableArray * _Nonnull arr) {
+                if (arr.count == 0) {
+                    [weakself.pushListARR removeAllObjects];
+                }else{
+                    weakself.pushListARR = arr;
+                }
+                ZWWLog(@"修改界面提示通知的数量")
+                NSInteger mcount = weakself.pushListARR.count;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    KinTabBarController *tabbar = (KinTabBarController *)weakself.tabBarController;
+                    if (tabbar) {
+                        if (mcount > 0) {
+                            [tabbar showBadgeOnItemIndex:0 withValue:mcount];
+                        }
+                        else{
+                            [tabbar hideBadgeOnItemIndex:0];
+                        }
+                    }
+                });
+            };
             [self.navigationController pushViewController:vc animated:YES];
         }
         
@@ -381,9 +401,8 @@ static NSString *const identifier = @"ContactTableViewCell";
     if (self.laterPersonDataArr && [self.laterPersonDataArr count] > indexPath.row) {
         model = self.laterPersonDataArr[indexPath.row];
     }
-    
     WEAKSELF
-    [[MMChatDBManager shareManager] deleteConversation:model.targetId
+    [[MMChatDBManager shareManager] deleteConversation:model.userId
                                             completion:^(NSString * _Nonnull aConversationId,
                                                          NSError * _Nonnull aError) {
         if (!aError) {
@@ -399,7 +418,8 @@ static NSString *const identifier = @"ContactTableViewCell";
     MMRecentContactsModel *conversationModel;
     NSInteger index = 0;
     for (MMRecentContactsModel *conversation in self.laterPersonDataArr) {
-        if ([conversation.userId isEqualToString:toUser]) {
+        NSString *contactUserID = [NSString stringWithFormat:@"%@",conversation.userId];
+        if ([contactUserID isEqualToString:toUser]) {
             conversationModel = conversation;
             break;
         }
@@ -409,15 +429,21 @@ static NSString *const identifier = @"ContactTableViewCell";
 }
 - (void)addOrUpdateConversation:(NSString *)conversationName latestMessage:(MMMessageFrame *)message isRead:(BOOL)isRead
 {
+    //如何判定到底是不是已读消息
+    ZWWLog(@"判断当前联系人的id 是否在我的最近联系人里面.如果不在,则证明是第一次发送")
     MMRecentContactsModel *conversation = [self isExistConversationWithToUser:conversationName];
     if (conversation) {
-        ZWWLog(@"当前会话未开启，未读消息")
-        conversation.latestMsgStr = message.aMessage.slice.content;
+        ZWWLog(@"当前会话未开启，是未读消息 == 不是第一次发送")
+        conversation.latestMsgStr = [MMRecentConVersationModel getMessageStrWithMessage:message.aMessage];
         conversation.latestMsgTimeStamp = message.aMessage.timestamp;
+        conversation.latestHeadImage = message.aMessage.fromPhoto;
+        //需要判断是群聊还是单聊
+        conversation.latestnickname = message.aMessage.fromUserName;
+        conversation.targetType = message.aMessage.type;
         [self updateLatestMsgForConversation:conversation latestMessage:message isRead:isRead];
     }
     else {
-        ZWWLog(@"如果当前会话开启，则已读消息")
+        ZWWLog(@"当前会话开启，是已读消息=== 是第一次发送")
         [self addConversationWithMessage:message conversationId:conversationName isReaded:isRead];
     }
 }
@@ -427,6 +453,18 @@ static NSString *const identifier = @"ContactTableViewCell";
     MMRecentContactsModel *conversation = [[MMRecentContactsModel alloc] init];
     conversation.unReadCount = read?0:1;
     conversation.userId = conversationId;
+    
+    conversation.latestMsgStr = [MMRecentConVersationModel getMessageStrWithMessage:message.aMessage];
+    conversation.latestMsgTimeStamp = message.aMessage.timestamp;
+    conversation.latestHeadImage = message.aMessage.fromPhoto;
+    //groupName  需要区分群或者单人聊天
+    conversation.targetType = message.aMessage.type;
+    if ([conversation.targetType isEqualToString:@"chat"]) {
+        conversation.latestnickname = message.aMessage.fromUserName;
+    }else{
+        ZWWLog(@"群聊,应该获取群的名字")
+        conversation.latestnickname = message.aMessage.fromUserName;
+    }
     [self.laterPersonDataArr insertObject:conversation atIndex:0];
     [self.tableView reloadData];
 }

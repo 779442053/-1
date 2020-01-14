@@ -95,7 +95,11 @@ static MMClient *helper = nil;
                                                        cmd:@"sendMsg"
                                                      cType:MMConversationType_Chat
                                                messageBody:chatContentModel];
-    
+    if (!isSender) {
+        ZWWLog(@"别人发送的消息111ID =\n %@ ",message.msgID)
+        message.msgID = userDic[@"msgID"];
+        ZWWLog(@"别人发送的消息ID =\n %@ ",message.msgID)
+    }
     message.localtime = [[NSDate date] timeStamp];
     //消息类型===当对方撤回消息的时候或者是系统消息的时候,需要手动封装消息
     message.messageType = [MMRecentConVersationModel getMessageType:message.slice.type];
@@ -118,10 +122,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [_multiDelegate clientManager:self
                    didReceivedMessage:message];
     }
-    
 }
-
-
 - (void)addHandleGroupMessage:(NSDictionary *)aMessage
 {
     ZWWLog(@"收到群聊消息==================%@",aMessage);
@@ -130,18 +131,26 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         MMLog(@"消息格式有误！详见：%@",userDic);
         return;
     }
+    //外部
     MMReceiveMessageModel *receiveModel = [MMReceiveMessageModel mj_objectWithKeyValues:userDic];
     NSString * fromID = [NSString stringWithFormat:@"%@",receiveModel.fromID];
     NSString * userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
     if ([fromID isEqualToString:userID] && !receiveModel.isInsert) {
         return;
     }
-
-    MMChatContentModel *chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"content"][@"slice"]];
+   //消息内容
+    MMChatContentModel *chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"msg"][@"slice"]];
     if ([[userDic allKeys] containsObject:@"msg"]) {
-        chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"msg"][@"slice"]];
+        if ([userDic[@"msg"][@"slice"] isKindOfClass:[NSArray class]]) {
+            NSArray *slicearr = userDic[@"msg"][@"slice"];
+            if (slicearr.count) {
+                NSDictionary *sliceDict = slicearr[0];
+                chatContentModel = [MMChatContentModel yy_modelWithDictionary:sliceDict];
+            }
+        }else{
+            chatContentModel = [MMChatContentModel yy_modelWithDictionary:userDic[@"msg"][@"slice"]];
+        }
     }
-    
     NSString *fname = [ZWUserModel currentUser].nickName;
     MMMessage *message = [[MMMessage alloc] initWithToUser:receiveModel.groupID
                                                 toUserName:receiveModel.fromNick.checkTextEmpty?receiveModel.fromNick:receiveModel.fromName
@@ -150,7 +159,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                                   chatType:@"groupchat"
                                                   isSender:NO
                                                        cmd:@"sendMsg"
-                                                     cType:MMConversationType_Chat
+                                                     cType:MMConversationType_Group
                                                messageBody:chatContentModel];
     
     message.isInsert = receiveModel.isInsert;
@@ -159,7 +168,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     message.timestamp = [self transTimeStamp:receiveModel.time];
     message.messageType = [MMRecentConVersationModel getMessageType:message.slice.type];
     message.fromPhoto = receiveModel.fromPhoto;
-    
+    message.conversation = receiveModel.groupID;
     // 消息插入数据库
     [[MMChatDBManager shareManager] addMessage:message];
     

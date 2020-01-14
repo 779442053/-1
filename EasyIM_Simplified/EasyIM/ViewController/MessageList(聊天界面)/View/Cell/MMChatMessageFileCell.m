@@ -75,7 +75,6 @@
     
     BOOL isExists = [MMFileTool fileExistsAtPath:localPath];
     
-    
     //如果文件不存在,则去下载
     if (!isExists) {
         self.fileButton.progressView.hidden = NO;

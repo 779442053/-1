@@ -18,38 +18,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "464009CB-DD8B-4BEE-BCD6-99FAABBFF324"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "EasyIM/ViewController/Contacts/Contacts(&#x901a;&#x8baf;&#x5f55;)/Controller/Friend(&#x6dfb;&#x52a0;&#x597d;&#x54df;)/FriendInfoViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "-zw_addSubviews"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7DDB5DAE-6631-4CC9-8D11-C3A1D401A3DF"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "EasyIM/ViewController/Contacts/Contacts(&#x901a;&#x8baf;&#x5f55;)/Controller/Friend(&#x6dfb;&#x52a0;&#x597d;&#x54df;)/FriendInfoViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
-            landmarkName = "-zw_addSubviews"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "D5F218E9-87EB-4A37-831E-67456A1B5F20"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -89,8 +57,8 @@
             filePath = "EasyIM/ViewController/MessageList(&#x804a;&#x5929;&#x754c;&#x9762;)/Controller/MMChatViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1187"
-            endingLineNumber = "1187"
+            startingLineNumber = "1164"
+            endingLineNumber = "1164"
             landmarkName = "-addCurrentConversationToChatList"
             landmarkType = "7">
          </BreakpointContent>
@@ -98,49 +66,65 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8F92AF3A-F74C-48B5-BABD-01AB6D302ED7"
+            uuid = "B5444B93-E25F-44F4-88DE-4E2A345AFF0B"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "EasyIM/ViewController/Contacts/Contacts(&#x901a;&#x8baf;&#x5f55;)/ViewModel/ZWFriendViewModel.m"
+            filePath = "EasyIM/ViewController/Contacts/Gruop(&#x521b;&#x5efa;&#x5220;&#x9664;&#x7fa4;)/Controller/MMGroupDetailViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "-zw_initialize"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
+            landmarkName = "-imagePickerController:didFinishPickingMediaWithInfo:"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "8F92AF3A-F74C-48B5-BABD-01AB6D302ED7 - ecba4fe02c457fc5"
+                  uuid = "B5444B93-E25F-44F4-88DE-4E2A345AFF0B - 56b5ef397c27559"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "__34-[ZWFriendViewModel zw_initialize]_block_invoke_7"
+                  symbolName = "-[MMGroupDetailViewController setGroupChatBg:]"
                   moduleName = "EasyIM"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/step_zhang/Desktop/EasyIM_Simplified2/Code/EasyIM_Simplified/EasyIM/ViewController/Contacts/Contacts(%E9%80%9A%E8%AE%AF%E5%BD%95)/ViewModel/ZWFriendViewModel.m"
+                  urlString = "file:///Users/step_zhang/Desktop/EasyIM_Simplified2/Code/EasyIM_Simplified/EasyIM/ViewController/Contacts/Gruop(%E5%88%9B%E5%BB%BA%E5%88%A0%E9%99%A4%E7%BE%A4)/Controller/MMGroupDetailViewController.m"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "108"
-                  endingLineNumber = "108"
-                  offsetFromSymbolStart = "496">
+                  startingLineNumber = "415"
+                  endingLineNumber = "415"
+                  offsetFromSymbolStart = "84">
                </Location>
                <Location
-                  uuid = "8F92AF3A-F74C-48B5-BABD-01AB6D302ED7 - ecba4fe02ca57fc6"
+                  uuid = "B5444B93-E25F-44F4-88DE-4E2A345AFF0B - c8a7a0bbeb353ec7"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "__34-[ZWFriendViewModel zw_initialize]_block_invoke_8"
+                  symbolName = "__46-[MMGroupDetailViewController setGroupChatBg:]_block_invoke"
                   moduleName = "EasyIM"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/step_zhang/Desktop/EasyIM_Simplified2/Code/EasyIM_Simplified/EasyIM/ViewController/Contacts/Contacts(%E9%80%9A%E8%AE%AF%E5%BD%95)/ViewModel/ZWFriendViewModel.m"
+                  urlString = "file:///Users/step_zhang/Desktop/EasyIM_Simplified2/Code/EasyIM_Simplified/EasyIM/ViewController/Contacts/Gruop(%E5%88%9B%E5%BB%BA%E5%88%A0%E9%99%A4%E7%BE%A4)/Controller/MMGroupDetailViewController.m"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "109"
-                  endingLineNumber = "109"
-                  offsetFromSymbolStart = "160">
+                  startingLineNumber = "416"
+                  endingLineNumber = "416"
+                  offsetFromSymbolStart = "64">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "04636DCB-3D2E-4FED-AD7D-A1911064A261"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "EasyIM/Helper/MMClient.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
+            landmarkName = "-addHandleGroupMessage:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

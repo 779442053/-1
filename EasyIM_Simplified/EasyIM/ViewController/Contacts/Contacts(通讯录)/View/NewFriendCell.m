@@ -137,11 +137,11 @@
             break;
         case BULLETIN_TYPE_BE_INVITE_INTO_GROUP://邀请加入群
         {
-            self.certainBtn.userInteractionEnabled = YES;
+            self.certainBtn.userInteractionEnabled = NO;
             self.infoLabel.text = @"邀请您加入群聊";
-            [self.certainBtn setTitle:@"同意加入群" forState:UIControlStateNormal];
-            self.certainBtn.backgroundColor = [UIColor colorWithHexString:@"#01A1EF"];
-            [self.certainBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [self.certainBtn setTitle:@"知道了" forState:UIControlStateNormal];
+           [self.certainBtn setBackgroundColor:[UIColor whiteColor]];
+            [self.certainBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         }
             break;
         case BULLETIN_TYPE_BE_KICK_OUT_GROUP://被提出群
@@ -153,8 +153,27 @@
             [self.certainBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         }
             break;
+        case BULLETIN_TYPE_NEW_GROUP_MEMBER://新成员加入（群）
+        {
+            self.certainBtn.userInteractionEnabled = NO;
+            self.infoLabel.text = [NSString stringWithFormat:@"%@ 加入群聊",model.fromNick];
+            [self.certainBtn setTitle:@"有新成员加入" forState:UIControlStateNormal];
+            [self.certainBtn setBackgroundColor:[UIColor whiteColor]];
+            [self.certainBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        }
+            break;
+        case BULLETIN_TYPE_APPLY_JOIN_GROUP://申请加入群
+           {
+               self.certainBtn.userInteractionEnabled = YES;
+               self.infoLabel.text = [NSString stringWithFormat:@"%@ 申请加入群聊",model.fromNick];
+               [self.certainBtn setTitle:@"同意或拒绝" forState:UIControlStateNormal];
+               self.certainBtn.backgroundColor = [UIColor colorWithHexString:@"#01A1EF"];
+               [self.certainBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+           }
+               break;
         default:
             {
+                ZWWLog(@"未知类型= %lu",(unsigned long)model.bulletinType)
                 self.certainBtn.userInteractionEnabled = NO;
                 self.infoLabel.text = @"未知通知类型";
                 [self.certainBtn setTitle:@"未知" forState:UIControlStateNormal];

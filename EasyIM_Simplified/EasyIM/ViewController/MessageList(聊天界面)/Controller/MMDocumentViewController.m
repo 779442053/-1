@@ -27,7 +27,7 @@
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight - ZWTabbarSafeBottomMargin) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate   = self;
-        _tableView.firstReload = YES;
+        //_tableView.firstReload = YES;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
     return _tableView;

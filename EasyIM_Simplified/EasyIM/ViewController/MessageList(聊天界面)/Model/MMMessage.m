@@ -29,12 +29,13 @@
         _toUserName = toUserName;
         _fromUserName = fromUserName;
         _fromID = fromUser;
-        _type = chatType;//单聊,群聊,视频,语音,文件,联系人,位置
+        _type = chatType;//单聊,群聊,
         _sessionID = sessionId;
+        _isSender = isSender;
+        //判断是别人发的 还是自己发的
         // 在这里,配置messid  因为进到聊天界面,会创建当前message 对象,保证唯一性和全局性
         _msgID = [self messageIDWithFromid:fromUser ToId:toUser];
-        _isSender = isSender;
-        _cType = cType;
+        _cType = cType;//视频,语音,文件,联系人,位置
         self.cmd = cmd;
         self.slice = body;
     }

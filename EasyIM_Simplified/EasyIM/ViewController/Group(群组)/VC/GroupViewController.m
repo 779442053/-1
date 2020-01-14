@@ -41,6 +41,21 @@ static NSString *const identifier = @"ContactTableViewCell";
     [rightPluss setImage:[UIImage imageNamed:@"添加"] forState:UIControlStateNormal];
     [self.navigationBgView addSubview:rightSearch];
     [self.navigationBgView addSubview:rightPluss];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupDelect:) name:@"groupdelect" object:nil];
+}
+-(void)groupDelect:(NSNotification *)info{
+    id object = info.object;
+    NSString *groupid = [NSString stringWithFormat:@"%@",object];
+    for (int i = 0; i < self.groupDataList.count; i++) {
+        ZWGroupModel *model = self.groupDataList[i];
+        NSString *modelid = [NSString stringWithFormat:@"%@",model.ID];
+        if ([groupid isEqualToString:modelid]) {
+            ZWWLog(@"删除这个我退出的群=%@",groupid)
+            [self.groupDataList removeObject:model];
+            [self.tableView reloadData];
+        }
+    }
 }
 -(void)rightAction{
      SearchFriendsViewController *searchVC = [[SearchFriendsViewController alloc] init];
@@ -87,6 +102,7 @@ static NSString *const identifier = @"ContactTableViewCell";
             [YJProgressHUD showMessage:@"不能添加自己为好友"];
             return;
         }
+        
         [[self.ViewModel.addFriendCommand execute:strId] subscribeNext:^(id  _Nullable x) {
             if ([x[@"code"] intValue] == 0) {
                 [YJProgressHUD showSuccess: @"请求成功"];
@@ -118,11 +134,7 @@ static NSString *const identifier = @"ContactTableViewCell";
     [[self.ViewModel.requestCommand execute:nil] subscribeNext:^(id  _Nullable x) {
         [self.tableView.mj_header endRefreshing];
         if ([x[@"code"] intValue] == 0) {
-            BOOL IsMore = [x[@"isMore"] boolValue];
             self.groupDataList = x[@"res"];
-            if (!IsMore) {
-                [self.tableView.mj_footer endRefreshingWithNoMoreData];
-            }
             [self.tableView reloadData];
         }
     }];

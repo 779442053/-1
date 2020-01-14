@@ -20,16 +20,22 @@
 @property (strong, nonatomic)  UILabel *nickLable;
 @property (strong, nonatomic)  UILabel *desLable;
 @property (strong, nonatomic)  UIButton *addBtn;
+@property (strong, nonatomic)  UIButton *deleBtn;
 @end
 
 @implementation FriendInfoViewController
-
-//MARK: - override
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setTitle:@"详细资料"];
     [self showLeftBackButton];
     [self getUserInfo];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ChangeName:) name:ChangeFriendName object:nil];
+}
+-(void)ChangeName:(NSNotification *)notion{
+    ZWWLog(@"受到通知=%@",notion)
+    NSString *name = [NSString stringWithFormat:@"%@",notion.object];
+    self.nickLable.text = name;
 }
 -(void)zw_addSubviews{
     UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, ZWStatusAndNavHeight + 15, KScreenWidth, 70)];
@@ -88,39 +94,70 @@
         make.right.mas_equalTo(bottomView.mas_right).with.mas_offset(-17);
         make.size.mas_equalTo(CGSizeMake(7, 11));
     }];
-    [bottomView addPanGestureRecognizer:^(UIPanGestureRecognizer * _Nonnull recognizer, NSString * _Nonnull gestureId) {
+    [bottomView addTapGestureRecognizer:^(UITapGestureRecognizer * _Nonnull recognizer, NSString * _Nonnull gestureId) {
         ZWWLog(@"设置备注")
         EditFriendRemarkController *editRemarkVC = [[EditFriendRemarkController alloc] init];
         editRemarkVC.strRemarkId = self.userInfoDic.userid;
+        editRemarkVC.NickNmae = self.userInfoDic.nickname;
         editRemarkVC.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:editRemarkVC animated:YES];
     }];
+    
     
     self.addBtn.frame = CGRectMake(10, CGRectGetMaxY(bottomView.frame) + 38, KScreenWidth - 20, 40);
     [self.view addSubview:self.addBtn];
     [self.addBtn setLayerBorderWidth:0 borderColor:nil cornerRadius:5];
     
     [[self.addBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
-         if (self.userInfoDic && self.userInfoDic.userid.checkTextEmpty) {
-             [self.navigationController popToRootViewControllerAnimated:YES];
-             ContactsModel *model = [[ContactsModel alloc] init];
-             model.photoUrl = self.userInfoDic.photoUrl;
-             model.userId = self.userId;
-             model.cmd = @"sendMsg";
-             model.userName = self.userInfoDic.nickname.length ? self.userInfoDic.nickname : self.userInfoDic.username;
-             [[NSNotificationCenter defaultCenter] postNotificationName:CHAT_PUSHVIEWCONTROLLER object:model];
-         }
-         else{
-             [MMProgressHUD showHUD:@"用户信息不存在"];
-         }
+        if ([self.userInfoDic.is_fr intValue] == 0) {
+            [self addFriend];
+        }else{
+            if (self.userInfoDic && self.userInfoDic.userid.checkTextEmpty) {
+                [self.navigationController popToRootViewControllerAnimated:YES];
+                ContactsModel *model = [[ContactsModel alloc] init];
+                model.photoUrl = self.userInfoDic.photoUrl;
+                model.userId = self.userId;
+                model.cmd = @"sendMsg";
+                model.userName = self.userInfoDic.nickname.length ? self.userInfoDic.nickname : self.userInfoDic.username;
+                [[NSNotificationCenter defaultCenter] postNotificationName:CHAT_PUSHVIEWCONTROLLER object:model];
+            }
+            else{
+                [MMProgressHUD showHUD:@"用户信息不存在"];
+            }
+        }
     }];
-     UIButton *deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    deleteBtn.frame = CGRectMake(10,CGRectGetMaxY(self.addBtn.frame)+20, SCREEN_WIDTH - 20, 45);
-    [deleteBtn setTitle:@"删除好友" forState:UIControlStateNormal];
-    [deleteBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    deleteBtn.backgroundColor = [UIColor whiteColor];
-    [deleteBtn addTarget:self action:@selector(deletefriend) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:deleteBtn];
+    
+    [self.view addSubview:self.deleBtn];
+    [[self.deleBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
+        [self deletefriend];
+    }];
+}
+-(void)addFriend{
+    NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+       parma[@"type"] = @"req";
+       parma[@"cmd"] = @"addFriend";
+       parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+       parma[@"toID"] = self.userInfoDic.userid;
+       parma[@"msg"] = [NSString stringWithFormat:@"你好!我是%@，请求加您为好友",[ZWUserModel currentUser].nickName];
+       ZWWLog(@"添加朋友=%@",parma)
+    [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+        if (!error) {
+            [YJProgressHUD showSuccess:@"申请成功,等待对方确认"];
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            [YJProgressHUD showError:data[@"err"]];
+        }
+    }];
+}
+-(UIButton *)deleBtn{
+    if (_deleBtn == nil) {
+        _deleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _deleBtn.frame = CGRectMake(10,CGRectGetMaxY(self.addBtn.frame)+20, SCREEN_WIDTH - 20, 45);
+        [_deleBtn setTitle:@"删除好友" forState:UIControlStateNormal];
+        [_deleBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        _deleBtn.backgroundColor = [UIColor whiteColor];
+    }
+    return _deleBtn;
 }
 //MARK: - 获取用户详细信息
 - (void)getUserInfo {
@@ -139,6 +176,12 @@
             }else{
                 //默认女
                 self.seximageV.image = [UIImage imageNamed:@"sexWomen"];
+            }
+            
+            if ([self.userInfoDic.is_fr intValue] == 0) {
+                //不是好友
+                self.deleBtn.hidden = YES;
+                [self.addBtn setTitle:@"添加好友" forState:UIControlStateNormal];
             }
         }
     }];
@@ -162,15 +205,21 @@
 }
 //删除好友
 - (void)toDeletefriend {
-    NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
-    parma[@"type"] =@"req";
-    parma[@"xns"] = @"xns_user";
-    parma[@"timeStamp"] = [MMDateHelper getNowTime];
-    parma[@"cmd"] = @"delFriend";
-    parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;;
-    parma[@"userId"] = [ZWUserModel currentUser].userId;
-    parma[@"frdId"] = self.userInfoDic.userid;
-    [ZWSocketManager SendDataWithData:parma];
+    //走htttp
+    [[self.ViewModel.deleteUserCommand execute:self.userInfoDic.userid] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            [[MMChatDBManager shareManager] deleteConversation:self.userInfoDic.userid completion:^(NSString * _Nonnull aConversationId, NSError * _Nonnull aError) {
+                if (!aError) {
+                    ZWWLog(@"成功")
+                }else{
+                    ZWWLog(@"失败")
+                }
+            }];
+            [[NSNotificationCenter defaultCenter] postNotificationName:delfriend object:self.userInfoDic.userid];
+            [self.navigationController popToViewController:self.navigationController.viewControllers[0] animated:YES];
+        }
+    }];
+
 }
 -(ZWFriendViewModel *)ViewModel{
     if (_ViewModel == nil) {
@@ -225,5 +274,7 @@
     }
     return _addBtn;
 }
-
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ChangeFriendName object:nil];
+}
 @end

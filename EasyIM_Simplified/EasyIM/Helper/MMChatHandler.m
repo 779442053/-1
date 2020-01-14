@@ -131,7 +131,7 @@
 }
 //对已有的消息 进行操作
 -(void)handleMessage:(MMMessage *)aMessage WithHandle:(NSInteger )handle{
-    //handle  区分需要做些什么操作
+    ZWWLog(@"对消息进行处理  区分需要做些什么操作=%ld",(long)handle)
     if (handle == 0) {
         //删除本地的消息
         [[MMChatDBManager shareManager] deleMessage:aMessage];

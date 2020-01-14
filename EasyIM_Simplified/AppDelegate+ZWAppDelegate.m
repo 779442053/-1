@@ -10,7 +10,6 @@
 #import <IQKeyboardManager.h>
 #import "MMEasyIMHelper.h"
 #import "KinTabBarController.h"
-#import "UINavigationBarSet.h"
 #import "LoginVC.h"
 #import "ZWDataManager.h"
 

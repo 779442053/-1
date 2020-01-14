@@ -22,10 +22,11 @@
     self.GetChartLishDataCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
+            [YJProgressHUD showLoading:@"loading..."];
             NSDictionary *parma = input;
             [self.request POST:getmsghis parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 ZWWLog(@"liao聊天记录=%@",responseString)
-                [YJProgressHUD showLoading:@"loading..."];
+                [YJProgressHUD hideHUD];
                 if ([responseString[@"code"] intValue] == 1) {
                     NSMutableArray *array = [NSMutableArray array];
                     if (responseString[@"data"][@"data"]){
@@ -220,12 +221,6 @@
                 ZWWLog(@"==群成员=%@",responseString)
                 if (responseString && [responseString[@"code"] integerValue] == 1){
                     NSDictionary *_dicTemp = responseString[@"data"][@"data"];
-                    //设置创建者编号
-//                    NSString *cid;
-//                    if (_dicTemp && [[_dicTemp allKeys] containsObject:@"createID"]) {
-//                        cid = [NSString stringWithFormat:@"%@",_dicTemp[@"createID"]];
-//                        [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp[@"list"],@"cid":cid}];
-//                    }
                     if (_dicTemp && [[_dicTemp allKeys] containsObject:@"list"]) {
                         [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp[@"list"]}];
                     }
@@ -239,7 +234,48 @@
             }];
         }];
     }];
-    
+    self.DownLoadFireCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+        return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+            //[YJProgressHUD showLoading:@"loading..."];
+            [[MMApiClient sharedClient] DOWNLOAD:input fileDir:kChatRecoderPath progress:nil success:^(NSString * _Nonnull filePath) {
+                [YJProgressHUD hideHUD];
+                [subscriber sendNext:@{@"code":@"0",@"res":filePath}];
+                [subscriber sendCompleted];
+            } failure:^(NSError * _Nonnull error) {
+                [YJProgressHUD hideHUD];
+                [subscriber sendNext:@{@"code":@"1"}];
+                [subscriber sendCompleted];
+            }];
+            return [RACDisposable disposableWithBlock:^{
+                
+            }];
+        }];
+    }];
+    //删除聊天消息
+    self.DeleMessageHistoryCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+        return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+            [YJProgressHUD showLoading:@"删除中..."];
+            NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+            parma[@"id"] = input;
+            [self.request POST:delMsgHis parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+                ZWWLog(@"删除聊天消息=%@",responseString)
+                [YJProgressHUD hideHUD];
+                if ([responseString[code] intValue] == 1) {
+                    [YJProgressHUD showSuccess:responseString[msg]];
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                    [YJProgressHUD showError:responseString[msg]];
+                }
+                [subscriber sendCompleted];
+            } failure:^(ZWRequest *request, NSError *error) {
+                [subscriber sendCompleted];
+            }];
+            return [RACDisposable disposableWithBlock:^{
+                
+            }];
+        }];
+    }];;
     
 }
 @end

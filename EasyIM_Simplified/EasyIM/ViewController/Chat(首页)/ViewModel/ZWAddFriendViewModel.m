@@ -27,7 +27,14 @@
             parma[@"toID"] = input;
             parma[@"msg"] = [NSString stringWithFormat:@"你好!我是%@，请求加您为好友",[ZWUserModel currentUser].nickName];
             ZWWLog(@"添加朋友=%@",parma)
-            [ZWSocketManager SendDataWithData:parma];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
+                [subscriber sendCompleted];
+            }];
             [subscriber sendCompleted];
             return [RACDisposable disposableWithBlock:^{
                 

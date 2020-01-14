@@ -57,15 +57,22 @@
     //添加好友
     self.addFriendCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
-           //  @strongify(self)
+             //@strongify(self)
             NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
             parma[@"type"] = @"req";
             parma[@"cmd"] = @"addFriend";
-            parma[@"sessionID"] = [ZWUserModel currentUser].userId;
+            parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
             parma[@"toID"] = input;
             parma[@"msg"] = [NSString stringWithFormat:@"你好!我是%@，请求加您为好友",[ZWUserModel currentUser].nickName];
             ZWWLog(@"添加朋友=%@",parma)
-            [ZWSocketManager SendDataWithData:parma];
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
+                [subscriber sendCompleted];
+            }];
             [subscriber sendCompleted];
             return [RACDisposable disposableWithBlock:^{
                 
@@ -80,8 +87,15 @@
             parma[@"sessionID"] = [ZWUserModel currentUser].userId;
             parma[@"groupID"] = input;
             parma[@"msg"] = [NSString stringWithFormat:@"你好!我是%@，请求加入该群",[ZWUserModel currentUser].nickName];
-            ZWWLog(@"添加朋友=%@",parma)
-            [ZWSocketManager SendDataWithData:parma];
+            ZWWLog(@"添加群=%@",parma)
+            [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                if (!error) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
+                [subscriber sendCompleted];
+            }];
             [subscriber sendCompleted];
             return [RACDisposable disposableWithBlock:^{
                 

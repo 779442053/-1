@@ -16,21 +16,13 @@
              @strongify(self)
             NSMutableDictionary *parma  = [[NSMutableDictionary alloc]init];
             parma[@"groupid"] = input;
-            parma[@"page"] = @"0";
-            parma[@"perpage"] = @"100";
+//            parma[@"page"] = @"0";
+//            parma[@"perpage"] = @"100";
             [self.request POST:groupmember parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
                 ZWWLog(@"==群成员=%@",responseString)
                 if (responseString && [responseString[@"code"] integerValue] == 1){
                     NSDictionary *_dicTemp = responseString[@"data"][@"data"];
-                    //设置创建者编号
-                    //NSString *cid;
-//                    if (_dicTemp && [[_dicTemp allKeys] containsObject:@"createID"]) {
-//                        cid = [NSString stringWithFormat:@"%@",_dicTemp[@"createID"]];
-//                        [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp[@"list"],@"cid":cid}];
-//                    }
-                    if (_dicTemp && [[_dicTemp allKeys] containsObject:@"list"]) {
-                        [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp[@"list"]}];
-                    }
+                    [subscriber sendNext:@{@"code":@"0",@"res":_dicTemp}];
                 }
                 [subscriber sendCompleted];
             } failure:^(ZWRequest *request, NSError *error) {
@@ -79,6 +71,7 @@
                     [subscriber sendNext:@{@"code":@"0"}];
                 }else{
                     [YJProgressHUD showError:@"删除失败"];
+                    [subscriber sendNext:@{@"code":@"1"}];
                 }
                 [subscriber sendCompleted];
             } failure:^(ZWRequest *request, NSError *error) {
@@ -113,15 +106,19 @@
     self.setGroupChatBg = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
         return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
             @strongify(self)
-            NSDictionary *dic = @{
-            @"cmd":@"exitGroup",
-            @"sessionId":[ZWUserModel currentUser].sessionID,
-            @"groupid":input[@"groupid"],
-            @"msg":input[@"msg"]
-            };
-            [self.request POST:@"" parameters:dic success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+            NSMutableDictionary *Parma = [[NSMutableDictionary alloc]init];
+            Parma[@"groupid"] = input[@"groupid"];
+            Parma[@"groupbackground"] = input[@"groupbackground"];
+            [self.request POST:modifygroup parameters:Parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+                [YJProgressHUD hideHUD];
+                if ([responseString[code] intValue] == 1) {
+                    [subscriber sendNext:@{@"code":@"0"}];
+                }else{
+                    [subscriber sendNext:@{@"code":@"1"}];
+                }
                 [subscriber sendCompleted];
             } failure:^(ZWRequest *request, NSError *error) {
+                [YJProgressHUD hideHUD];
                 [subscriber sendCompleted];
             }];
             return [RACDisposable disposableWithBlock:^{

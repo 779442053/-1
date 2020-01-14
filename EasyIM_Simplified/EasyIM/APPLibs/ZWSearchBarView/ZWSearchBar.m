@@ -69,7 +69,7 @@ static NSInteger space = 15;
 
 - (UITextField *)textField{
     if (!_textField) {
-        _textField = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width-25, self.frame.size.height)];
+        _textField = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width-40, self.frame.size.height)];
     }
     return _textField;
 }
@@ -96,7 +96,7 @@ static NSInteger space = 15;
 - (UIButton *)cancelButton{
     if (!_cancelButton) {
         _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _cancelButton.frame = CGRectMake(CGRectGetMaxX(_textField.frame)+10, 0, 40, self.frame.size.height);
+        _cancelButton.frame = CGRectMake(CGRectGetMaxX(_textField.frame)+15, 0, 40, self.frame.size.height);
         [_cancelButton addTarget:self action:@selector(cancelAction) forControlEvents:UIControlEventTouchUpInside];
         [_cancelButton setTitleColor:[UIColor colorWithHexString:@"464646"] forState:UIControlStateNormal];
         [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
@@ -121,10 +121,15 @@ static NSInteger space = 15;
 }
 #pragma mark --- 取消按钮点击事件
 - (void)cancelAction{
-    [self endEditing:YES];
+    //[self endEditing:YES];
     _placeholderLabel.hidden  = NO;
     _textField.text = @"";
-    [_SearchDelegate cancleWithStr];
+    if ([_SearchDelegate performSelector:@selector(cancleWithStr)]) {
+        ZWWLog(@"取消搜索111")
+        [_SearchDelegate cancleWithStr];
+    }
+    ZWWLog(@"取消搜索222")
+    [self.window endEditing:YES];
     [UIView animateWithDuration:0.25 animations:^{
         //        执行更新
         [self.textField layoutIfNeeded];
@@ -135,14 +140,7 @@ static NSInteger space = 15;
 
 /*! 当输入框开始编辑的时候 */
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-    /*! _placeholderLabel移动到关标右边*/
-//    [_placeholderLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.centerX.mas_equalTo(_textField).offset(-_textField.frame.size.width/2+leftViewWidth+_size.width/2+5);
-//    }];
-//    /*! _searchImage移动到关标左边 */
-//    [_searchImage mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.centerX.mas_equalTo(_textField).offset(-_textField.frame.size.width/2-space+leftViewWidth);
-//    }];
+   
     [UIView animateWithDuration:0.25 animations:^{
 //        执行更新
         [self layoutIfNeeded];
@@ -160,7 +158,6 @@ static NSInteger space = 15;
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [_textField resignFirstResponder];
     [_SearchDelegate searchWithStr:textField.text];
-    //NSLog(@"点击了搜索");
     return YES;
 }
 #pragma mark --- textFieldDidEditing:

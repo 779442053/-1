@@ -10,7 +10,7 @@
 #import "UserFriendModel.h"
 #import "NewGroupViewCell.h"
 #import "ZWGroudDetailViewModel.h"
-#import "ZWPhotoHelper.h"
+
 @interface GroupCompleteViewController()<UITableViewDataSource,UITableViewDelegate,NSURLConnectionDataDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *logoBtn;

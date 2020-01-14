@@ -44,7 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 群名称*/
 @property (nonatomic, copy) NSString *name;
-
+/** 群名公告*/
+@property (nonatomic, copy) NSString *bulletin;
 /** 群是否免打扰(notify — 0 不启用消息 开启免打扰，1 启用接收消息,关闭免打扰) */
 @property (nonatomic, copy) NSString *notify;
 

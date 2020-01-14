@@ -76,25 +76,7 @@ typedef struct {
         
     }
 }
-/**
- *  写入数据
- *
- *  @param dic 请求体
- */
-+ (void)SendDataWithData:(NSMutableDictionary*)dic{
-    ZWWLog(@"发送数据包字典 \n=%@",dic)
-    NSInteger SocketrequestTag = ZWGCDSocketTCPCmdTypeEnum(dic[@"cmd"]);
-    NSString *body = [NSString stringWithFormat:@"<JoyIM>%@</JoyIM>",dic.innerXML];
-    //ZWWLog(@"请求包体=\n %@",body)
-    NSData *bodyData = [body dataUsingEncoding:NSUTF8StringEncoding];
-    //封装包头
-    NSUInteger size = bodyData.length;//数据包的长度
-    PacketHeader head = {size, 0, 0};//包头结构体
-    NSData *headData = [[NSData alloc] initWithBytes:&head length:4];//包头data
-    NSMutableData *mData = [NSMutableData dataWithData:headData];
-    [mData appendData:bodyData];//
-    [[ZWSocketManager shareInstance].socket writeData:mData withTimeout:-1 tag:SocketrequestTag];
-}
+
 + (void)SendMessageWithMessage:(MMMessage*)message complation:(SocketDidReadBlock)complation;{
     //消息,分为群聊,单聊,语音呼叫,视频呼叫 文件,图片,联系人,位置
     [ZWSocketManager shareInstance].DidReadBlock = complation;
@@ -186,12 +168,15 @@ typedef struct {
  *  @param port   port
  */
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port{
-    ZWWLog(@"多次走这里原因:\n 1.断网 2.主动断开,再次尝试连接 \n 3.初次连接成功,在规定时间内没有发送心跳包.造成断开连接")
+    ZWWLog(@"多次走这里原因:\n 1.断网 \n2.主动断开,再次尝试连接 \n 3.初次连接成功,在规定时间内没有发送心跳包.造成断开连接")
     [ZWMessage success:@"测试使用" title:@"socket连接成功!!"];
     [_socket readDataWithTimeout:-1 tag:0];
     _instance.connectState = SGSocketConnectState_ConnectSuccess;
-    if(_reconnectTimer){//如果连接成功啦.就暂停定时器的操作
+    if(_reconnectTimer){//如果连接成功啦.就暂停定时器的操作.同时,开始心跳链接
         [self stopReconnectTimer];
+    }
+    if (_pingTimer) {
+        [[ZWSocketManager shareInstance] startPingTimer];
     }
     if (self.connectBlock) {//告诉引用着.连接成功啦
         self.connectBlock(nil);
@@ -207,7 +192,6 @@ typedef struct {
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)error{
    //  和服务器z断开连接
     if (error) {
-        //ZWWLog(@"连接失败 - 错误为：%@",error);
          [ZWMessage error:@"连接失败!!" title:[NSString stringWithFormat:@"Socket连接错误-----\n%@",error]];
         _instance.connectState = SGSocketConnectState_ConnectFail;
         ///连接失败回调
@@ -225,28 +209,15 @@ typedef struct {
         [self stopPingTimer];
     }
 }
-/**
- *  接受数据
- *    这里如果收到的是消息回执则将数据直接传给业务层做处理，其他回执这里直接处理
- *  @param sock  socket
- *  @param data  data
- *  @param tag   tag
- */
+
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag{
-    //在这里,处理收到的数据,将数据区分,block 出去   ==根据tag 处理相应的数据包
-    //1.心跳数据,不作处理
-    //2.查询数据,返回查询结果,推送数据,d发送通知
-    //收到数据  到下次发送数据,30s 长度.如果没有主动调用发送数据,就开启定时器,
-    //发送心跳包.告知服务器,前端一直处于live 状态
-//    ZWWLog(@"收到数据收到数据收到数据收到数据收到数据收到数据收到数据收到数据")
-//    ZWWLog(@"=====%@",data)
     [self dealWithData:data];
     [_socket readDataWithTimeout:-1 tag:tag];
 }
 -(void)dealWithData:(NSData *)data{
     NSData *bodyData = [data subdataWithRange:NSMakeRange(4, data.length-4)];
     NSString *responseMessage = [[NSString alloc] initWithData:bodyData encoding:NSUTF8StringEncoding];
-    //ZWWLog(@"newMessage=====%@",responseMessage)
+    ZWWLog(@"===\n %@",responseMessage)
     if ([responseMessage containsString:@"<JoyIM>"] && [responseMessage containsString:@"</JoyIM>"]){
         NSMutableDictionary *jsonDic = [NSDictionary dictionaryWithXMLString:responseMessage].mutableCopy;
         NSString *strCMD = [NSString stringWithFormat:@"%@",jsonDic[@"cmd"]];
@@ -254,9 +225,14 @@ typedef struct {
             [jsonDic removeObjectForKey:@"__name"];
         }
         ZWWLog(@"socket 返回数据 = \n %@",jsonDic)
-        NSString *errString = jsonDic[@"err"];
+        NSString *errString;
+        if ([[jsonDic allKeys] containsObject:@"err"] && [jsonDic[@"err"] isKindOfClass:[NSString class]]) {
+            errString = jsonDic[@"err"];
+        }else{
+            errString = @"inviteFrd2Group";
+        }
         NSError *error = [NSError errorWithDomain:NSURLErrorDomain
-                                             code:[jsonDic.allKeys containsObject:@"result"]? [jsonDic[@"result"] integerValue]:-1
+                                             code:[jsonDic.allKeys containsObject:@"result"]? [jsonDic[@"result"] integerValue]:[jsonDic.allKeys containsObject:@"ret"]?[jsonDic[@"ret"] intValue]:-1
                                          userInfo:@{
                                                     NSLocalizedDescriptionKey: errString.checkTextEmpty?errString :  ([jsonDic.allKeys containsObject:@"desc"]?jsonDic[@"desc"]:@"未知错误")
                                                     }];
@@ -265,7 +241,8 @@ typedef struct {
             case GCDSocketTCPCmdTypeHeartBeat:
                 //ZWWLog(@"/** heartBeat 心跳包 */")
                 return;
-            case GCDSocketTCPCmdTypeUpdateuserstate:
+            case GCDSocketTCPCmdTypeupdateUserStatus:
+                //其他关联的用户收到Push消息 — 用户登入登出时也会发送给相关用户
                 ZWWLog(@"全局通知一个用户下线暂不用直接返回.登录或者修改用户在线状态")
                 [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTS_LINE object:jsonDic];
                 return;
@@ -278,7 +255,7 @@ typedef struct {
                 return;
             case GCDSocketTCPCmdTypeInviteFrd2Group:
                 ZWWLog(@"邀请好友入群=%@",jsonDic)
-                if ([jsonDic[@"ret"] isEqualToString:@"1"]) {
+                if ([jsonDic[@"ret"] intValue] == 1 || ![jsonDic.allKeys containsObject:@"ret"] ) {
                     if (self.DidReadBlock) {
                         ZWWLog(@"邀请成功 1")
                         self.DidReadBlock(nil,jsonDic);
@@ -289,6 +266,16 @@ typedef struct {
                     }
                 }
                 break;
+            case GCDSocketTCPCmdTypenewMember2Group:
+            ZWWLog(@"邀请好友入群,其他群内成员受到消息=%@",jsonDic)
+            if ([jsonDic[@"ret"] isEqualToString:@"1"]) {
+                NSString *groupName = jsonDic[@"groupName"];
+                NSString *title = [NSString stringWithFormat:@"%@ 消息提醒",groupName];
+                [ZWMessage success:@"有新成员加入了群聊,赶快认识一下吧~~" title:title];
+            }else{
+               
+            }
+            break;
             case  GCDSocketTCPCmdTypeHasBulletin:
                 ZWWLog(@"好友通知 == %@",jsonDic)
                 //通知类型,有很多种
@@ -297,8 +284,9 @@ typedef struct {
             case  GCDSocketTCPCmdTypeCallUser:
             {ZWWLog(@"音视频呼叫对方,状态放回=%@",jsonDic)
                 /**在这里,在block 出去之后,进行界面修改,声音提醒*/
-                NSString *fUId = [jsonDic.allKeys containsObject:@"frmUid"]?jsonDic[@"frmUid"]:jsonDic[@"fromId"];
-                if (![fUId isEqualToString:[ZWUserModel currentUser].userId]){
+                NSString *fUId = [jsonDic.allKeys containsObject:@"fromId"]?jsonDic[@"fromId"]:jsonDic[@"fromId"];
+                NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+                if (![fUId isEqualToString:userID]){
                     ZWWLog(@"别人呼叫我")
                     [YHUtils playVoiceForAudioAndVideo:^(AVAudioPlayer *_Nullable _avaudio) {
                         _avAudioPlayer = _avaudio;
@@ -346,7 +334,7 @@ typedef struct {
                 return;
             case GCDSocketTCPCmdTypeLogin:
             {
-                ZWWLog(@"登录,获取sectionid 开启心跳机制")
+            ZWWLog(@"登录,获取sectionid 开启心跳机制 = %@",jsonDic)
             if ([jsonDic[@"result"] isEqualToString:@"1"])
             {
                 if ([jsonDic.allKeys containsObject:@"sessionID"]) {
@@ -355,11 +343,18 @@ typedef struct {
                     [ZWUserModel currentUser].photoUrl = jsonDic[@"photoUrl"];
                     [ZWUserModel currentUser].userSig = jsonDic[@"userSig"];
                     [ZWDataManager saveUserData];
-                    [[ZWSocketManager shareInstance]startPingTimer];
+                    //[[ZWSocketManager shareInstance]startPingTimer];
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(nil,jsonDic);
+                    }
                 }
             }else{//1.2 处理在别的设备登入你的账号时
                 ZWWLog(@"1.2 处理在别的设备登入你的账号时")
                 [MMProgressHUD showError:jsonDic[@"err"]];
+                [ZWMessage error:jsonDic[@"err"] title:@"系统错误"];
+                if (self.DidReadBlock) {
+                    self.DidReadBlock(error,nil);
+                }
                 }
             }
                 break;
@@ -440,6 +435,7 @@ typedef struct {
                        }
                 }
             }
+                break;
             case GCDSocketTCPCmdTypeAcceptGroupCall:
             {
                 [self stopAndReleaseAudioPlayer];
@@ -468,7 +464,7 @@ typedef struct {
             //MARK:6.拒绝视频邀请(RejectCall 1v1、RejectGroupCall 1vM)
             case GCDSocketTCPCmdTypeRejectCall:
             {
-                ZWWLog(@"我主动拒绝别人的单聊音视频邀请 = %@",jsonDic)
+                ZWWLog(@"拒绝别人的单聊音视频邀请 = %@",jsonDic)
                 [self stopAndReleaseAudioPlayer];
                 [YHUtils closeVoiceAudioAndVideo];
                 [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio_Refuse object:nil userInfo:jsonDic];
@@ -476,7 +472,7 @@ typedef struct {
              break;
             case GCDSocketTCPCmdTypeRejectGroupCall:
             {
-                ZWWLog(@"我主动拒绝群里面的音视频邀请=%@",jsonDic)
+                ZWWLog(@"拒绝群里面的音视频邀请=%@",jsonDic)
                 [self stopAndReleaseAudioPlayer];
                 [YHUtils closeVoiceAudioAndVideo];
                 
@@ -497,10 +493,14 @@ typedef struct {
                     //播放消息声音
                     if (jsonDic[@"xns"] && [jsonDic[@"xns"] isEqualToString:@"xns_group"]) {
                         NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
-                        if ([jsonDic[@"sessionID"] isEqualToString:userID]) {
+                        NSString *fromID = [NSString stringWithFormat:@"%@",jsonDic[@"list"][@"group"][@"fromID"]];
+                        ZWWLog(@"群里发过来的fromID =%@  myuserid = %@",fromID,userID)
+                        if ([fromID isEqualToString:userID]) {
                             [YHUtils ShackTheIphon];
+                            ZWWLog(@"自己发到群里的消息")
                         }else{
                             [YHUtils playVoiceForMessage];
+                            ZWWLog(@"别人w向群里d发的消息")
                         }
                     }else{
                         [YHUtils playVoiceForMessage];
@@ -517,7 +517,7 @@ typedef struct {
                 break;
             case GCDSocketTCPCmdTypedelFriend:
             {
-
+               
             }
                 break;
             //MARK:9.发群消息回调 groupMsg
@@ -542,9 +542,15 @@ typedef struct {
                 if ([jsonDic.allKeys containsObject:@"result"]) {
                     if ([jsonDic[@"result"] intValue] == 1) {
                         [YJProgressHUD showSuccess:@"添加好友成功,等待对方确认"];
+                        if (self.DidReadBlock) {
+                            self.DidReadBlock(nil, jsonDic);
+                        }
                     }else{
                         //添加好友失败
                         [YJProgressHUD showError:jsonDic[@"err"]];
+                        if (self.DidReadBlock) {
+                            self.DidReadBlock(error, jsonDic);
+                        }
                     }
                 }
             }
@@ -649,10 +655,23 @@ typedef struct {
                 }
             }
                 break;
-                //群主同意别人加入本群,无论是别人,还是自己,都需要接受这个群消息
-                //
+            case GCDSocketTCPCmdTypeacceptJoinGroup:
+            {
+                ZWWLog(@"群主同意别人加入本群,=%@",jsonDic)
+                if ([jsonDic[@"result"] intValue] == 1) {
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(nil, jsonDic);
+                    }
+                }else{
+                    if (self.DidReadBlock) {
+                        self.DidReadBlock(error, nil);
+                    }
+                }
+            }
+                break;
             case GCDSocketTCPCmdTypeagreeJoinGroup:
             {
+                ZWWLog(@"群主同意别人加入本群,无论是别人,还是自己,都需要接受这个群消息=%@",jsonDic)
                 if ([jsonDic[@"result"] intValue] == 1) {
                     if ([jsonDic[@"ApplyID"] isEqualToString:[ZWUserModel currentUser].sessionID]) {
                         //群主同意我加入该群
@@ -752,6 +771,19 @@ typedef struct {
                     }
                 }
                   break;
+                case GCDSocketTCPCmdTypecallHeartbeat:
+                {  ZWWLog(@"呼叫新天发送返回数据=%@",jsonDic)
+                    if ([jsonDic[@"result"] intValue] == 1) {
+                        if (self.DidReadBlock) {
+                            self.DidReadBlock(nil, jsonDic);
+                        }
+                    }else{
+                        if (self.DidReadBlock) {
+                            self.DidReadBlock(error, jsonDic);
+                        }
+                    }
+                }
+                  break;
             default:
                 NSLog(@"未知类型的cmd:%@",strCMD);
                 break;
@@ -759,12 +791,6 @@ typedef struct {
     }
 }
 
-/**
- *  写入数据成功
- *    发送消息之后需要来这里判断消息是否发送成功,但是这里不弄那么复杂了。直接根据回执判断消息的发送情况
- *  @param sock  socket
- *  @param tag   tag
- */
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag{
     //，自己调用一下读取数据的方法, 发送数据成功后，接着_socket才会执行下面的方法,
     [_socket readDataWithTimeout:-1 tag:tag];
@@ -811,7 +837,7 @@ typedef struct {
     heartParma[@"type"] = @"req";
     heartParma[@"loginType"] = @"410";
     heartParma[@"deviceDesc"] = [UIDevice currentDevice].name;
-    [ZWSocketManager  SendDataWithData:heartParma];
+    [ZWSocketManager  SendDataWithData:heartParma complation:nil];
 }
 #pragma mark - socket重连
 /**

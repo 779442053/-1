@@ -8,6 +8,8 @@ static NSString* const RequestContentTypeJson = @"text/json";
 static NSString* const RequestContentTypePlain = @"text/plain";
 //设置代理
 @class ZWRequest;
+//下载进度
+typedef void (^ApiProgress)(NSProgress *progress);
 @protocol ZWRequestDelegate <NSObject>
 
 - (void)ZWRequest:(ZWRequest *)request finished:(NSMutableDictionary *)response;
@@ -84,6 +86,7 @@ static NSString* const RequestContentTypePlain = @"text/plain";
      success:(void (^)(ZWRequest *request, NSMutableDictionary* responseString,NSDictionary *data))success
      failure:(void (^)(ZWRequest *request, NSError *error))failure;
 
+
 - (void)uploadFile:(NSString*)URLString withFileData:(NSData*)fileData mimeType:(NSString*)mimeType name:(NSString*)name
         parameters:(NSDictionary*)parameters
            success:(void (^)(ZWRequest *request, NSMutableDictionary* responseString,NSDictionary *data))success
@@ -98,6 +101,10 @@ parameters:(NSDictionary*)parameters
             parameters:(NSDictionary*)parameters
                success:(void (^)(ZWRequest *request, NSMutableDictionary* responseString,NSDictionary *data))success
                failure:(void (^)(ZWRequest *request, NSError *error))failure;
+////下载文件
+//- (void)Download:(NSString*)URLString fileDir:( nullable NSString *)fileDir progress:( nullable ApiProgress)progress
+//         success:(void (^_Nullable)(ZWRequest * _Nullable request, NSMutableDictionary* _Nullable responseString,NSDictionary * _Nonnull data))success
+//         failure:(void (^_Nonnull)(ZWRequest * _Nullable request, NSError * _Nullable error))failure;
 /**
  *取消当前请求队列的所有请求
  */

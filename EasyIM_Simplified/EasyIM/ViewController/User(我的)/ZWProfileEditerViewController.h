@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ZWProfileEditerViewController : MMBaseViewController
 @property (nonatomic, copy)void(^confirmIdentity)(NSString * Vuale);
 @property (nonatomic, copy)NSString *Type;
+@property (nonatomic, copy)NSString *GroupID;
 @end
 
 NS_ASSUME_NONNULL_END

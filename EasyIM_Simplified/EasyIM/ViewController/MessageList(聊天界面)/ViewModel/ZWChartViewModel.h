@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) RACCommand *requestMoreCommand;
 //获取群成员
 @property(nonatomic,strong) RACCommand *getGroupPeopleListCommand;
+@property(nonatomic,strong) RACCommand *DownLoadFireCommand;
+@property(nonatomic,strong) RACCommand *DeleMessageHistoryCommand;
 @end
 
 NS_ASSUME_NONNULL_END

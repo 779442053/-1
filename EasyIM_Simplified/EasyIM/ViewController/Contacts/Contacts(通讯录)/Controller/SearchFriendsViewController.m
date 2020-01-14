@@ -21,6 +21,7 @@
 #import "AddFriViewController.h"
 #import "ZWSearchBar.h"
 #import "ZWAddFriendViewModel.h"
+
 static NSString *const cellIde = @"cellIde";
 static NSString *const page_size = @"10";
 @interface SearchFriendsViewController ()<UITableViewDelegate,UITableViewDataSource,ZWSearchBarDelegate>
@@ -263,10 +264,14 @@ static NSString *const page_size = @"10";
         return;
     }
     //添加好友,走tcp 请求
-    [[self.ViewModel.addFriendCommand execute:tagUserid] subscribeNext:^(id  _Nullable x) {
-        if ([x[@"code"] intValue] == 0) {
-            [MMProgressHUD showHUD: @"请求成功"];
-        }
+    NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+    parma[@"type"] = @"req";
+    parma[@"cmd"] = @"addFriend";
+    parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+    parma[@"toID"] = tagUserid;
+    parma[@"msg"] = [NSString stringWithFormat:@"你好!我是%@，请求加您为好友",[ZWUserModel currentUser].nickName];
+    ZWWLog(@"添加朋友=%@",parma)
+    [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
     }];
 }
 - (UITableView *)tableView{
@@ -281,7 +286,7 @@ static NSString *const page_size = @"10";
         //cell无数据时，不显示间隔线
         UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
         [_tableView setTableFooterView:view];
-        _tableView.firstReload = YES;
+        //_tableView.firstReload = YES;
         //分隔线
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorColor = G_EEF0F3_COLOR;

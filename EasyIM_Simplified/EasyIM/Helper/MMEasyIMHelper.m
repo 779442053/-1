@@ -54,7 +54,7 @@ static MMEasyIMHelper *helper = nil;
 
 - (void)handlePushChatController:(NSNotification *)aNotif
 {
-    //如群组,会议室等 共同跳转同一个类 如加对方为好友跳转到相对应的界面并传值
+    ZWWLog(@"如群组,会议室等 共同跳转同一个类 如加对方为好友跳转到相对应的界面并传值")
     id object = aNotif.object;
     MMConversationModel *model = nil;
     if ([object isKindOfClass:[ContactsModel class]]) {
@@ -76,8 +76,23 @@ static MMEasyIMHelper *helper = nil;
         }
         
     }else if ([object isKindOfClass:[MMRecentContactsModel class]]){
+        ZWWLog(@"从首页进到聊天界面,需要转换的数据模型")
         MMRecentContactsModel *recentModel = (MMRecentContactsModel *)object;
-        model = [MMConversationHelper modelFromRecentContacts:recentModel];
+        if ([recentModel.targetType isEqualToString:@"chat"]) {
+           ZWWLog(@"单聊")
+            ContactsModel *contact = [[ContactsModel alloc]init];
+            contact.cmd = @"sendMsg";
+            contact.userId = recentModel.userId;
+            contact.userName = recentModel.latestnickname;
+            contact.photoUrl = recentModel.latestHeadImage;
+            model = [MMConversationHelper modelFromContact:contact];
+        }else if ([recentModel.targetType isEqualToString:@"groupchat"]){
+            ZWWLog(@"群聊")
+            model = [MMConversationHelper modelFromRecentContacts:recentModel];
+        }else{
+            ZWWLog(@"暂时不知道什么类型从首页进来的聊天")
+        }
+        
     }
 
     

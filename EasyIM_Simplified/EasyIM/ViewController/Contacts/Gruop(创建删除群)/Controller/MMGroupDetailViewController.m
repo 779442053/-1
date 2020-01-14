@@ -16,6 +16,7 @@
 //ViewController
 #import "MMAddMemberViewController.h"
 #import "MMEditGroupViewController.h"
+#import "ZWProfileEditerViewController.h"
 //二维码
 #import "QRCodeViewController.h"
 #import "ZWGroudDetailViewModel.h"
@@ -26,8 +27,10 @@ static const CGFloat foot_view_h = 48;
 @property (nonatomic, strong) UITableView        *tableView;     //表格
 @property (nonatomic, strong) NSMutableArray     *dataSource;    //数据源
 @property (nonatomic, strong) UIButton           *btnGroupQrCode;//群二维码
+@property (nonatomic, strong) UIButton           *disbandedGroup;
 @property (nonatomic, strong) UIView *footView;
 @property (nonatomic, strong) ZWGroudDetailViewModel *viewModel;
+
 
 @end
 @implementation MMGroupDetailViewController{
@@ -41,34 +44,74 @@ static const CGFloat foot_view_h = 48;
     [self setTitle:@"群组信息"];
     [self showLeftBackButton];
     [self.view addSubview:self.tableView];
+    [self.footView addSubview:self.disbandedGroup];
+    self.tableView.tableFooterView = self.footView;
 }
 -(void)zw_bindViewModel{//获取群成员
     [[self.viewModel.getGroupPeopleListCommand execute:self.groupId]subscribeNext:^(NSDictionary *x) {
         if ([x[@"code"] intValue] == 0) {
-            NSArray<MemberList *> *memberList = [MemberList mj_objectArrayWithKeyValuesArray:x[@"res"]];
-            [self.dataSource addObjectsFromArray:memberList];
-            if ([[x allValues] containsObject:@"cid"]) {
-                self.creatorId = x[@"cid"];
+            NSDictionary *datadict = x[@"res"];
+            self.creatorId = [NSString stringWithFormat:@"%@",datadict[@"createID"]];
+            NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+            if ([self.creatorId isEqualToString:userID]){
+                [self.disbandedGroup setTitle:@"解散该群" forState:UIControlStateNormal];
+                [self.disbandedGroup setTitleColor:[UIColor colorWithHexString:@"#FF0000"] forState:UIControlStateNormal];
+            }else{
+                [self.disbandedGroup setTitle:@"退出该群" forState:UIControlStateNormal];
+                [self.disbandedGroup setTitleColor:[UIColor colorWithHexString:@"#FF0000"] forState:UIControlStateNormal];
             }
+            MemberList *creatMember = [MemberList mj_objectWithKeyValues:datadict[@"createInfo"]];
+            NSArray<MemberList *> *memberList = [MemberList mj_objectArrayWithKeyValuesArray:datadict[@"list"]];
+            [self.dataSource addObjectsFromArray:memberList];
+            [self.dataSource insertObject:creatMember atIndex:0];
             [self.tableView reloadData];
         }
     }];
+    
+    [[self.disbandedGroup rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
+        NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+        if ([self.creatorId isEqualToString:userID]){
+            [self disbandedGroupAction];
+        }else{
+            [self exitGroupAction];
+        }
+        
+    }];
+    
 }
-//自己是群主,集散该群
-- (void)disbandedGroupAction:(UIButton *)sender
-{
+- (void)disbandedGroupAction
+{   ZWWLog(@"自己是群主,集散该群")
     [[self.viewModel.deleteGroupWithGroupId execute:self.groupId] subscribeNext:^(id  _Nullable x) {
         if ([x[@"code"] intValue] == 0) {
-            //发出通知,回到主界面,删除本地关于该群消息
+            [[MMChatDBManager shareManager] deleteConversation:self.groupId
+                                                    completion:^(NSString * _Nonnull aConversationId,
+                                                                 NSError * _Nonnull aError) {
+                if (!aError) {
+                     ZWWLog(@"删除成功");
+                }else{
+                    ZWWLog(@"删除失败");
+                }
+            }];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"groupdelect" object:self.groupId];
             [self.navigationController popToRootViewControllerAnimated:YES];
         }
     }];
 }
-//MARK: - 退出该群
-- (void)exitGroupAction:(UIButton *)sender
+- (void)exitGroupAction
 {
+    ZWWLog(@"退出该群")
     [[self.viewModel.exitGroupWithGroupid execute:@{@"groupid":self.groupId,@"msg":@"为啥推出啊?"}] subscribeNext:^(id  _Nullable x) {
         if ([x[@"code"] intValue] == 0) {
+            [[MMChatDBManager shareManager] deleteConversation:self.groupId
+                                                    completion:^(NSString * _Nonnull aConversationId,
+                                                                 NSError * _Nonnull aError) {
+                if (!aError) {
+                     ZWWLog(@"删除成功");
+                }else{
+                    ZWWLog(@"删除失败");
+                }
+            }];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"groupdelect" object:self.groupId];
             [self.navigationController popToRootViewControllerAnimated:YES];
         }
     }];
@@ -81,16 +124,6 @@ static const CGFloat foot_view_h = 48;
                                       AndFromName:self.name
                                       WithFromPic:nil];
     [self.navigationController pushViewController:qrcodeVC animated:YES];
-}
-//MARK: - 设置群背景图
--(void)setGroupChatBg:(NSString * _Nonnull)strUrlBg{
-    /**
-     [MBProgressHUD showSuccess:@"群聊背景图设置成功!"];
-     if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(mmGroupDetailsSetBackgroundSuccess:andImage:)]) {
-         [weakSelf.delegate mmGroupDetailsSetBackgroundSuccess:strUrlBg
-                                                      andImage:_selectImg];
-     }
-     */
 }
 //MARK: - 消息免打扰设置
 -(void)switchChangeAction:(UISwitch *)sender{
@@ -232,7 +265,11 @@ static const CGFloat foot_view_h = 48;
                     cell.textLabel.text = @"群公告";
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 }else{
-                    cell.textLabel.text = @"我们一起学猫叫~";
+                    if (self.bulletin) {
+                        cell.textLabel.text = self.bulletin;
+                    }else{
+                        cell.textLabel.text = @"暂未设置群公告";
+                    }
                     cell.textLabel.font = [UIFont zwwNormalFont:12];
                     cell.textLabel.textColor = [UIColor colorWithHexString:@"#787878"];
                 }
@@ -292,7 +329,8 @@ static const CGFloat foot_view_h = 48;
         MMEditGroupViewController *editGroup = [[MMEditGroupViewController alloc] init];
         editGroup.dataSource  = [self.dataSource mutableCopy];
         editGroup.groupId = self.groupId;
-        editGroup.creatorId = self.creatorId;
+        NSString *creator = [NSString stringWithFormat:@"%@",self.creatorId];
+        editGroup.creatorId = creator;
         editGroup.deleget = (id<MMEditGroupViewControllerDelegate>)self;
         [self.navigationController pushViewController:editGroup animated:YES];
     }
@@ -300,36 +338,71 @@ static const CGFloat foot_view_h = 48;
         if (indexPath.row == 0) {
             //群主才修改背景
             NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
-            if (!self.creatorId.checkTextEmpty || ![self.creatorId isEqualToString:userID]) {
+            NSString *creator = [NSString stringWithFormat:@"%@",self.creatorId];
+            if (!creator.checkTextEmpty || ![creator isEqualToString:userID]) {
                  [MMProgressHUD showHUD:@"非群主无法设置群聊背景"];
                 return;
             }
-            __block typeof(self) weakSelf = self;
-            [BaseUIView createPhotosAndCameraPickerForMessage:@"选择群聊天背景图"
-                                           andAlertController:^(UIAlertController * _Nullable _alertVC) {
-                                               [weakSelf presentViewController:_alertVC animated:YES completion:nil];
-                                           }
-                                 withImagePickerController:^(UIImagePickerController * _Nullable _imgPickerVC) {
-                                        _imgPickerVC.delegate = self;
-                                        [weakSelf presentViewController:_imgPickerVC animated:YES completion:nil];
-                                    }];
+        __block typeof(self) weakSelf = self;
+        [BaseUIView createPhotosAndCameraPickerForMessage:@"选择群聊天背景图"
+                                       andAlertController:^(UIAlertController * _Nullable _alertVC) {
+                                           [weakSelf presentViewController:_alertVC animated:YES completion:nil];
+                                       }
+                             withImagePickerController:^(UIImagePickerController * _Nullable _imgPickerVC) {
+                                    _imgPickerVC.delegate = self;
+                                    [weakSelf presentViewController:_imgPickerVC animated:YES completion:nil];
+                                }];
+        }else if (indexPath.row == 2){
+            ZWWLog(@"编辑群名称")
+            NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
+            NSString *creator = [NSString stringWithFormat:@"%@",self.creatorId];
+            if (!creator.checkTextEmpty || ![creator isEqualToString:userID]) {
+                 [MMProgressHUD showHUD:@"非群主无法修改群名称"];
+                return;
+            }
+            ZWProfileEditerViewController *mUser = [[ZWProfileEditerViewController alloc] init];
+                   mUser.Type = @"请设置群名称";
+                    NSString *gropid = [NSString stringWithFormat:@"%@",self.groupId];
+                    mUser.GroupID = gropid;
+            ZW(weakself)
+                   mUser.confirmIdentity = ^(NSString * _Nonnull Vuale) {
+                       weakself.name = Vuale;
+                       NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:2];
+                       [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                   };
+                   [self.navigationController pushViewController:mUser animated:YES];
         }
     }else if (indexPath.section == 0){
-        if (indexPath.row == 0) {//查看群成员
+        if (indexPath.row == 0) {
+            ZWWLog(@"查看群成员")
             MMEditGroupViewController *editGroup = [[MMEditGroupViewController alloc] init];
             editGroup.dataSource  = [self.dataSource mutableCopy];
             editGroup.groupId = self.groupId;
-            editGroup.creatorId = self.creatorId;
+            NSString *creator = [NSString stringWithFormat:@"%@",self.creatorId];
+            editGroup.creatorId = creator;
             editGroup.deleget = (id<MMEditGroupViewControllerDelegate>)self;
             [self.navigationController pushViewController:editGroup animated:YES];
         }
     }else if (indexPath.section == 3){
         ZWWLog(@"编辑群公告")
         NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
-        if (!self.creatorId.checkTextEmpty || ![self.creatorId isEqualToString:userID]) {
+        NSString *creator = [NSString stringWithFormat:@"%@",self.creatorId];
+        if (!creator.checkTextEmpty || ![creator isEqualToString:userID]) {
              [MMProgressHUD showHUD:@"非群主无法编辑群公告"];
             return;
         }
+        ZWProfileEditerViewController *mUser = [[ZWProfileEditerViewController alloc] init];
+        mUser.Type = @"请编辑群公告";
+        NSString *gropid = [NSString stringWithFormat:@"%@",self.groupId];
+        mUser.GroupID = gropid;
+        ZW(weakself)
+        mUser.confirmIdentity = ^(NSString * _Nonnull Vuale) {
+            ZWWLog(@"这是编辑的群公告=%@",Vuale)
+            weakself.bulletin = Vuale;
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:3];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        };
+        [self.navigationController pushViewController:mUser animated:YES];
     }
 }
 //MARK: - UIImagePickerControllerDelegate
@@ -343,25 +416,29 @@ static const CGFloat foot_view_h = 48;
     if (picker.isEditing)
         tmpImg = [info objectForKey:UIImagePickerControllerEditedImage];
     _selectImg = [UIImage imageWithData:[YHUtils zipNSDataWithImage:tmpImg]];
-    
     if (!_selectImg) {
         [MBProgressHUD showError:@"图片不存在，请重新设置"];
         return;
     }
-    
-    //[S] 图片上传
-    NSString *filePath = [[MMMediaManager sharedManager] saveImage:_selectImg];
-    __weak typeof(self) weakSelf = self;
-    [MBProgressHUD showMessage:@"上传中..." toView:self.view];
-    /**
-     上传图片
-     */
+    [[self.viewModel.UploadImageToSeverCommand execute:@{@"code":@"image",@"res":tmpImg}] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            NSString *groupImageUrl = x[@"res"];
+            [self setGroupChatBg:groupImageUrl];
+        }
+    }];
+
 }
-#pragma mark - MMRightActionDeltegate
--(void)rightAction:(UIButton *)sender
-{
-    //编辑群
-    MMLog(@"编辑群");
+-(void)setGroupChatBg:(NSString * _Nonnull)strUrlBg{
+    ZW(weakSelf)
+    [[self.viewModel.setGroupChatBg execute:@{@"groupid":self.groupId,@"groupbackground":strUrlBg}] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            [YJProgressHUD showSuccess:@"群聊背景图设置成功!"];
+            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(mmGroupDetailsSetBackgroundSuccess:andImage:)]) {
+                [weakSelf.delegate mmGroupDetailsSetBackgroundSuccess:strUrlBg
+                                                        andImage:_selectImg];
+            }
+        }
+    }];
 }
 //MARK: - MMEditGroupViewControllerDelegate(移除群组成员回调)
 -(void)mmEditGroupRemoveMemberSuccess:(MemberList *)member{
@@ -373,13 +450,13 @@ static const CGFloat foot_view_h = 48;
 #pragma mark - AddGroupMemberDelegate(邀请好友)
 - (void)addGroupMemberWithGesR:(UIGestureRecognizer *)gesture
 {
-    //2、点击邀请好友
     MMAddMemberViewController *addMember = [[MMAddMemberViewController alloc] init];
     addMember.memberData = [self.dataSource copy];
     addMember.isGroupVideo = NO;
     addMember.isGroupAudio = NO;
     addMember.groupId = self.groupId;
-    addMember.creatorId = self.creatorId;
+    NSString *creat = [NSString stringWithFormat:@"%@",self.creatorId];
+    addMember.creatorId = creat;
     addMember.delegate = (id<MMAddMemberViewControllerDelegate>)self;
     [self.navigationController pushViewController:addMember animated:YES];
 }
@@ -410,7 +487,6 @@ static const CGFloat foot_view_h = 48;
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.tableFooterView = self.footView;
     }
     return _tableView;
 }
@@ -446,28 +522,19 @@ static const CGFloat foot_view_h = 48;
     if (!_footView) {
         _footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, foot_view_h)];
         _footView.backgroundColor = [UIColor clearColor];
-        //如果群的创建ID等于用户ID 则为群主 权利是解散该群 不是则有退出该群
-        NSString *userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];
-        if ([self.creatorId isEqualToString:userID]) {
-            UIButton *disbandedGroup = [UIButton  buttonWithType:UIButtonTypeCustom];
-            disbandedGroup.backgroundColor = [UIColor whiteColor];
-            [disbandedGroup setTitle:@"解散该群" forState:UIControlStateNormal];
-            [disbandedGroup setFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
-            [disbandedGroup addTarget:self action:@selector(disbandedGroupAction:) forControlEvents:UIControlEventTouchUpInside];
-            [disbandedGroup setTitleColor:[UIColor colorWithHexString:@"#FF0000"] forState:UIControlStateNormal];
-            [_footView addSubview:disbandedGroup];
-        }
-        else{
-            UIButton *exitGroup = [UIButton  buttonWithType:UIButtonTypeCustom];
-            exitGroup.backgroundColor = [UIColor whiteColor];
-            [exitGroup setTitle:@"退出该群" forState:UIControlStateNormal];
-            [exitGroup setTitleColor:[UIColor colorWithHexString:@"#FF0000"] forState:UIControlStateNormal];
-            [exitGroup setFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
-            [exitGroup addTarget:self action:@selector(exitGroupAction:) forControlEvents:UIControlEventTouchUpInside];
-            [_footView addSubview:exitGroup];
-        }
     }
     
     return _footView;
+}
+-(UIButton *)disbandedGroup{
+    if (_disbandedGroup == nil) {
+        _disbandedGroup = [UIButton  buttonWithType:UIButtonTypeCustom];
+        [_disbandedGroup setFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
+        _disbandedGroup.backgroundColor = [UIColor whiteColor];
+        [_disbandedGroup setTitle:@"退出该群" forState:UIControlStateNormal];
+        [_disbandedGroup setTitleColor:[UIColor colorWithHexString:@"#FF0000"] forState:UIControlStateNormal];
+        _disbandedGroup.backgroundColor = [UIColor whiteColor];
+    }
+    return _disbandedGroup;
 }
 @end

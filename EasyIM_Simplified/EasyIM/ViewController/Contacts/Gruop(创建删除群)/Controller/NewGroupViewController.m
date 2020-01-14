@@ -224,7 +224,7 @@
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag; // 拖动时隐藏键盘
-        _tableView.firstReload = YES;
+        //_tableView.firstReload = YES;
     }
     return _tableView;
 }

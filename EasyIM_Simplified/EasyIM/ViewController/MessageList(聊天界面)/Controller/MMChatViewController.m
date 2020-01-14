@@ -234,24 +234,22 @@ static const CGFloat section_header_h = 60;
     MMLog(@"startDateStr:%@,endDateStr:%@",startDateStr,endDateStr);
     
     if (self.isGroup) {
-        NSMutableDictionary *dicParams = [NSMutableDictionary
-        dictionaryWithDictionary:@{
-                                   @"groupid":_conversationModel.toUid,
-                                   @"startime":startDateStr,
-                                   @"endtime":endDateStr,
-                                   @"page":@(_netCurrentPage).description,
-                                   @"perpage":@(limit).description
-                                   }];
-        [[self.ViewModel.GetGroupChartLishDataCommand execute:dicParams] subscribeNext:^(id  _Nullable x) {
+        NSMutableDictionary *Parma = [[NSMutableDictionary alloc]init];
+        Parma[@"groupid"] = _conversationModel.toUid;
+        Parma[@"startime"] = startDateStr;
+        Parma[@"endtime"] = endDateStr;
+        Parma[@"page"] = @(_netCurrentPage).description;
+        Parma[@"perpage"] = @(limit).description;
+        [[self.ViewModel.GetGroupChartLishDataCommand execute:Parma] subscribeNext:^(id  _Nullable x) {
             if ([x[@"code"] intValue] == 0) {
                 NSArray *arr = x[@"res"];
                 if (arr.count < limit) {
                     self.loadAllMessage = YES;
-                    MMLog(@"我没有数据不再加载了");
+                    ZWWLog(@"我没有数据不再加载了");
                     return ;
                 }
                 _netCurrentPage += limit;
-                MMLog(@"继续加载数据");
+                ZWWLog(@"继续加载数据");
             }
         }];
     }
@@ -314,6 +312,7 @@ static const CGFloat section_header_h = 60;
         detail.groupId = _conversationModel.toUid;
         detail.name = _conversationModel.toUserName;
         detail.notify = _conversationModel.notify;
+        detail.bulletin = _conversationModel.bulletin;
         detail.delegate = (id<MMGroupDetailViewControllerDelegate>)self;
         [self.navigationController pushViewController:detail animated:YES];
     }
@@ -339,8 +338,12 @@ static const CGFloat section_header_h = 60;
 - (void)registerNotific
 {
     //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(respondsToNotification:) name:@"MESSAGEFETCH" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ChangeName:) name:ChangeFriendName object:nil];
 }
-
+-(void)ChangeName:(NSNotification *)noti{
+    id obj = noti.object;
+    ZWWLog(@"修改了名字=%@",obj)
+}
 - (void)respondsToNotification:(NSNotification *)noti
 {
     id obj = noti.object;
@@ -437,12 +440,12 @@ static const CGFloat section_header_h = 60;
     self.tableView.height = HEIGHT_SCREEN - height - ZWTabbarSafeBottomMargin - ZWStatusAndNavHeight;
     self.chatBoxVC.view.top = self.tableView.bottom;
     if (height == HEIGHT_TABBAR) {
-        ZWWLog(@"键盘回复原样状态")
+        //ZWWLog(@"键盘回复原样状态")
         [self.tableView reloadData];
         [self scrollToBottom];
         //_isKeyBoardAppear  = NO;
     } else {
-         ZWWLog(@"键盘弹出")
+         //ZWWLog(@"键盘弹出")
         [self scrollToBottom];
         //_isKeyBoardAppear  = YES;
     }
@@ -790,17 +793,19 @@ static const CGFloat section_header_h = 60;
         voicePath = filePath;//wav
         [self playFilePath:voicePath andVoiceIcon:voiceIcon];
     }else{
-        [[MMApiClient sharedClient] DOWNLOAD:messageFrame.aMessage.slice.content fileDir:kChatRecoderPath progress:nil success:^(NSString * _Nonnull filePath) {
-            //删除之前的后缀名并改写成wav格式
-            voicePath = [[filePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"wav"];
-            if ([VoiceConverter ConvertAmrToWav:filePath wavSavePath:voicePath]) {
-                messageFrame.aMessage.slice.filePath = voicePath;
-                [[MMChatDBManager shareManager] updateMessage:messageFrame.aMessage];
-                [weakSelf playFilePath:voicePath andVoiceIcon:voiceIcon];
+        [[self.ViewModel.DownLoadFireCommand execute:messageFrame.aMessage.slice.content] subscribeNext:^(id  _Nullable x) {
+            if ([x[@"code"] intValue] == 0) {
+                NSString * filePath = x[@"res"];
+                voicePath = [[filePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"wav"];
+                if ([VoiceConverter ConvertAmrToWav:filePath wavSavePath:voicePath]) {
+                    messageFrame.aMessage.slice.filePath = voicePath;
+                    [[MMChatDBManager shareManager] updateMessage:messageFrame.aMessage];
+                    [weakSelf playFilePath:voicePath andVoiceIcon:voiceIcon];
+                }
+                [MMFileTool removeFileAtPath:filePath];
+            }else{
+                [YJProgressHUD showError:@"播放失败"];
             }
-            [MMFileTool removeFileAtPath:filePath];
-        } failure:^(NSError * _Nonnull error) {
-            [MMProgressHUD showHUD:@"播放失败"];
         }];
     }
     if (messageFrame.aMessage.status == 0){
@@ -916,35 +921,13 @@ static const CGFloat section_header_h = 60;
     if (self.dataSource && _longIndexPath && [self.dataSource count] > _longIndexPath.row) {
         // 这里还应该把本地的消息附件删除
         MMMessageFrame *messageF = [self.dataSource objectAtIndex:_longIndexPath.row];
-        NSDictionary *dicParams = @{
-                                    @"cmd":@"delMsgHis",
-                                    @"sessionId":[ZWUserModel currentUser] ? [ZWUserModel currentUser].sessionID:@"",
-                                    @"msgid":messageF.aMessage.msgID,
-                                    @"userid":[ZWUserModel currentUser] ? [ZWUserModel currentUser].userId:@""
-                                };
-        
-        __weak typeof(self) weakSelf = self;
-        [[MMApiClient sharedClient] GET:K_APP_REQUEST_API
-                             parameters:dicParams
-                                success:^(id  _Nonnull responseObject) {
-                                    if (responseObject && K_APP_REQUEST_OK(responseObject[K_APP_REQUEST_CODE])) {
-                                        
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            [weakSelf statusChanged:messageF];
-                                            MMLog(@"消息删除成功");
-                                        });
-                                    }
-                                    else{
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            [MMProgressHUD showError:responseObject[K_APP_REQUEST_MSG]];
-                                        });
-                                    }
-                                }
-                                failure:^(NSError * _Nonnull error) {
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        MMLog(@"消息删除失败");
-                                    });
-                                }];
+        ZW(weakSelf)
+        [[self.ViewModel.DeleMessageHistoryCommand execute:messageF.aMessage.msgID] subscribeNext:^(id  _Nullable x) {
+            ZWWLog(@"需要将该条消息从本地数据库中删除!!!")
+            if ([x[@"code"] intValue] == 0) {
+                [weakSelf statusChanged:messageF];
+            }
+        }];
     }
 }
 // - 消息撤回
@@ -977,10 +960,13 @@ static const CGFloat section_header_h = 60;
 }
 - (void)statusChanged:(MMMessageFrame *)messageF
 {
+    //删除本地存储的消息,更新首页消息类型展示
     [self.dataSource removeObject:messageF];
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:@[_longIndexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView endUpdates];
+    [[MMChatHandler shareInstance] handleMessage:messageF.aMessage WithHandle:0];
+    
 }
 - (void)forwardMessage:(UIMenuItem *)forwardItem
 {
@@ -1031,7 +1017,6 @@ static const CGFloat section_header_h = 60;
         _tableView.backgroundColor = MMColor(240, 237, 237);
         _tableView.estimatedSectionHeaderHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
-        _tableView.firstReload = YES;
     }
     return _tableView;
 }
@@ -1115,7 +1100,7 @@ static const CGFloat section_header_h = 60;
     // 接收的消息
     if (manager) {
         if ([message.fromID isEqualToString:message.toID]) { // 自己发送给自己的消息
-            ZWWLog(@"自己跟自己发送消息")
+            ZWWLog(@"自己跟自己发送消息,不展示UI")
             // 不展示UI
             return;
         }
@@ -1127,7 +1112,7 @@ static const CGFloat section_header_h = 60;
     ZWWLog(@"idididid = fromid = %@  userid= %@ toID= %@  toUid = %@",fromID,userid,toID,toUid)
     if (![fromID isEqualToString:toUid] && ![toID isEqualToString:toUid]) {
         // 不展示UI
-        ZWWLog(@"我收到一条不属于当前聊天的消息")
+        ZWWLog(@"我收到一条不属于当前聊天的消息\n我收到一条不属于当前聊天的消息")
         return;
     }
     MMMessageFrame *mf = [[MMMessageFrame alloc] init];

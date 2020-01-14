@@ -53,8 +53,7 @@ static NSString *const cell_identify = @"setup_cell_identify";
     parma[@"cmd"] = @"ignoreBulletin";
     parma[@"timestamp"] = [MMDateHelper getNowTime];
     parma[@"bulletinIds"] = @"";
-//    parma[@"type"] = @"";
-//    parma[@"type"] = @"";
+
     [MMProgressHUD showHUD:currentStatus?@"已开启":@"已关闭"];
 }
 
@@ -212,7 +211,15 @@ static NSString *const cell_identify = @"setup_cell_identify";
          parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
          parma[@"cmd"] = @"logout";
          parma[@"timestamp"] = [MMDateHelper getNowTime];
-        [ZWSocketManager SendDataWithData:parma];
+        [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+            //暂时不做任何处理,,,,,需要断开相关链接.回到登录界面
+            [ZWUserModel currentUser].token = @"";
+            [ZWUserModel currentUser].nickName = @"";
+            [ZWUserModel currentUser].userName = @"";
+            [ZWUserModel currentUser].userId = @"";
+            [ZWUserModel currentUser].sessionID = @"";
+            [ZWDataManager saveUserData];
+        }];
     }];
     UIAlertAction *cancerAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
     

@@ -22,13 +22,13 @@ static MMVedioCallManager *vedioCallManager = nil;
 @property (strong, nonatomic) MMCallSessionModel *currenSession;
 @property (strong, nonatomic) MM1v1CallViewController *currenViewCtr;
 @property (strong, nonatomic) NSTimer *timeoutTimer;
+@property (strong, nonatomic) NSTimer *CallHeartTimer;
 @property (assign, nonatomic) BOOL isEnter;
 @property (assign, nonatomic) BOOL isCalling;
 @property(nonatomic,strong)ZWCallViewModel *ViewModel;
 @end
 
 @implementation MMVedioCallManager
-
 - (instancetype)init
 {
     self = [super init];
@@ -203,19 +203,26 @@ static MMVedioCallManager *vedioCallManager = nil;
     self.currenViewCtr.callStatus = MMCallStatus_talkIng;
     //3.倒计时结束
     [self stopCallTimeoutTimer];
+    //这里,开始接入OWT 并且同步向服务器 发送 呼叫心跳
+    [self startCallHeartBeat];
+    ZWWLog(@"加入房间id =%@",self.currenSession.description)
+    
 }
 //拒绝啦,有可能是我主动拒绝或者别人主动拒绝
 - (void)handleRefuseCall:(NSNotification *)notify
 {
-    ZWWLog(@"我被别人拒绝啦我的音视频请求")
+    ZWWLog(@"manager里面我被别人拒绝啦我的音视频请求")
     if (!notify.userInfo) {
         return;
     }
     if (self.currenViewCtr.avConf) {
         [self.currenViewCtr.avConf leave];
     }
-    NSDictionary *dic = (NSDictionary *) notify.userInfo;
+    //NSDictionary *dic = (NSDictionary *) notify.userInfo;
     [self stopCallTimeoutTimer];
+    //在这里.进行退出操作.(需要秒退).OWT 退出房间操作
+    [self StopCallHeartBeat];
+     ZWWLog(@"房间id =%@",self.currenSession.description)
     self.currenSession = nil;
     [self.currenViewCtr clearDataAndView];
     [self.currenViewCtr dismissViewControllerAnimated:NO completion:nil];
@@ -223,8 +230,6 @@ static MMVedioCallManager *vedioCallManager = nil;
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
     [audioSession setActive:YES error:nil];
-    [MMProgressHUD showHUD:dic[@"desc"]];
-
 }
 
 //MARK:1VM群聊音视频请求
@@ -367,7 +372,6 @@ static MMVedioCallManager *vedioCallManager = nil;
         }
     }];
 }
-
 #pragma mark - Call Timeout Before Answered
 - (void)timeoutBeforeCallAnswered
 {
@@ -375,28 +379,9 @@ static MMVedioCallManager *vedioCallManager = nil;
                callType:self.currenSession.callType
                webrtcId:self.currenSession.webrtcId
            isNeedHangup:YES];
-    
     //时间结束前请求
     [MMProgressHUD showHUD:@"对方无应答"];
 }
-
-- (void)startCallTimeoutTimer
-{
-    self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:50 target:self selector:@selector(timeoutBeforeCallAnswered) userInfo:nil repeats:YES];
-    
-    [[NSRunLoop mainRunLoop] addTimer:self.timeoutTimer forMode:NSRunLoopCommonModes];
-}
-
-- (void)stopCallTimeoutTimer
-{
-    if (self.timeoutTimer == nil) {
-        return;
-    }
-    
-    [self.timeoutTimer invalidate];
-    self.timeoutTimer = nil;
-}
-
 //挂断
 - (void)endCallWithId:(NSString *)aCallId
              callType:(NSInteger)callType
@@ -482,6 +467,50 @@ static MMVedioCallManager *vedioCallManager = nil;
         _ViewModel = [[ZWCallViewModel alloc]init];
     }
     return _ViewModel;
+}
+- (void)startCallTimeoutTimer
+{//50s 之后,别人没有做出回应,就自动取消
+    self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:50 target:self selector:@selector(timeoutBeforeCallAnswered) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.timeoutTimer forMode:NSRunLoopCommonModes];
+}
+
+- (void)stopCallTimeoutTimer
+{
+    if (self.timeoutTimer == nil) {
+        return;
+    }
+    [self.timeoutTimer invalidate];
+    self.timeoutTimer = nil;
+}
+#pragma 接通知后,开始进行呼叫
+-(void)startCallHeartBeat{
+    ZWWLog(@"已经接通,开始呼叫心跳")
+    self.CallHeartTimer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(CallHeartSocketSend) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.CallHeartTimer forMode:NSRunLoopCommonModes];
+}
+-(void)StopCallHeartBeat{
+    ZWWLog(@"已经挂断,停止呼叫心跳")
+    if (self.CallHeartTimer == nil) {
+        return;
+    }
+    [self.CallHeartTimer invalidate];
+    self.CallHeartTimer = nil;
+}
+-(void)CallHeartSocketSend{
+    NSMutableDictionary *Parma = [[NSMutableDictionary alloc] init];
+    Parma[@"type"] = @"req";
+    Parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+    Parma[@"timeStamp"] = [MMDateHelper getNowTime];
+    Parma[@"xns"] = @"xns_user";
+    Parma[@"cmd"] = @"callHeartbeat";
+    Parma[@"webrtcId"] =self.currenSession.webrtcId;
+    [ZWSocketManager SendDataWithData:Parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+        if (!error) {
+            ZWWLog(@"呼\n叫\n心\n跳\n发\n送\n成\n功")
+        }else{
+            ZWWLog(@"呼叫心跳发送失败")
+        }
+    }];
 }
 @end
 

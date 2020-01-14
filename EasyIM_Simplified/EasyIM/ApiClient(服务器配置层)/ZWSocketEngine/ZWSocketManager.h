@@ -8,16 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "ZWSocketConfig.h"
-
-//传递过来一条消息模型,将消息发送到服务端,
-//受到一条消息,将收到的消息传递转化成消息模型,通过通知,将消息传递出去
 #import "MMMessage.h"
 NS_ASSUME_NONNULL_BEGIN
-
-
-/**
- *  连接状态
- */
 typedef NS_ENUM(NSInteger, SGSocketConnectState) {
     SGSocketConnectState_NotConnect = 1,     ///未连接
     SGSocketConnectState_ConnectSuccess = 2, ///连接成功
@@ -50,13 +42,6 @@ typedef void (^SocketDidReadBlock)(NSError *__nullable error, id __nullable data
 
  */
 + (void)DisConnectSocket;
-
-/**
- 发送数据
-
- @param dic <#dic description#>
- */
-+ (void)SendDataWithData:(NSMutableDictionary*)dic;
 
 /**
  聊天,发送消息

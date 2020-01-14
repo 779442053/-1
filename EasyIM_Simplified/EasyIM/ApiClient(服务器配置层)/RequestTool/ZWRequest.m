@@ -17,7 +17,6 @@
         self.operationManager = [AFHTTPSessionManager manager];
         self.operationManager.responseSerializer = [AFJSONResponseSerializer serializer];
         self.operationManager.requestSerializer = [AFJSONRequestSerializer serializer];
-        //self.operationManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
     }
     return self;
 }
@@ -115,15 +114,13 @@
     [self.operationManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
    
     NSString *URL = [NSString stringWithFormat:@"%@%@",HTURL,URLString];
-    ZWWLog(@"请求地址=%@,请求参数=%@",URL,parameters);
+    ZWWLog(@"请求地址=%@,\n请求参数=%@",URL,parameters);
     [self.operationManager POST:URL parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
-        
         //ZWWLog(@"uploadProgress=%@",uploadProgress);
     } success:^(NSURLSessionDataTask * _Nonnull task, NSMutableDictionary* responseObject) {
         NSDictionary *data;
         ZWWLog(@"[ZWRequest成功]: %@",responseObject);
         success(self,responseObject,data);
-        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [YJProgressHUD hideHUD];
         if (error.code == -1001) {
@@ -312,6 +309,27 @@ parameters:(NSDictionary*)parameters
         ZWWLog(@"===上传失败啦===上传失败啦====上传失败啦=%@",[error description])
         failure(self,error);
     }];
+}
+//- (void)Download:(NSString*)URLString fileDir:( nullable NSString *)fileDir progress:( nullable ApiProgress)progress
+//success:(void (^_Nullable)(ZWRequest * _Nullable request, NSMutableDictionary* _Nullable responseString,NSDictionary * _Nonnull data))success
+//         failure:(void (^_Nonnull)(ZWRequest * _Nullable request, NSError * _Nullable error))failure{
+//    self.operationQueue=self.operationManager.operationQueue;
+//    self.operationManager.responseSerializer = [AFJSONResponseSerializer serializer];//声明返回的结果是json类型
+//    self.operationManager.requestSerializer.timeoutInterval = 8.f;
+//    [self.operationManager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
+//    NSString *URL =[self urlControlWithURL:URL param:nil];
+//    
+//    
+//}
+#pragma mark - 内外部URL处理
+- (NSString *)urlControlWithURL:(NSString *)url param:(NSDictionary *)param
+{
+    ZWWLog(@"当前请求网址:%@",url);
+    if ([url rangeOfString:@"http:"].location != NSNotFound || [url rangeOfString:@"https:"].location != NSNotFound) {
+        return url;
+    }
+    ZWWLog(@"当前请求网址%@",[NSString stringWithFormat:@"%@%@",HTURL,url]);
+    return [NSString stringWithFormat:@"%@%@",HTURL,url];
 }
 - (NSDictionary *)convertjsonStringToDict:(NSString *)jsonString
 {

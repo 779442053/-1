@@ -176,19 +176,17 @@
     if (tColor != nil) {
         _txtField.textColor = tColor;
     }
-    
-    if (placeColor != nil) {
-        [_txtField setValue:placeColor forKeyPath:@"_placeholderLabel.textColor"];
-    }
-    else{
-        if (tColor) {
-            [_txtField setValue:tColor forKeyPath:@"_placeholderLabel.textColor"];
-        }
-    }
-    
+
     return _txtField;
 }
 
+-(NSMutableAttributedString *)placeholder:(NSString *)text Tcolor:(UIColor *)tColor Font:(UIFont *)font{
+    if (text.length == 0) {
+        return nil;
+    }
+    NSMutableAttributedString *att = [[NSMutableAttributedString alloc]initWithString:text attributes:@{NSFontAttributeName:font,NSForegroundColorAttributeName:tColor}];
+    return att;
+}
 /** 根据背景色创建视图 */
 +(UIView *)createView:(CGRect)rect
    AndBackgroundColor:(UIColor *)bgcolor

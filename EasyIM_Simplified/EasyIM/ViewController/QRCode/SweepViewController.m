@@ -52,15 +52,15 @@
     CGFloat y = 0.f;
     CGRect rectWindow = [UIScreen mainScreen].bounds;
     //MARK: - 导航
-    UIImageView *navImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, rectWindow.size.width, 70)];
+    UIImageView *navImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, rectWindow.size.width, ZWStatusBarHeight + 40)];
     navImg.backgroundColor = [UIColor blackColor];
     navImg.alpha = 0.45f;
     [self.view addSubview:navImg];
     //MARK:返回
-    w = 24.f;
-    h = 24.f;
-    x = 10.f;
-    y = 30.f;
+    w = 30.f;
+    h = 30.f;
+    x = 15.f;
+    y = ZWStatusBarHeight;
     UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
     btnBack.frame = CGRectMake(x, y, w, h);
     
@@ -69,10 +69,10 @@
     [self.view addSubview:btnBack];
     
     //MARK:相册
-    w = 44.f;
+    w = 50.f;
     h = 44.f;
     x = rectWindow.size.width - w - 10.f;
-    y = 20.f;
+    y = ZWStatusBarHeight;
     UIButton *btnPhoto = [UIButton buttonWithType:UIButtonTypeCustom];
     btnPhoto.frame = CGRectMake(x, y, w, h);
     
@@ -85,7 +85,7 @@
     //MARK:标题
     w = 100.f;
     x = (rectWindow.size.width - w) / 2;
-    UILabel *labTitle = [[UILabel alloc] initWithFrame:CGRectMake(x, 31.5, w, 21.f)];
+    UILabel *labTitle = [[UILabel alloc] initWithFrame:CGRectMake(x, ZWStatusBarHeight, w, 21.f)];
     
     labTitle.text = @"扫一扫";
     labTitle.font = [UIFont systemFontOfSize:18];

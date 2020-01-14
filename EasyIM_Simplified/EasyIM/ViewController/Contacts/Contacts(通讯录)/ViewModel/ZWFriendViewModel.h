@@ -12,12 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ZWFriendViewModel : ZWBaseViewModel
 @property(nonatomic,strong) RACCommand *addFriendCommand;
-@property(nonatomic,strong) RACCommand *addFriendMsgCommand;
+//@property(nonatomic,strong) RACCommand *addFriendMsgCommand;
 @property(nonatomic,strong) RACCommand *acceptFriendCommand;
 @property(nonatomic,strong) RACCommand *rejectFriendCommand;
 @property(nonatomic,strong) RACCommand *setmemoFriendCommand;
 @property(nonatomic,strong) RACCommand *GetUserInfoCommand;
-//@property(nonatomic,strong) RACCommand *DeleteUserInfoCommand;
+@property(nonatomic,strong) RACCommand *deleteUserCommand;
 @end
 
 NS_ASSUME_NONNULL_END

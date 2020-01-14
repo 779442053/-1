@@ -38,21 +38,25 @@
     return YES;
 }
 - (void)applicationWillResignActive:(UIApplication *)application {
-     ZWWLog(@"当程序进入后台的时候调用")
+     ZWWLog(@"\n即将进入后台\n applicationWillResignActive")
 }
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     [ZWDataManager saveUserData];
     //    清除角标
     [[UIApplication alloc] setApplicationIconBadgeNumber:0];
+    ZWWLog(@"\n已经进入了后台\n applicationDidEnterBackground")
 }
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    ZWWLog(@"\n即将进入前台\n applicationWillEnterForeground")
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [[UIApplication alloc] setApplicationIconBadgeNumber:0];
+    ZWWLog(@"\n程序开始启动\n applicationDidBecomeActive")
 }
 - (void)applicationWillTerminate:(UIApplication *)application {
     [ZWDataManager saveUserData];
     [[UIApplication alloc] setApplicationIconBadgeNumber:0];
+    ZWWLog(@"\n 程序即将死掉 \n applicationWillTerminate")
 }
 +(UIViewController *)appRootViewController {
     UIViewController *appRootVC = [UIApplication sharedApplication].keyWindow.rootViewController;

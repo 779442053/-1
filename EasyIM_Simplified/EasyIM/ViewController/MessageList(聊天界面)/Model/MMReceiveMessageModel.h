@@ -35,6 +35,28 @@ NS_ASSUME_NONNULL_BEGIN
      toID = 3993692;
  };
  */
+/**
+ group =         {
+     fromID = 1544657;
+     fromName = lw007;
+     fromNick = "\U6d4b\U8bd5007";
+     fromPhoto = "http://imapi.joyvc.com/storage/users/2019/11/28/2019-11-28-20-52-40-5ddfc318e4e93.jpg";
+     groupID = 1436;
+     msg =             {
+         slice =                 (
+                                 {
+                 content = "\U7389\U6842\U72d7";
+                 type = text;
+             },
+                                 {
+                 type = null;
+             }
+         );
+     };
+     msgID = "200112-211739_00001_1544657_1436";
+     time = "2020-1-12 21:17:25";
+ };
+ */
 #pragma mark - 公共部分
 @property (nonatomic, copy) NSString *fromID;
 @property (nonatomic, copy) NSString *fromName;
