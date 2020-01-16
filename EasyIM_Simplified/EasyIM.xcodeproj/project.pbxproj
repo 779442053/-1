@@ -69,6 +69,13 @@
 		28233D7B238673CA0085D18B /* ZWFindPswViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 28233D7A238673CA0085D18B /* ZWFindPswViewModel.m */; };
 		28335675239DDEE600455EE0 /* ZWProfileEditerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28335674239DDEE600455EE0 /* ZWProfileEditerViewController.m */; };
 		2833733A2397AACB00CBA642 /* BaseNavgationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 283373392397AACB00CBA642 /* BaseNavgationController.m */; };
+		28379CB323D0661000434F2C /* ZWAVPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 28379CB223D0661000434F2C /* ZWAVPlayer.m */; };
+		28379CB623D0668300434F2C /* ZWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28379CB523D0668300434F2C /* ZWProgressView.m */; };
+		28379CBD23D0783300434F2C /* HVideoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28379CBA23D0783300434F2C /* HVideoViewController.xib */; };
+		28379CBE23D0783300434F2C /* HVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28379CBC23D0783300434F2C /* HVideoViewController.m */; };
+		28379CC023D07E7800434F2C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28379CBF23D07E7800434F2C /* Foundation.framework */; };
+		28379CC223D07E8400434F2C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28379CC123D07E8400434F2C /* Photos.framework */; };
+		28379CC423D07E9300434F2C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28379CC323D07E9300434F2C /* UIKit.framework */; };
 		2841EC0923B47B7F00EA6C20 /* ZWIMSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2841EC0823B47B7F00EA6C20 /* ZWIMSearchBar.m */; };
 		2841EC0D23B497FD00EA6C20 /* GroupCompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2841EC0B23B497FC00EA6C20 /* GroupCompleteViewController.m */; };
 		2841EC0E23B497FD00EA6C20 /* GroupCompleteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2841EC0C23B497FD00EA6C20 /* GroupCompleteViewController.xib */; };
@@ -583,6 +590,16 @@
 		28335674239DDEE600455EE0 /* ZWProfileEditerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWProfileEditerViewController.m; sourceTree = "<group>"; };
 		283373382397AACB00CBA642 /* BaseNavgationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseNavgationController.h; sourceTree = "<group>"; };
 		283373392397AACB00CBA642 /* BaseNavgationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseNavgationController.m; sourceTree = "<group>"; };
+		28379CB123D0661000434F2C /* ZWAVPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWAVPlayer.h; sourceTree = "<group>"; };
+		28379CB223D0661000434F2C /* ZWAVPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWAVPlayer.m; sourceTree = "<group>"; };
+		28379CB423D0668300434F2C /* ZWProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWProgressView.h; sourceTree = "<group>"; };
+		28379CB523D0668300434F2C /* ZWProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWProgressView.m; sourceTree = "<group>"; };
+		28379CBA23D0783300434F2C /* HVideoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HVideoViewController.xib; sourceTree = "<group>"; };
+		28379CBB23D0783300434F2C /* HVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HVideoViewController.h; sourceTree = "<group>"; };
+		28379CBC23D0783300434F2C /* HVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HVideoViewController.m; sourceTree = "<group>"; };
+		28379CBF23D07E7800434F2C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		28379CC123D07E8400434F2C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		28379CC323D07E9300434F2C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2841EC0723B47B7F00EA6C20 /* ZWIMSearchBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWIMSearchBar.h; sourceTree = "<group>"; };
 		2841EC0823B47B7F00EA6C20 /* ZWIMSearchBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZWIMSearchBar.m; sourceTree = "<group>"; };
 		2841EC0A23B497FB00EA6C20 /* GroupCompleteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupCompleteViewController.h; sourceTree = "<group>"; };
@@ -1186,6 +1203,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28379CC423D07E9300434F2C /* UIKit.framework in Frameworks */,
+				28379CC223D07E8400434F2C /* Photos.framework in Frameworks */,
+				28379CC023D07E7800434F2C /* Foundation.framework in Frameworks */,
 				28962C5223C6175300D4E75A /* libsqlite3.0.tbd in Frameworks */,
 				28962C5023C6173D00D4E75A /* libc++.tbd in Frameworks */,
 				28962C4E23C6172300D4E75A /* libicucore.tbd in Frameworks */,
@@ -2085,6 +2105,9 @@
 		B2CAB3D0341CBBB608F9716F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				28379CC323D07E9300434F2C /* UIKit.framework */,
+				28379CC123D07E8400434F2C /* Photos.framework */,
+				28379CBF23D07E7800434F2C /* Foundation.framework */,
 				28962C5123C6175300D4E75A /* libsqlite3.0.tbd */,
 				28962C4F23C6173D00D4E75A /* libc++.tbd */,
 				28962C4D23C6172300D4E75A /* libicucore.tbd */,
@@ -2513,6 +2536,10 @@
 				FAD47F33226DA36E0040B96E /* MMEmotionButton.m */,
 				FAD47F35226DA4AE0040B96E /* MMChatBox.h */,
 				FAD47F36226DA4AE0040B96E /* MMChatBox.m */,
+				28379CB123D0661000434F2C /* ZWAVPlayer.h */,
+				28379CB223D0661000434F2C /* ZWAVPlayer.m */,
+				28379CB423D0668300434F2C /* ZWProgressView.h */,
+				28379CB523D0668300434F2C /* ZWProgressView.m */,
 			);
 			path = ChatBox;
 			sourceTree = "<group>";
@@ -2850,6 +2877,9 @@
 				2821699D23BEEB990073A164 /* ZWLocationViewController.m */,
 				282169A223BF05100073A164 /* ZWMapLocationViewController.h */,
 				282169A323BF05100073A164 /* ZWMapLocationViewController.m */,
+				28379CBB23D0783300434F2C /* HVideoViewController.h */,
+				28379CBC23D0783300434F2C /* HVideoViewController.m */,
+				28379CBA23D0783300434F2C /* HVideoViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -3116,6 +3146,7 @@
 				8689EC5921E63B830024A6A0 /* 13.png in Resources */,
 				EDB6F6DB22281152004CA268 /* sel_bg@3x.png in Resources */,
 				EDB6F6C122263B8B004CA268 /* group@3x.png in Resources */,
+				28379CBD23D0783300434F2C /* HVideoViewController.xib in Resources */,
 				EDB6F6742223D010004CA268 /* contactList.png in Resources */,
 				EDB6F6B922263B8B004CA268 /* yqhd.png in Resources */,
 				EDB6F6D922281152004CA268 /* newGroup_tick@3x.png in Resources */,
@@ -3294,6 +3325,7 @@
 				FAD47F37226DA4AE0040B96E /* MMChatBox.m in Sources */,
 				FA022DE92286C72500E25218 /* MMClient.m in Sources */,
 				8625B67521EB83310050C023 /* ICAVPlayer.m in Sources */,
+				28379CBE23D0783300434F2C /* HVideoViewController.m in Sources */,
 				FA7A1900229BAEE500EC8C6A /* MMMemberCell.m in Sources */,
 				8689EC6E21E63B830024A6A0 /* JSONAPI.m in Sources */,
 				28117A03239E2AA600727AA9 /* ZWSocketConfig.m in Sources */,
@@ -3394,6 +3426,7 @@
 				C4C662DB2383DDCB0024C454 /* UIView+wyhRadius.m in Sources */,
 				FAD47F0D226D98040040B96E /* MMChatSystemCell.m in Sources */,
 				FAD47F31226DA2CA0040B96E /* MMEmotionPageView.m in Sources */,
+				28379CB623D0668300434F2C /* ZWProgressView.m in Sources */,
 				28789A9E23A35E68005416D3 /* UIViewController+ZWAlertViewAndActionSheet.m in Sources */,
 				28233D7B238673CA0085D18B /* ZWFindPswViewModel.m in Sources */,
 				FA2858B32271E45100E8C0F2 /* MMImageBrowser.m in Sources */,
@@ -3448,6 +3481,7 @@
 				FAD47F22226D9CE70040B96E /* MMChatBoxMoreViewItem.m in Sources */,
 				286A8A552398AC0B00B2A069 /* ZWAddFriendViewController.m in Sources */,
 				86FDEB46221FEF9C00C44450 /* ListFriendModel.m in Sources */,
+				28379CB323D0661000434F2C /* ZWAVPlayer.m in Sources */,
 				EDE6922423153312009F5349 /* CMInputView.m in Sources */,
 				28FA0A5E238E96D40025E87B /* ZWGroupModel.m in Sources */,
 				FAD47F42226DA8340040B96E /* MMDocumentViewController.m in Sources */,

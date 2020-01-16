@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) RACCommand *restUserNameCommand;
 @property(nonatomic,strong) RACCommand *deleteUserCommand;
 @property(nonatomic,strong) RACCommand *GetPushdataCommand;
+@property(nonatomic,strong) RACCommand *GetContactFriendCommand;
 @end
 
 NS_ASSUME_NONNULL_END

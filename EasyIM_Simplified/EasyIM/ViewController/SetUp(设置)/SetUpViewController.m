@@ -232,6 +232,7 @@ static NSString *const cell_identify = @"setup_cell_identify";
     ZWWLog(@"退出IM登录成功,开始清除本地数据=回到登录界面")
     [ZWSaveTool setBool:NO forKey:@"IMislogin"];
     [ZWDataManager removeUserData];
+    [ZWSocketManager DisConnectSocket];
     BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:[LoginVC new]];
     self.view.window.rootViewController  = nav;
 }

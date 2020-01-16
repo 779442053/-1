@@ -99,45 +99,34 @@ static NSString *const cell_identify = @"addressbook_cell_identify";
         [self.muArrSectionData addObject:@"#"];
     }
     //[E] 索引排序(升序)
-    
     [self.listTableView reloadData];
 }
-
 //获取列数据
 -(NSArray *_Nullable)getListCellForSection:(NSInteger)section{
     if (self.muArrSectionData && [self.muArrSectionData count] > section) {
         NSString *strKey = [NSString stringWithFormat:@"%@",self.muArrSectionData[section]];
         if (strKey.checkTextEmpty && self.muDicListData && [[self.muDicListData allKeys] containsObject:strKey]) {
-            
             NSArray *arrTemp = (NSArray *)[self.muDicListData valueForKey:strKey];
             return arrTemp;
         }
     }
-    
     return nil;
 }
-
-
-//MARK: - 添加好友
 -(IBAction)btnAddFriendAction:(UIButton *)sender{
     NSInteger section = sender.superview.superview.tag;
     NSInteger index = sender.superview.tag;
-    
     if (self.muArrSectionData && [self.muArrSectionData count] > section) {
         NSArray *arrTemp = [self getListCellForSection:section];
         if (arrTemp && [arrTemp count] > index){
             NSDictionary *dicTemp = arrTemp[index];
             NSLog(@"dicTemp:%@",dicTemp);
-            
             if (self.addFriendFinishBack) {
                 self.addFriendFinishBack();
             }
-        
             //暂无通过手机号加好友接口,只有通过UserId加好友的接口...
             [MMProgressHUD showHUD:@"暂无通过手机号加好友接口"];
         }
     }
-    
     NSLog(@"数据不存在,section:%ld,index:%ld",section,index);
 }
 

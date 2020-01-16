@@ -31,6 +31,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,assign) BULLETIN_FLOW_TYPE bulletinFlowType;
 @property(nonatomic,assign) BULLETIN_TYPE bulletinType;
+
+/**手机通讯录*/
+@property (nonatomic, copy)   NSString *username;
+@property (nonatomic, copy)   NSString *userid;
+@property (nonatomic, copy)   NSString *nickname;
+@property (nonatomic, copy)   NSString *mobile;
+@property (nonatomic, copy)   NSString *photoUrl;
 @end
 
 NS_ASSUME_NONNULL_END

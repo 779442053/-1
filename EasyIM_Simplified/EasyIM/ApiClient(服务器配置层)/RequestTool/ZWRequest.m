@@ -56,14 +56,13 @@
             [ZWMessage error:@"请求超时,请稍后再来" title:@"温馨提示"];
         }else if (error.code == -1009){
             [ZWMessage error:@"似乎已断开与互联网的连接" title:@"温馨提示"];
+            [MMProgressHUD showError:@"似乎已断开与互联网的连接"];
         }else{
             ZWWLog(@"[ZWRequest请求失败]: %@  \n %@",error.localizedDescription,error);
             [ZWMessage error:error.localizedDescription title:@"温馨提示"];
         }
         failure(self,error);
-        
     }];
-    
 }
 - (void)POSTTWO:(NSString *)URLString
   parameters:(NSDictionary*)parameters
@@ -128,6 +127,7 @@
             [ZWMessage error:@"请求超时,请稍后再来" title:@"温馨提示"];
         }else if (error.code == -1009){
             [ZWMessage error:@"似乎已断开与互联网的连接" title:@"温馨提示"];
+            [MMProgressHUD showError:@"似乎已断开与互联网的连接"];
         }else{
             ZWWLog(@"[ZWRequest请求失败]: %@  \n %@",error.localizedDescription,error);
             [ZWMessage error:error.localizedDescription title:@"温馨提示"];
@@ -170,8 +170,6 @@
 - (void)cancelAllOperations{
     [self.operationQueue cancelAllOperations];
 }
-
-
 - (void)upload:(NSString*)URLString withFileData:(NSData*)fileData mimeType:(NSString*)mimeType name:(NSString*)name
     parameters:(NSDictionary*)parameters
        success:(void (^)(ZWRequest *request, NSMutableDictionary* responseString,NSDictionary *data))success
@@ -209,6 +207,7 @@
             [ZWMessage error:@"请求超时,请稍后再来" title:@"温馨提示"];
         }else if (error.code == -1009){
             [ZWMessage error:@"似乎已断开与互联网的连接" title:@"温馨提示"];
+            [MMProgressHUD showError:@"似乎已断开与互联网的连接"];
         }else{
             ZWWLog(@"[ZWRequest请求失败]: %@  \n %@",error.localizedDescription,error);
             [ZWMessage error:error.localizedDescription title:@"温馨提示"];
@@ -266,6 +265,7 @@ parameters:(NSDictionary*)parameters
             [ZWMessage error:@"请求超时,请稍后再来" title:@"温馨提示"];
         }else if (error.code == -1009){
             [ZWMessage error:@"似乎已断开与互联网的连接" title:@"温馨提示"];
+            [MMProgressHUD showError:@"似乎已断开与互联网的连接"];
         }else{
             ZWWLog(@"[ZWRequest请求失败]: %@  \n %@",error.localizedDescription,error);
             [ZWMessage error:error.localizedDescription title:@"温馨提示"];

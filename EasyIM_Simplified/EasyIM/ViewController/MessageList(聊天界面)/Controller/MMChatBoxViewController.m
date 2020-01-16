@@ -24,7 +24,8 @@
 #import "MMAddMemberViewController.h"
 //位置
 #import "ZWLocationViewController.h"
-
+//拍照
+#import "HVideoViewController.h"
 #import "ZWChartViewModel.h"
 @interface MMChatBoxViewController ()<MMChatBoxDelegate,MMChatBoxMoreViewDelegate, UIImagePickerControllerDelegate,MMDocumentDelegate,UINavigationControllerDelegate,MMAddMemberViewControllerDelegate,LocationViewControllerDelegate>
 
@@ -225,11 +226,26 @@ didSelectItem:(MMChatBoxItem)itemType
                 [alertController addAction:OKAction];
                 [self  presentViewController:alertController animated:YES completion:nil];
             } else {
+                //开始使用相机拍照
                 if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                    self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-                    [self presentViewController:self.imagePicker animated:YES completion:nil];
+                    HVideoViewController *ctrl = [[NSBundle mainBundle] loadNibNamed:@"HVideoViewController" owner:nil options:nil].lastObject;
+                    ctrl.HSeconds = 30;
+                    ctrl.takeBlock = ^(id item) {
+                        if ([item isKindOfClass:[NSURL class]]) {
+                            NSURL *videoURL = item;
+                            ZWWLog(@"视频url = %@",videoURL)
+                        } else {
+                            NSURL *ImageURL = item;
+                            ZWWLog(@"图片url = %@",ImageURL)
+                        }
+                    };
+                    ctrl.modalPresentationStyle = 0;
+                    [self presentViewController:ctrl animated:YES completion:nil];
+//                    self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+//                    [self presentViewController:self.imagePicker animated:YES completion:nil];
                 } else {
-                    NSLog(@"camera is no available!");
+                    ZWWLog(@"camera is no available!");
+                    [YJProgressHUD showError:@"camera is no available!"];
                 }
             }
         }

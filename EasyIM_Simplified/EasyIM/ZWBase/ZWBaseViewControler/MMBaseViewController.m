@@ -9,6 +9,9 @@
 #import "MMBaseViewController.h"
 
 #import "LoginVC.h"
+#import "ZWDataManager.h"
+#import "ZWSocketManager.h"
+#import "ZWSaveTool.h"
 
 @interface MMBaseViewController ()
 
@@ -122,6 +125,9 @@
 }
 
 - (void)isLogin {
+    [ZWSaveTool setBool:NO forKey:@"IMislogin"];
+    [ZWSocketManager DisConnectSocket];
+    [ZWDataManager readUserData];
     BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:[LoginVC new]];
     nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.navigationController presentViewController:nav animated:YES completion:nil];

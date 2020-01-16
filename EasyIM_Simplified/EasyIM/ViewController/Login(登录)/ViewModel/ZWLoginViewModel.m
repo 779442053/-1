@@ -25,7 +25,8 @@
                     if ([responseString[@"data"] isKindOfClass:[NSDictionary class]]) {
                         NSDictionary *dict = responseString[@"data"];
                         ZWUserModel *userModel = [ZWUserModel currentUser];
-                        userModel.port = [dict[@"port"] intValue];//端口号
+                        userModel.port = [dict[@"port"] intValue];
+                        //userModel.port = 8089;//端口号
                         userModel.HostUrl = dict[@"webapi"];//接口地址,会变调
                         userModel.webrtc = dict[@"webrtc"];//socket  地址
                         userModel.host = dict[@"ip"];//IP地址
@@ -41,7 +42,7 @@
                         [subscriber sendCompleted];
                     }
                 }else{
-                    [YJProgressHUD showError:responseString[@"message"]];
+                    [MMProgressHUD showError:responseString[@"message"]];
                     [subscriber sendNext:@{@"code":@"1"}];
                     [subscriber sendCompleted];
                 }
@@ -104,13 +105,13 @@
                         parma[@"enc"] = @"0";
                         parma[@"zip"] = @"0";
                         parma[@"netstatus"] = @"0";
-                        ZWWLog(@"登录IM= \n %@",parma)
+                        ZWWLog(@"登录页面登录IM= \n %@",parma)
                         [ZWSocketManager ConnectSocketWithConfigM:[ZWSocketConfig ShareInstance] complation:^(NSError * _Nonnull error) {
                             if (!error) {
                                 [ZWSocketManager SendDataWithData:parma complation:^(NSError * _Nullable error, id  _Nullable data) {
                                     [YJProgressHUD hideHUD];
+                                    ZWWLog(@"登录界面 登录IM 返回数据 = %@",data)
                                     if (!error) {
-                                        ZWWLog(@"IM登录成功,监听音视频通话,界面开始跳转")
                                         [MMVedioCallManager sharedManager];
                                         [[NSNotificationCenter defaultCenter] postNotificationName:appLogin object:nil];
                                         [ZWSaveTool setBool:YES forKey:@"IMislogin"];
@@ -132,6 +133,7 @@
                     }
                 }else{
                     [YJProgressHUD showError:responseString[@"message"]];
+                    [MMProgressHUD showError:responseString[@"message"]];
                     [subscriber sendNext:@{@"code":@"1"}];
                     [subscriber sendCompleted];
                 }
@@ -145,12 +147,6 @@
             }];
         }];
     }];
-}
-
--(void)LoginIMSever{
-    
-    
-
 }
 -(NSString *)HexStringWithData:(NSData *)data{
     Byte *bytes = (Byte *)[data bytes];

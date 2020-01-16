@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isSelect;
 
+
+
 -(NSString *)getName;
 @end
 

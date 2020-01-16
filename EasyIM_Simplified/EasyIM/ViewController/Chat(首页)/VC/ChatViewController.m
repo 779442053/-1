@@ -39,18 +39,13 @@ static NSString *const identifier = @"ContactTableViewCell";
 @implementation ChatViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //if (ZWWOBJECT_IS_EMPYT([ZWUserModel currentUser].sessionID)) {
-        [[self.ViewModel.socketContactCommand execute:nil] subscribeNext:^(id  _Nullable x) {
-            if ([x intValue] == 0) {
-                //[YJProgressHUD showSuccess:@"连接成功"];
-            }else{
-                [YJProgressHUD showError:@"Tcp连接失败"];
-            }
-        }];
-//    }else{
-//        ZWWLog(@"登录的时候,已经进行了登录IMw服务器操作啦\n登录的时候,已经进行了登录IMw服务器操作啦 ")
-//    }
-    
+    [[self.ViewModel.socketContactCommand execute:nil] subscribeNext:^(id  _Nullable x) {
+        if ([x intValue] == 0) {
+            //[YJProgressHUD showSuccess:@"连接成功"];
+        }else{
+            [YJProgressHUD showError:@"Tcp连接失败"];
+        }
+    }];
 }
 -(ZWChatViewModel *)ViewModel{
     if (_ViewModel == nil) {
@@ -85,6 +80,9 @@ static NSString *const identifier = @"ContactTableViewCell";
             [self.tableView reloadData];
             [[NSNotificationCenter defaultCenter] postNotificationName:IMPushData object:self.pushListARR];
         }else if ([x[@"code"] intValue] == 2){
+            [ZWSaveTool setBool:NO forKey:@"IMislogin"];
+            [ZWSocketManager DisConnectSocket];
+            [ZWDataManager readUserData];
             LoginVC *login = [[LoginVC alloc]init];
             BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:login];
             [self.navigationController presentViewController:nav animated:YES completion:nil];
@@ -127,6 +125,8 @@ static NSString *const identifier = @"ContactTableViewCell";
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NEARLYLISTRELOAD object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CONTACTS_RELOAD object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:delfriend object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:deletegroup object:nil];
 }
 //MARK: - 右边工具栏
 - (void)rightBarButtonClicked:(UIButton *)sender
@@ -161,10 +161,59 @@ static NSString *const identifier = @"ContactTableViewCell";
 }
 - (void)registerNotic
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(FriendChangeNotifion:) name:delfriend object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(FriendChangeNotifion:) name:deletegroup object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noticReload:) name:NEARLYLISTRELOAD object:nil];//我的最近联系人记录
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noticReload:) name:CONTACTS_RELOAD object:nil];//通讯录
 }
-// 通知常用联系人/常用联系群 重新加载数据
+- (void)FriendChangeNotifion:(NSNotification *) notification{
+    NSDictionary *bojectDict = (NSDictionary *)notification.object;
+    if (bojectDict && [bojectDict.allValues containsObject:@"groupID"]) {
+        NSString *toID = bojectDict[@"groupID"];
+        WEAKSELF
+        [[MMChatDBManager shareManager] deleteConversation:toID
+                                                completion:^(NSString * _Nonnull aConversationId,
+                                                             NSError * _Nonnull aError) {
+            if (!aError) {
+                ZWWLog(@"我被踢出群====开始从本地删除数据源")
+                for (int i = 0; i < weakSelf.laterPersonDataArr.count; i++) {
+                  MMRecentContactsModel *model = weakSelf.laterPersonDataArr[i];
+                    NSString *userid = [NSString stringWithFormat:@"%@",model.userId];
+                    if ([userid isEqualToString:toID]) {
+                        ZWWLog(@"我删除成功,我删除成功")
+                        [weakSelf.laterPersonDataArr removeObjectAtIndex:i];
+                        [weakSelf.tableView reloadData];
+                    }
+                }
+                
+            }else{
+                MMLog(@"删除失败");
+            }
+        }];
+    }else{
+        NSString *toID = bojectDict[@"toID"];
+        WEAKSELF
+        [[MMChatDBManager shareManager] deleteConversation:toID
+                                                completion:^(NSString * _Nonnull aConversationId,
+                                                             NSError * _Nonnull aError) {
+            if (!aError) {
+                ZWWLog(@"我被对方删除好友====开始从本地删除数据源")
+                for (int i = 0; i < weakSelf.laterPersonDataArr.count; i++) {
+                  MMRecentContactsModel *model = weakSelf.laterPersonDataArr[i];
+                    NSString *userid = [NSString stringWithFormat:@"%@",model.userId];
+                    if ([userid isEqualToString:toID]) {
+                        ZWWLog(@"我删除成功,我删除成功")
+                        [weakSelf.laterPersonDataArr removeObjectAtIndex:i];
+                        [weakSelf.tableView reloadData];
+                    }
+                }
+                
+            }else{
+                MMLog(@"删除失败");
+            }
+        }];
+    }
+}
 - (void)noticReload:(NSNotification *) notification
 {
     NSString *tagType = notification.userInfo[@"tagType"];
@@ -184,6 +233,9 @@ static NSString *const identifier = @"ContactTableViewCell";
             [self.laterPersonDataArr removeAllObjects];
             [self.laterPersonDataArr addObjectsFromArray:x[@"res"]];
         }else if ([x[@"code"] intValue] == 2){
+            [ZWSaveTool setBool:NO forKey:@"IMislogin"];
+            [ZWSocketManager DisConnectSocket];
+            [ZWDataManager readUserData];
             LoginVC *login = [[LoginVC alloc]init];
             BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:login];
             [self.navigationController presentViewController:nav animated:YES completion:nil];

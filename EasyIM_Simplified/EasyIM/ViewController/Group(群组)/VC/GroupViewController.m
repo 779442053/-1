@@ -41,8 +41,21 @@ static NSString *const identifier = @"ContactTableViewCell";
     [rightPluss setImage:[UIImage imageNamed:@"添加"] forState:UIControlStateNormal];
     [self.navigationBgView addSubview:rightSearch];
     [self.navigationBgView addSubview:rightPluss];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupDelectTWO:) name:deletegroup object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(groupDelect:) name:@"groupdelect" object:nil];
+}
+-(void)groupDelectTWO:(NSNotification *)info{
+    NSDictionary * objectDict = (NSDictionary *)info.object;
+    NSString *groupid = [NSString stringWithFormat:@"%@",objectDict[@"groupID"]];
+    for (int i = 0; i < self.groupDataList.count; i++) {
+        ZWGroupModel *model = self.groupDataList[i];
+        NSString *modelid = [NSString stringWithFormat:@"%@",model.ID];
+        if ([groupid isEqualToString:modelid]) {
+            ZWWLog(@"删除这个我退出的群=%@",groupid)
+            [self.groupDataList removeObject:model];
+            [self.tableView reloadData];
+        }
+    }
 }
 -(void)groupDelect:(NSNotification *)info{
     id object = info.object;
@@ -116,7 +129,6 @@ static NSString *const identifier = @"ContactTableViewCell";
 
 -(void)sweepViewDidFinishError
 {
-    MMLog(@"扫描失败");
 }
 -(void)zw_addSubviews{
     [self.view addSubview:self.tableView];
@@ -261,6 +273,8 @@ static NSString *const identifier = @"ContactTableViewCell";
     }
     return _ViewModel;
 }
-
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 @end

@@ -186,10 +186,7 @@
         }
     }];
 }
-
-//MARK: - 删除好友
 - (void)deletefriend {
-    //删除好友
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"确定要删除该好友吗？" preferredStyle:UIAlertControllerStyleAlert];
     [self presentViewController:alert animated:YES completion:nil];
     
@@ -201,24 +198,47 @@
     [alert addAction:[UIAlertAction actionWithTitle:@"再想想" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [alert dismissViewControllerAnimated:YES completion:nil];
     }]];
-    
 }
 //删除好友
 - (void)toDeletefriend {
-    //走htttp
-    [[self.ViewModel.deleteUserCommand execute:self.userInfoDic.userid] subscribeNext:^(id  _Nullable x) {
-        if ([x[@"code"] intValue] == 0) {
-            [[MMChatDBManager shareManager] deleteConversation:self.userInfoDic.userid completion:^(NSString * _Nonnull aConversationId, NSError * _Nonnull aError) {
+    NSMutableDictionary *Parma = [[NSMutableDictionary alloc]init];
+    Parma[@"type"] = @"req";
+    Parma[@"xns"] = @"xns_user";
+    Parma[@"timeStamp"] = [MMDateHelper getNowTime];
+    Parma[@"cmd"] = @"delFriend";
+    Parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+    Parma[@"userId"] = [ZWUserModel currentUser].userId;
+    Parma[@"frdId"] = self.userInfoDic.userid;
+    ZW(weakself)
+    [ZWSocketManager SendDataWithData:Parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+        if (!error) {
+            [[MMChatDBManager shareManager] deleteConversation:weakself.userInfoDic.userid completion:^(NSString * _Nonnull aConversationId, NSError * _Nonnull aError) {
                 if (!aError) {
                     ZWWLog(@"成功")
                 }else{
                     ZWWLog(@"失败")
                 }
             }];
-            [[NSNotificationCenter defaultCenter] postNotificationName:delfriend object:self.userInfoDic.userid];
-            [self.navigationController popToViewController:self.navigationController.viewControllers[0] animated:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:delfriend object:weakself.userInfoDic.userid];
+            [weakself.navigationController popToViewController:self.navigationController.viewControllers[0] animated:YES];
+        }else{
+            
         }
     }];
+    //走htttp
+//    [[self.ViewModel.deleteUserCommand execute:self.userInfoDic.userid] subscribeNext:^(id  _Nullable x) {
+//        if ([x[@"code"] intValue] == 0) {
+//            [[MMChatDBManager shareManager] deleteConversation:weakself.userInfoDic.userid completion:^(NSString * _Nonnull aConversationId, NSError * _Nonnull aError) {
+//                if (!aError) {
+//                    ZWWLog(@"成功")
+//                }else{
+//                    ZWWLog(@"失败")
+//                }
+//            }];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:delfriend object:weakself.userInfoDic.userid];
+//            [weakself.navigationController popToViewController:self.navigationController.viewControllers[0] animated:YES];
+//        }
+//    }];
 
 }
 -(ZWFriendViewModel *)ViewModel{

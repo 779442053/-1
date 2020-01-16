@@ -197,5 +197,37 @@
         }];
     }];
     
+    ///获取通讯录里面的好友
+    self.GetContactFriendCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+        return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+             @strongify(self)
+            NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
+            parma[@"mobile"] = input;
+            [self.request POST:getuserbymobile parameters:parma success:^(ZWRequest *request, NSMutableDictionary *responseString, NSDictionary *data) {
+                ZWWLog(@"通讯录里面的好友 = %@",responseString)
+                if ([responseString[code] intValue] == 1) {
+                    NSArray *arr = [NewFriendModel  mj_objectArrayWithKeyValuesArray:responseString[@"data"][@"data"]];
+                    if (arr.count) {
+                        [subscriber sendNext:@{@"code":@"0",@"res":arr}];
+                    }else{
+                        [subscriber sendNext:@{@"code":@"1"}];
+                    }
+                }else if ([responseString[code] intValue] == 1020 && [responseString[msg] isEqualToString:@"登陆验证失败"]){
+                    [subscriber sendNext:@{@"code":@"2"}];
+                    [YJProgressHUD showError:responseString[msg]];
+                }else{
+                    [YJProgressHUD showError:responseString[msg]];
+                }
+                [subscriber sendCompleted];
+            } failure:^(ZWRequest *request, NSError *error) {
+                [MMProgressHUD showHUD:msg withDelay:1];
+                [subscriber sendCompleted];
+            }];
+            return [RACDisposable disposableWithBlock:^{
+                
+            }];
+        }];
+    }];;
+    
 }
 @end

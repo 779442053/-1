@@ -131,7 +131,6 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         MMLog(@"消息格式有误！详见：%@",userDic);
         return;
     }
-    //外部
     MMReceiveMessageModel *receiveModel = [MMReceiveMessageModel mj_objectWithKeyValues:userDic];
     NSString * fromID = [NSString stringWithFormat:@"%@",receiveModel.fromID];
     NSString * userID = [NSString stringWithFormat:@"%@",[ZWUserModel currentUser].userId];

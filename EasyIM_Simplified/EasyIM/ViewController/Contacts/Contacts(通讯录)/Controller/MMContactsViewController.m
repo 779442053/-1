@@ -34,6 +34,8 @@
 #import "KinTabBarController.h"
 
 #import "ZWContactsViewModel.h"
+
+#import "NewFriendModel.h"
 static CGFloat   const cell_section_height = 32;
 static CGFloat   const foot_view_empty_h = 200;
 
@@ -156,10 +158,10 @@ static MMContactsViewController *_shareInstance = nil;
     [self.navigationController pushViewController:searchVC animated:YES];
 }
 - (void)handleAddFriend:(NSNotification *_Nullable)notic{
-    //1.如果通知没有object 直接返回
     if (!notic.object) {
         return;
     }
+    ZWWLog(@"此处需要处理红点,作相应的操作=%@",notic.object)
     _unReadCount++;
     dispatch_async(dispatch_get_main_queue(), ^{
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
@@ -178,6 +180,10 @@ static MMContactsViewController *_shareInstance = nil;
         }
     });
     //需要区分什么通知,进而改变通讯录 数据源
+     NSDictionary *ObjcetDict = (NSDictionary *)notic.object;
+    if ([ObjcetDict[@"cmd"] isEqualToString:@"delFriend"]) {
+        
+    }
     
 }
 -(void)loadMoreData{
@@ -245,8 +251,6 @@ static MMContactsViewController *_shareInstance = nil;
         }
     }];
 }
-
-//MARK: - 获取联系人
 -(void)loadContactDataForRefresh:(BOOL)isRefresh
                     andAnimation:(BOOL)isAnimation{
     if (isRefresh) {
@@ -325,7 +329,6 @@ static MMContactsViewController *_shareInstance = nil;
         }
     }];
 }
-//MARK: - 创建组视图
 - (UIView *)createSectionHeadViewForTitle:(NSString *_Nonnull)strTitle{
     UIView *_sectionHeadView = [BaseUIView createView:CGRectMake(0, 0, G_SCREEN_WIDTH, cell_section_height)
                                    AndBackgroundColor:[UIColor colorWithHexString:@"#EFEFF4"]
@@ -333,7 +336,6 @@ static MMContactsViewController *_shareInstance = nil;
                                             AndRadiuc:0
                                        AndBorderWidth:0
                                        AndBorderColor:nil];
-    //标题
     CGFloat w = 50;
     CGFloat h = 21;
     CGFloat y = (cell_section_height - h) * 0.5;
@@ -367,12 +369,18 @@ static MMContactsViewController *_shareInstance = nil;
                 NSString *label = labelValue.label;
                 phoneNumbers = labelValue.value;
                 CNPhoneNumber *phoneNumber = labelValue.value;
-                NSLog(@"label=%@ 电话:%@\n", label,phoneNumber.stringValue);
-                [myDict setObject:phoneNumber.stringValue forKey:@"cellphone"];
+                ZWWLog(@"label=%@ 电话:%@\n", label,phoneNumber.stringValue);
+                NSString *phonenum = phoneNumber.stringValue;
+                if ([phonenum containsString:@"-"]) {
+                    phonenum = [phonenum stringByReplacingOccurrencesOfString:@"-" withString:@""];
+                }
+                if ([phonenum containsString:@" "]) {
+                    phonenum = [phonenum stringByReplacingOccurrencesOfString:@" " withString:@""];
+                }
+                [myDict setObject:phonenum forKey:@"cellphone"];
                 isTel = YES;
             }
-            if (isTel == NO) {[myDict setObject:@"" forKey:@"cellphone"];}
-            
+            if (isTel == NO) {[myDict setObject:@"11111111111" forKey:@"cellphone"];}
             if (!self.dataScoure) {
                 self.dataScoure = [NSMutableArray array];
             }
@@ -398,9 +406,36 @@ static MMContactsViewController *_shareInstance = nil;
         return YES;
     }];
     NSArray *arrTemp = [self.dataScoure filteredArrayUsingPredicate:predicate];
+    ZWWLog(@"arrTemp == %@",arrTemp)
     self.dataScoure = [NSMutableArray arrayWithArray:arrTemp];
+    //开始获取通讯录里面我的好友
+    [self getMyFriendFromContact:self.dataScoure];
 }
-//MARK: - 修改备注
+-(void)getMyFriendFromContact:(NSMutableArray *)contactARR{
+    NSMutableArray * telePhoneRR = [[NSMutableArray alloc]init];
+    for (int i = 0; i < contactARR.count ; i++) {
+        NSDictionary *tempDict = contactARR[i];
+        if (tempDict[@"cellphone"]) {
+            NSString* cellphone = tempDict[@"cellphone"];
+            [telePhoneRR addObject:cellphone];
+        }
+    }
+    ZWWLog(@"=====%@",telePhoneRR)
+    NSString *mobile = [telePhoneRR componentsJoinedByString:@","];
+    ZWWLog(@"=====%@",mobile)
+    [[self.ViewModel.GetContactFriendCommand execute:mobile] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            self.dataScoure = x[@"res"];
+            //处理数据
+            //NSMutableArray *arr = [[NSMutableArray alloc]init];
+            for (int i = 0; i < self.dataScoure.count; i++) {
+//                NSMutableDictionary * TemPDict = [[NSMutableDictionary alloc]init];//aName ,cellphone ,userphoto
+//                NewFriendModel *FriendMode = self.dataScoure[i];
+                
+            }
+        }
+    }] ;
+}
 - (void)remarkFriend:(NSIndexPath *)indexPath
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"修改备注" preferredStyle:UIAlertControllerStyleAlert];
@@ -444,9 +479,15 @@ static MMContactsViewController *_shareInstance = nil;
             ContactsModel *model = arrTemp[indexPath.row];
             if ([model isKindOfClass:[ContactsModel class]]) {
                 ZW(weakself)
-                [[self.ViewModel.deleteUserCommand execute:model.userId] subscribeNext:^(id  _Nullable x) {
-                    if ([x[@"code"] intValue] == 0) {
-                        //删除最近联系人
+                NSMutableDictionary *Parma = [[NSMutableDictionary alloc]init];
+                Parma[@"type"] = @"req";
+                Parma[@"xns"] = @"xns_user";
+                Parma[@"timeStamp"] = [MMDateHelper getNowTime];
+                Parma[@"cmd"] = @"delFriend";
+                Parma[@"sessionID"] = [ZWUserModel currentUser].sessionID;
+                Parma[@"frdId"] = model.userId;
+                [ZWSocketManager SendDataWithData:Parma complation:^(NSError * _Nullable error, id  _Nullable data) {
+                    if (!error) {
                         [[MMChatDBManager shareManager] deleteConversation:model.userId completion:^(NSString * _Nonnull aConversationId, NSError * _Nonnull aError) {
                             if (!aError) {
                                 ZWWLog(@"成功")
@@ -454,11 +495,31 @@ static MMContactsViewController *_shareInstance = nil;
                                 ZWWLog(@"失败")
                             }
                         }];
+                        
                         dispatch_async(dispatch_get_global_queue(0, 0), ^{
                             [weakself loadContactDataForRefresh:YES andAnimation:YES];
                         });
+                        
+                    }else{
+                        
                     }
                 }];
+                
+//                [[self.ViewModel.deleteUserCommand execute:model.userId] subscribeNext:^(id  _Nullable x) {
+//                    if ([x[@"code"] intValue] == 0) {
+//                        //删除最近联系人
+//                        [[MMChatDBManager shareManager] deleteConversation:model.userId completion:^(NSString * _Nonnull aConversationId, NSError * _Nonnull aError) {
+//                            if (!aError) {
+//                                ZWWLog(@"成功")
+//                            }else{
+//                                ZWWLog(@"失败")
+//                            }
+//                        }];
+//                        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//                            [weakself loadContactDataForRefresh:YES andAnimation:YES];
+//                        });
+//                    }
+//                }];
             }
         }
     }
@@ -578,14 +639,11 @@ static MMContactsViewController *_shareInstance = nil;
                     [self.navigationController pushViewController:vc animated:YES];
                 }
                     break;
-                    
-                //MARK:添加好友
                 case 1:
                 {
                     [self rightAction];
                 }
                     break;
-                 
                 //MARK:手机通讯录
                 case 2:
                 {
@@ -595,10 +653,8 @@ static MMContactsViewController *_shareInstance = nil;
                         [MMTools openSetting];
                     }
                     else{
-
                         //获取通讯录数据
                         [self getAddressData];
-                        
                         AddressBookViewController *vc = [[AddressBookViewController alloc] init];
                         vc.arrAddressData = self.dataScoure;
                         vc.addFriendFinishBack = ^{
