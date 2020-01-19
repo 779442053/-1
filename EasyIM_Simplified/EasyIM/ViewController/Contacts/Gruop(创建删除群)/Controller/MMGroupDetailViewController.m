@@ -30,7 +30,7 @@ static const CGFloat foot_view_h = 48;
 @property (nonatomic, strong) UIButton           *disbandedGroup;
 @property (nonatomic, strong) UIView *footView;
 @property (nonatomic, strong) ZWGroudDetailViewModel *viewModel;
-
+@property (nonatomic, strong) MemberList *creatMember;
 
 @end
 @implementation MMGroupDetailViewController{
@@ -60,10 +60,10 @@ static const CGFloat foot_view_h = 48;
                 [self.disbandedGroup setTitle:@"退出该群" forState:UIControlStateNormal];
                 [self.disbandedGroup setTitleColor:[UIColor colorWithHexString:@"#FF0000"] forState:UIControlStateNormal];
             }
-            MemberList *creatMember = [MemberList mj_objectWithKeyValues:datadict[@"createInfo"]];
+            self.creatMember = [MemberList mj_objectWithKeyValues:datadict[@"createInfo"]];
             NSArray<MemberList *> *memberList = [MemberList mj_objectArrayWithKeyValuesArray:datadict[@"list"]];
+            [self.dataSource removeAllObjects];
             [self.dataSource addObjectsFromArray:memberList];
-            [self.dataSource insertObject:creatMember atIndex:0];
             [self.tableView reloadData];
         }
     }];

@@ -27,14 +27,10 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
 @property (strong,nonatomic) AVCaptureDeviceInput *captureDeviceInput;
 //后台任务标识
 @property (assign,nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
-
 @property (assign,nonatomic) UIBackgroundTaskIdentifier lastBackgroundTaskIdentifier;
-
 @property (weak, nonatomic) IBOutlet UIImageView *focusCursor; //聚焦光标
-
 //负责输入和输出设备之间的数据传递
 @property(nonatomic)AVCaptureSession *session;
-
 //图像预览层，实时显示捕获的图像
 @property(nonatomic)AVCaptureVideoPreviewLayer *previewLayer;
 
@@ -49,31 +45,22 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
 @property (strong, nonatomic) IBOutlet UIImageView *bgView;
 //记录录制的时间 默认最大60秒
 @property (assign, nonatomic) NSInteger seconds;
-
 //记录需要保存视频的路径
 @property (strong, nonatomic) NSURL *saveVideoUrl;
-
 //是否在对焦
 @property (assign, nonatomic) BOOL isFocus;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *afreshCenterX;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *ensureCenterX;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *backCenterX;
-
 //视频播放
 @property (strong, nonatomic) ZWAVPlayer *player;
-
 @property (strong, nonatomic) IBOutlet ZWProgressView *progressView;
-
 //是否是摄像 YES 代表是录制  NO 表示拍照
 @property (assign, nonatomic) BOOL isVideo;
-
 @property (strong, nonatomic) UIImage *takeImage;
 @property (strong, nonatomic) UIImageView *takeImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *imgRecord;
-
-
 @end
-
 //时间大于这个就是视频，否则为拍照
 #define TimeMax 1
 @implementation HVideoViewController
@@ -95,7 +82,6 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -106,23 +92,18 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
 -(BOOL)prefersStatusBarHidden{
     return YES;
 }
-
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
 }
-
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     [self.session stopRunning];
 }
-
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
-
 - (void)customCamera {
-    
     //初始化会话，用来结合输入输出
     self.session = [[AVCaptureSession alloc] init];
     //设置分辨率 (设备支持的最高分辨率)
@@ -133,7 +114,6 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
     AVCaptureDevice *captureDevice = [self getCameraDeviceWithPosition:AVCaptureDevicePositionBack];
     //添加一个音频输入设备
     AVCaptureDevice *audioCaptureDevice=[[AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio] firstObject];
-    
     //初始化输入设备
     NSError *error = nil;
     self.captureDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:captureDevice error:&error];
@@ -141,7 +121,6 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
         ZWWLog(@"取得设备输入对象时出错，错误原因：%@",error.localizedDescription);
         return;
     }
-    
     //添加音频
     error = nil;
     AVCaptureDeviceInput *audioCaptureDeviceInput=[[AVCaptureDeviceInput alloc]initWithDevice:audioCaptureDevice error:&error];
@@ -149,7 +128,6 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
         NSLog(@"取得设备输入对象时出错，错误原因：%@",error.localizedDescription);
         return;
     }
-    
     //输出对象
     self.captureMovieFileOutput = [[AVCaptureMovieFileOutput alloc] init];//视频输出
     //将输入设备添加到会话
@@ -226,10 +204,26 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
     ZWWLog(@"重新录制");
     [self recoverLayout];
 }
-
+- (UIImage *)getScreenShotImageFromVideoPath:(NSURL *)fileURL{
+    UIImage *shotImage;
+    //视频路径URL
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:fileURL options:nil];
+    
+    AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    gen.appliesPreferredTrackTransform = YES;
+    CMTime time = CMTimeMakeWithSeconds(0.0, 600);
+    NSError *error = nil;
+    CMTime actualTime;
+    CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+    shotImage = [[UIImage alloc] initWithCGImage:image];
+    CGImageRelease(image);
+    return shotImage;
+}
 - (IBAction)onEnsureAction:(UIButton *)sender {
-    ZWWLog(@"确定 这里进行保存或者发送出去");
+    ZWWLog(@"确定 这里进行保存或者发送出去 = %@",self.saveVideoUrl);
     if (self.saveVideoUrl) {
+        //开始获取视频的第一帧
+        UIImage *FirstImage = [self getScreenShotImageFromVideoPath:self.saveVideoUrl];
         ZW(weakSelf)
         [YJProgressHUD showLoading:@"视频处理中..."];
         ALAssetsLibrary *assetsLibrary=[[ALAssetsLibrary alloc]init];
@@ -240,11 +234,13 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
                 [[UIApplication sharedApplication] endBackgroundTask:weakSelf.lastBackgroundTaskIdentifier];
             }
             if (error) {
-        ZWWLog(@"保存视频到相簿过程中发生错误，错误信息：%@",error.localizedDescription);
+    ZWWLog(@"保存视频到相簿过程中发生错误，错误信息：%@",error.localizedDescription);
                 [YJProgressHUD showError:@"保存视频到相册发生错误"];
             } else {
+                //assetURL 这是 短视频在相机里面的路径
+                //weakSelf.saveVideoUrl 短视频在公告区域的临时路径
                 if (weakSelf.takeBlock) {
-                    weakSelf.takeBlock(assetURL);
+                    weakSelf.takeBlock(weakSelf.saveVideoUrl,FirstImage);
                 }
                 ZWWLog(@"成功保存视频到相簿.");
                 [weakSelf onCancelAction:nil];
@@ -254,7 +250,7 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
         //照片
         UIImageWriteToSavedPhotosAlbum(self.takeImage, self, nil, nil);
         if (self.takeBlock) {
-            self.takeBlock(self.takeImage);
+            self.takeBlock(self.takeImage,nil);
         }
 
         [self onCancelAction:nil];
@@ -476,7 +472,6 @@ typedef void(^PropertyChangeBlock)(AVCaptureDevice *captureDevice);
         if ([captureDevice isFlashModeSupported:AVCaptureFlashModeAuto]) {
             [captureDevice setFlashMode:AVCaptureFlashModeAuto];
         }
-        
         propertyChange(captureDevice);
         [captureDevice unlockForConfiguration];
     }else{

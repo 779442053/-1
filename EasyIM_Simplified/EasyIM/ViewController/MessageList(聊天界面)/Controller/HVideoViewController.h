@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^TakeOperationSureBlock)(id item);
+typedef void(^TakeOperationSureBlock)(id item,UIImage *fistImage);
 
 @interface HVideoViewController : UIViewController
 

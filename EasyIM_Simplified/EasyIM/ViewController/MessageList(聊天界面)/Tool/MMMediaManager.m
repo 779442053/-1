@@ -180,7 +180,17 @@ static UIImage *_failedImage;
     [imageData writeToFile:filePath atomically:NO];
     return filePath;
 }
-
+- (NSString *)saveVideo:(UIImage *)Videodata{
+    ZWWLog(@"视频第一帧 = %@",Videodata)
+    NSData *imageData = UIImagePNGRepresentation(Videodata);
+    NSString *chachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    // 图片名称
+    NSString *fileName = [NSString stringWithFormat:@"%@%@",[NSString currentName],@".png"];
+    NSString *mainFilePath = [self createFolderPahtWithMainFolder:chachePath childFolder:kVideoPic];
+    NSString *filePath = [mainFilePath stringByAppendingPathComponent:fileName];
+    [imageData writeToFile:filePath atomically:YES];
+    return filePath;
+}
 // 发送图片的地址
 - (NSString *)sendImagePath:(NSString *)imgName
 {
@@ -189,9 +199,14 @@ static UIImage *_failedImage;
     NSString *mainFilePath = [self createFolderPahtWithMainFolder:chachePath childFolder:kMyPic];
     NSString *filePath = [mainFilePath stringByAppendingPathComponent:fileName];
     return filePath;
-    
 }
-
+- (NSString *)sendVideoPath:(NSString *)VideoName;{
+    NSString *chachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *fileName = [NSString stringWithFormat:@"%@",VideoName];
+    NSString *mainFilePath = [self createFolderPahtWithMainFolder:chachePath childFolder:kVideoPic];
+    NSString *filePath = [mainFilePath stringByAppendingPathComponent:fileName];
+    return filePath;
+}
 /// save video image in sandbox
 - (void)saveVideoImage:(UIImage *)image
               fileName:(NSString *)fileName

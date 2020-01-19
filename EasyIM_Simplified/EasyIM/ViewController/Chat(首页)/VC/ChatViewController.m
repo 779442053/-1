@@ -162,11 +162,11 @@ static NSString *const identifier = @"ContactTableViewCell";
 - (void)registerNotic
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(FriendChangeNotifion:) name:delfriend object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(FriendChangeNotifion:) name:deletegroup object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(GroupChangeNotifion:) name:deletegroup object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noticReload:) name:NEARLYLISTRELOAD object:nil];//我的最近联系人记录
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noticReload:) name:CONTACTS_RELOAD object:nil];//通讯录
 }
-- (void)FriendChangeNotifion:(NSNotification *) notification{
+- (void)GroupChangeNotifion:(NSNotification *) notification{
     NSDictionary *bojectDict = (NSDictionary *)notification.object;
     if (bojectDict && [bojectDict.allValues containsObject:@"groupID"]) {
         NSString *toID = bojectDict[@"groupID"];
@@ -190,14 +190,26 @@ static NSString *const identifier = @"ContactTableViewCell";
                 MMLog(@"删除失败");
             }
         }];
-    }else{
-        NSString *toID = bojectDict[@"toID"];
+    }
+}
+- (void)FriendChangeNotifion:(NSNotification *) notification{
+    id Object = notification.object;
+    NSString *toID;
+    if ([Object isKindOfClass:[NSString class]]) {
+        toID = Object;
+    }else if ([Object isKindOfClass:[NSDictionary class]]){
+        NSDictionary *bojectDict = (NSDictionary *)notification.object;
+        if (bojectDict && [bojectDict.allValues containsObject:@"toID"]) {
+            toID = bojectDict[@"toID"];
+        }else{
+           ZWWLog(@"通知类型错误")
+        }
         WEAKSELF
         [[MMChatDBManager shareManager] deleteConversation:toID
                                                 completion:^(NSString * _Nonnull aConversationId,
                                                              NSError * _Nonnull aError) {
             if (!aError) {
-                ZWWLog(@"我被对方删除好友====开始从本地删除数据源")
+                ZWWLog(@"我主动删除删除好友====开始从本地删除数据源")
                 for (int i = 0; i < weakSelf.laterPersonDataArr.count; i++) {
                   MMRecentContactsModel *model = weakSelf.laterPersonDataArr[i];
                     NSString *userid = [NSString stringWithFormat:@"%@",model.userId];
@@ -212,7 +224,10 @@ static NSString *const identifier = @"ContactTableViewCell";
                 MMLog(@"删除失败");
             }
         }];
+    }else{
+        ZWWLog(@"我也不知道究竟是什么类型")
     }
+    
 }
 - (void)noticReload:(NSNotification *) notification
 {

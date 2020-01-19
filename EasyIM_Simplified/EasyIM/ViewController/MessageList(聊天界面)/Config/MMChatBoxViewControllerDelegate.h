@@ -36,7 +36,10 @@
 - (void) chatBoxViewController:(MMChatBoxViewController *_Nullable)chatboxViewController
               sendImageMessage:(UIImage *_Nullable)image
                      imagePath:(NSString *_Nullable)imgPath;
-
+/**发送短视频*/
+- (void) chatBoxViewController:(MMChatBoxViewController *_Nullable)chatboxViewController
+sendVoideMessage:(NSData *_Nullable)voideData
+                FirstImagePath:(NSString *_Nullable)firstImagePath WithImage:(UIImage *_Nullable)firstImage;
 /**
  *  send 语音 message
  *

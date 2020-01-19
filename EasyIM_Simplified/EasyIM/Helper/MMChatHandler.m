@@ -24,6 +24,7 @@
 @property (nonatomic, strong) NSMutableArray *delegates;
 @property (nonatomic, strong) ZWChatHandlerViewModel *ViewModel;
 @property (nonatomic, copy) NSString *upLoadUrl;
+@property (nonatomic, copy) NSString *VideoupLoadUrl;
 @end
 
 @implementation MMChatHandler
@@ -85,7 +86,6 @@
     }];
     return message;
 }
-
 /**
  发送联系人消息=====
  */
@@ -168,7 +168,6 @@
     
     aStausChange();
 }
-
 /**
  保存消息和会话
  @param message 消息模型
@@ -183,9 +182,110 @@
         // 消息插入数据库
         [[MMChatDBManager shareManager] addMessage:message];
     }
-    
     // 数据库添加或者刷新会话
     [[MMChatDBManager shareManager] addOrUpdateConversationWithMessage:message isChatting:YES];
+}
+//发送短视频文件
+- (MMMessage *)sendVoideMessage:(NSString *)filePath
+        imageSize:(CGSize)size
+        VoideData:(NSData *)data
+        toUser:(NSString *)toUser
+    toUserName:(NSString *)toUserName
+toUserPhotoUrl:(NSString *)photoUrl
+           cmd:(NSString *)cmd
+                     completion:(void(^)(MMMessage *message))aCompletionBlock;
+{
+    //1.对内容模型赋值
+    MMChatContentModel *messageBody = [[MMChatContentModel alloc] init];
+    messageBody.type = TypeVideo;
+    messageBody.filePath = filePath;//视频第一帧的 图片本地地址
+    messageBody.width = size.width;
+    messageBody.height = size.height;
+    //2.对消息体某些字段传值,返回消息体
+    BOOL isGroup = NO;
+    NSString *chatType = @"chat";
+    MMConversationType cType = MMConversationType_Chat;
+    if ([cmd isEqualToString:@"groupMsg"]) {
+        isGroup = YES;
+        chatType = @"groupchat";
+        cType = MMConversationType_Group;
+    }
+    MMMessage *message = [[MMMessage alloc] initWithToUser:toUser toUserName:toUserName fromUser:[ZWUserModel currentUser].userId fromUserName:[ZWUserModel currentUser].userName chatType:chatType isSender:YES cmd:cmd cType:cType messageBody:messageBody];
+    message.messageType = MMMessageType_Video;
+    message.deliveryState = MMMessageDeliveryState_Delivering;
+    message.conversation = toUser;
+    message.fromPhoto = photoUrl;
+    //创建并发任务,多个任务,同时执行.所有任务执行完毕之后,得到完毕的通知.
+    dispatch_group_t dispatchGroup = dispatch_group_create();
+    dispatch_group_enter(dispatchGroup);
+    ZWWLog(@"开始上传短视频的封面图 = %@",filePath)
+    [self uploadImage:filePath WithGroup:dispatchGroup];
+    dispatch_group_enter(dispatchGroup);
+    ZWWLog(@"开始上传短视频的数据源 = %@",data)
+    [self uploadVideo:data WithGroup:dispatchGroup];
+    dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^{
+            NSLog(@"执行完毕 .开始发送消息请求 thread:%@",[NSThread currentThread]);
+            ZWWLog(@"image = %@  videoUrl = %@",self.upLoadUrl,self.VideoupLoadUrl)
+        messageBody.content = self.VideoupLoadUrl;
+        messageBody.filePath = filePath;
+        messageBody.cover = self.upLoadUrl;
+        [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {
+            ZWWLog(@"受到发送短视频消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
+            [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
+                aCompletionBlock(message);
+            }];
+        }];
+
+        });
+    //获取图片在服务器的路径
+//    [[self.ViewModel.UploadImageToSeverCommand execute:@{@"code":@"mov",@"res":filePath,@"data":data}] subscribeNext:^(id  _Nullable x) {
+//        if ([x[@"code"] intValue] == 0) {
+//            NSString *url = x[@"res"];
+//            if ([url isEqualToString:@""]) {
+//                messageBody.content = url;
+//                NSString *domain = @"com.MyCompany.MyApplication.ErrorDomain";
+//                NSString *desc = NSLocalizedString(@"Unable to…", @"");
+//                NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : desc };
+//                NSError *error = [NSError errorWithDomain:domain
+//                                                     code:-101
+//                                                 userInfo:userInfo];
+//                [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
+//                    aCompletionBlock(message);
+//                }];
+//            }else{
+//                messageBody.content = url;
+//                messageBody.filePath = filePath;
+//                [ZWSocketManager SendMessageWithMessage:message complation:^(NSError * _Nullable error, id  _Nullable data) {
+//                    ZWWLog(@"受到发送短视频消息成功block 2 里面的回调了后台返回消息发送成功的字典 =%@",data)
+//                    [self sendMessage:message isReSend:NO error:error aSendStausChange:^{
+//                        aCompletionBlock(message);
+//                    }];
+//                }];
+//            }
+//        }
+//    }];
+    return message;
+}
+//上传短视频第一帧
+-(void)uploadImage:(NSString *)filePath WithGroup:(dispatch_group_t)group{
+    ZWWLog(@"开始上传第一帧图片地址 = %@",filePath)
+    [[self.ViewModel.UploadImageToSeverCommand execute:@{@"code":@"image",@"res":filePath}] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            ZWWLog(@"服务器视频第一帧 ======= %@",x[@"res"])
+            self.upLoadUrl = x[@"res"];
+            dispatch_group_leave(group);
+        }
+    }];
+}
+-(void)uploadVideo:(NSData *)Video WithGroup:(dispatch_group_t)group{
+    ZWWLog(@"开始上传视频数据源 = %@",Video)
+    [[self.ViewModel.UploadVideoToSeverCommand execute:Video] subscribeNext:^(id  _Nullable x) {
+        if ([x[@"code"] intValue] == 0) {
+            self.VideoupLoadUrl = x[@"res"];
+            ZWWLog(@"服务器视频地址 ======= %@",self.VideoupLoadUrl)
+            dispatch_group_leave(group);
+        }
+    }];
 }
 //发送照片图片
 - (MMMessage *)sendImgMessage:(NSString *)filePath

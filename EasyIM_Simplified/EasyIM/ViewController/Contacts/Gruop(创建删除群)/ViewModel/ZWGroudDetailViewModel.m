@@ -48,6 +48,7 @@
                     [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTS_RELOAD object:nil];
                     [subscriber sendNext:@{@"code":@"0"}];
                 }else{
+                    [YJProgressHUD showError:error.description];
                     [subscriber sendNext:@{@"code":@"1"}];
                 }
                 [subscriber sendCompleted];

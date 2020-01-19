@@ -38,7 +38,17 @@ NS_ASSUME_NONNULL_BEGIN
                 toUserPhotoUrl:(NSString *)photoUrl
                            cmd:(NSString *)cmd
                     completion:(void(^) (MMMessage *message))aCompletionBlock;
-
+/**
+ 发送短视频
+ */
+- (MMMessage *)sendVoideMessage:(NSString *)filePath
+        imageSize:(CGSize)size
+        VoideData:(NSData *)data
+        toUser:(NSString *)toUser
+    toUserName:(NSString *)toUserName
+toUserPhotoUrl:(NSString *)photoUrl
+           cmd:(NSString *)cmd
+                     completion:(void(^)(MMMessage *message))aCompletionBlock;
 
 /**
  发送图片消息

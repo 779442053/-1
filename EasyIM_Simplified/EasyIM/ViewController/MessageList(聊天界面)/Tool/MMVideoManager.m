@@ -230,24 +230,17 @@
     }
     return [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@%@",videoName,kVideoType]];
 }
-
 - (NSString *)videoPathForMP4:(NSString *)namePath
 {
     NSString *videoPath   = [[MMVideoManager shareManager] videoPathWithFileName:[[namePath lastPathComponent] stringByDeletingPathExtension]];
     NSString *mp4Path     = [[videoPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"mp4"];
     return mp4Path;
 }
-
-
-
-
-
 // 接收到的视频保存路径(文件以fileKey为名字)
 - (NSString *)receiveVideoPathWithFileKey:(NSString *)fileKey
 {
     return [self videoPathWithFileName:fileKey];
 }
-
 - (NSURL *)convertMp4:(NSURL *)movUrl {
     NSURL *mp4Url = nil;
     AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:movUrl options:nil];
@@ -266,16 +259,16 @@
         [exportSession exportAsynchronouslyWithCompletionHandler:^{
             switch ([exportSession status]) {
                 case AVAssetExportSessionStatusFailed: {
-                    NSLog(@"failed, error:%@.", exportSession.error);
+                    ZWWLog(@"failed, error:%@.", exportSession.error);
                 } break;
                 case AVAssetExportSessionStatusCancelled: {
-                    NSLog(@"cancelled.");
+                    ZWWLog(@"cancelled.");
                 } break;
                 case AVAssetExportSessionStatusCompleted: {
-                    NSLog(@"completed.");
+                    ZWWLog(@"completed.");
                 } break;
                 default: {
-                    NSLog(@"others.");
+                    ZWWLog(@"others.");
                 } break;
             }
             dispatch_semaphore_signal(wait);
@@ -288,13 +281,9 @@
             wait = nil;
         }
     }
-    
     return mp4Url;
 }
-
-
 #pragma mark - Getter
-
 - (AVCaptureSession *)session
 {
     if (!_session) {
@@ -302,7 +291,6 @@
     }
     return _session;
 }
-
 - (AVCaptureMovieFileOutput *)captureMovieOutput
 {
     if (!_captureMovieOutput) {

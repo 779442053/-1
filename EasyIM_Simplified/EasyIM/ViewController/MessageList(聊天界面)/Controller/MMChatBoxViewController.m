@@ -27,6 +27,7 @@
 //拍照
 #import "HVideoViewController.h"
 #import "ZWChartViewModel.h"
+#import <Photos/Photos.h>
 @interface MMChatBoxViewController ()<MMChatBoxDelegate,MMChatBoxMoreViewDelegate, UIImagePickerControllerDelegate,MMDocumentDelegate,UINavigationControllerDelegate,MMAddMemberViewControllerDelegate,LocationViewControllerDelegate>
 
 @property (nonatomic, assign) CGRect keyboardFrame;
@@ -44,6 +45,10 @@
 @property(nonatomic,strong)MMVedioCallManager *vedioCallManager;
 @end
 @implementation MMChatBoxViewController
+{
+    NSURL *_exportMP4Path;
+    NSString *_realFileUrl;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -51,6 +56,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
     self.vedioCallManager = [MMVedioCallManager sharedManager];
+    _exportMP4Path = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"video_rc_tmp.mp4"]];
 }
 
 - (BOOL)resignFirstResponder
@@ -147,9 +153,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
-
 #pragma mark - Getter and Setter
-
 - (MMChatBox *) chatBox
 {
     if (_chatBox == nil) {
@@ -158,7 +162,6 @@
     }
     return _chatBox;
 }
-
 - (MMChatBoxFaceView *)chatBoxFaceView
 {
     if (nil == _chatBoxFaceView) {
@@ -166,7 +169,6 @@
     }
     return _chatBoxFaceView;
 }
-
 - (MMChatBoxMoreView *)chatBoxMoreView
 {
     if (nil == _chatBoxMoreView) {
@@ -230,19 +232,28 @@ didSelectItem:(MMChatBoxItem)itemType
                 if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
                     HVideoViewController *ctrl = [[NSBundle mainBundle] loadNibNamed:@"HVideoViewController" owner:nil options:nil].lastObject;
                     ctrl.HSeconds = 30;
-                    ctrl.takeBlock = ^(id item) {
+                    ZW(weakSelf)
+                    ctrl.takeBlock = ^(id item,UIImage *fistImage) {
                         if ([item isKindOfClass:[NSURL class]]) {
                             NSURL *videoURL = item;
-                            ZWWLog(@"视频url = %@",videoURL)
+                            ZWWLog(@"短视频在公告区域的临时路径url = %@",videoURL)
+                            ZWWLog(@"视频第一帧 = %@",fistImage)
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                    ZWWLog(@"将要转换的路径===%@",videoURL.path)//需要在公共区域 导出视频到我自定义的文件夹下满
+                                    AVURLAsset *asset = [AVURLAsset assetWithURL:videoURL];
+                                    [weakSelf startExportVideoWithVideoAsset:asset completion:^(NSString *outputPath) {
+                                   ZWWLog(@"===成功\n成功\n成功\n成功\n==outputPath=%@",outputPath)
+                                    }];
+                            });
+                            [self CarmaVoideUrl:videoURL WithFirstImage:fistImage];
                         } else {
-                            NSURL *ImageURL = item;
-                            ZWWLog(@"图片url = %@",ImageURL)
+                            UIImage *Image = item;
+                            ZWWLog(@"图片url = %@",Image)
+                            [self CarmaImage:Image];
                         }
                     };
                     ctrl.modalPresentationStyle = 0;
                     [self presentViewController:ctrl animated:YES completion:nil];
-//                    self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-//                    [self presentViewController:self.imagePicker animated:YES completion:nil];
                 } else {
                     ZWWLog(@"camera is no available!");
                     [YJProgressHUD showError:@"camera is no available!"];
@@ -252,11 +263,9 @@ didSelectItem:(MMChatBoxItem)itemType
             break;
         case MMChatBoxItemVedio://视频通话
         {
-            //MARK:群聊视频
             if (self.conversationType == MMConversationType_Group) {
                 [self groupInvitation:YES];
             }
-            //MARK:单聊视频
             else{
                 ZWWLog(@"张威威应该想后台获取通信地址,本地唤醒webrtc,视频")
                 NSMutableDictionary *parma = [[NSMutableDictionary alloc]init];
@@ -265,12 +274,10 @@ didSelectItem:(MMChatBoxItem)itemType
                 parma[CALL_CALLPARTY] = @(MMCallParty_Calling);
                 [[NSNotificationCenter defaultCenter] postNotificationName:CALL_Vedio1V1 object:parma];
             }
-            
         }
             break;
         case MMChatBoxItemVoice://音频通话
         {
-            //MARK:群聊语音
             if (self.conversationType == MMConversationType_Group) {
                 [self groupInvitation:NO];
             }
@@ -314,7 +321,6 @@ didSelectItem:(MMChatBoxItem)itemType
             ZWLocationViewController *addressVC = [[ZWLocationViewController alloc]init];
             addressVC.delegate = self;
             BaseNavgationController *nav = [[BaseNavgationController alloc] initWithRootViewController:addressVC];
-            //nav.navigationBar.hidden = NO;
             nav.modalPresentationStyle = 0;
             [self presentViewController:nav animated:YES completion:nil];
         }
@@ -337,10 +343,88 @@ didSelectItem:(MMChatBoxItem)itemType
             break;
     }
 }
-
+- (void)startExportVideoWithVideoAsset:(AVURLAsset *)videoAsset completion:(void (^)(NSString *outputPath))completion
+{
+    NSArray *presets = [AVAssetExportSession exportPresetsCompatibleWithAsset:videoAsset];
+    NSString *pre = nil;
+    if ([presets containsObject:AVAssetExportPreset3840x2160])
+    {
+        pre = AVAssetExportPreset3840x2160;
+    }
+    else if([presets containsObject:AVAssetExportPreset1920x1080])
+    {
+        pre = AVAssetExportPreset1920x1080;
+    }
+    else if([presets containsObject:AVAssetExportPreset1280x720])
+    {
+        pre = AVAssetExportPreset1280x720;
+    }
+    else if([presets containsObject:AVAssetExportPreset960x540])
+    {
+        pre = AVAssetExportPreset1280x720;
+    }
+    else
+    {
+        pre = AVAssetExportPreset640x480;
+    }
+    if ([presets containsObject:AVAssetExportPreset640x480]) {
+        AVAssetExportSession *session = [[AVAssetExportSession alloc]initWithAsset:videoAsset presetName:AVAssetExportPreset640x480];
+        NSDateFormatter *formater = [[NSDateFormatter alloc] init];
+        [formater setDateFormat:@"yy-MM-dd-HH:mm:ss"];
+        NSString *outputPath = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/%@", [[formater stringFromDate:[NSDate date]] stringByAppendingString:@".mp4"]];
+        NSLog(@"video outputPath = %@",outputPath);
+        //删除原来的 防止重复选
+        if ([[NSFileManager defaultManager] removeItemAtPath:_exportMP4Path.absoluteString error:nil]) {
+            ZWWLog(@"删除之前的公共区域视频成功")
+        }
+        _exportMP4Path =[NSURL fileURLWithPath:outputPath];
+        session.outputURL = [NSURL fileURLWithPath:outputPath];
+        session.shouldOptimizeForNetworkUse = YES;
+        NSArray *supportedTypeArray = session.supportedFileTypes;
+        if ([supportedTypeArray containsObject:AVFileTypeMPEG4]) {
+            session.outputFileType = AVFileTypeMPEG4;
+        } else if (supportedTypeArray.count == 0) {
+            NSLog(@"No supported file types 视频类型暂不支持导出");
+            return;
+        } else {
+            ZWWLog(@"该视频不支持转成MP4 格式,该视频不支持转成MP4 格式该视频不支持转成MP4 格式")
+            session.outputFileType = [supportedTypeArray objectAtIndex:0];
+        }
+        if (![[NSFileManager defaultManager] fileExistsAtPath:[NSHomeDirectory() stringByAppendingFormat:@"/Documents"]]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:[NSHomeDirectory() stringByAppendingFormat:@"/Documents"] withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+        if ([[NSFileManager defaultManager] fileExistsAtPath:_realFileUrl]) {
+            [[NSFileManager defaultManager] removeItemAtPath:_realFileUrl error:nil];
+        }
+        [session exportAsynchronouslyWithCompletionHandler:^(void) {
+            switch (session.status) {
+                case AVAssetExportSessionStatusUnknown:
+                    NSLog(@"AVAssetExportSessionStatusUnknown"); break;
+                case AVAssetExportSessionStatusWaiting:
+                    NSLog(@"AVAssetExportSessionStatusWaiting"); break;
+                case AVAssetExportSessionStatusExporting:
+                    NSLog(@"AVAssetExportSessionStatusExporting"); break;
+                case AVAssetExportSessionStatusCompleted: {
+                    NSLog(@"AVAssetExportSessionStatusCompleted");
+ZWWLog(@"导出视频成功导出视频成功AVAssetExportSessionStatusCompleted导出视频成功导出视频成功");
+                //当上传成功之后,为了用户体验.需要经本地的数据删除.除非用户手动保存在了相册里
+                    //这个 _realFileUrl  就是data 在本地的存储位置,拿到之后,上传服务器即可
+                    self->_realFileUrl = session.outputURL.path;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (completion) {
+                            completion(outputPath);
+                        }
+                    });
+                }  break;
+                case AVAssetExportSessionStatusFailed:
+                    NSLog(@"AVAssetExportSessionStatusFailed"); break;
+                default: break;
+            }
+        }];
+    }
+}
 -(void)groupInvitation:(BOOL)isVideo{
     __weak typeof(self) weakSelf = self;
-    //先获取群内部成员
     [[self.ViewMOdel.getGroupPeopleListCommand execute:self.groupId] subscribeNext:^(id  _Nullable x) {
         if ([x[@"code"] intValue]) {
             NSArray<MemberList *> *memberList = [MemberList mj_objectArrayWithKeyValuesArray:x[@"res"]];
@@ -412,7 +496,6 @@ didSelectItem:(MMChatBoxItem)itemType
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
-
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     UIImage *orgImage = info[UIImagePickerControllerOriginalImage];
@@ -426,9 +509,35 @@ didSelectItem:(MMChatBoxItem)itemType
     }
 }
 
+-(void)CarmaImage:(UIImage *)orgImage{
+    UIImage *simpleImg = [UIImage simpleImage:orgImage];
+    NSString *filePath = [[MMMediaManager sharedManager] saveImage:simpleImg];
+    if (_delegate && [_delegate respondsToSelector:@selector(chatBoxViewController:sendImageMessage:imagePath:)]) {
+        [_delegate chatBoxViewController:self sendImageMessage:simpleImg imagePath:filePath];
+    }
+}
+-(void)CarmaVoideUrl:(NSURL *)url WithFirstImage:(UIImage *)firstImage{
+//assets-library://asset/asset.mov?id=8558EA91-5CA4-4D6A-8773-834BDEAB1421&ext=mov
+    PHFetchResult *result = [PHAsset fetchAssetsWithALAssetURLs:@[url] options:nil];
+    PHAsset * PHAsset = result.firstObject;
+    PHAssetResource * resource = [[PHAssetResource assetResourcesForAsset: PHAsset] firstObject];
+     ZWWLog(@"短视频 ====  %@",resource);
+    PHImageRequestOptions * options = [[PHImageRequestOptions alloc] init];
+    options.version = PHImageRequestOptionsVersionCurrent;
+    options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+    options.synchronous = YES;
+    [[PHImageManager defaultManager] requestImageDataForAsset: PHAsset
+                                                      options: options
+                                                resultHandler: ^(NSData * imageData, NSString * dataUTI, UIImageOrientation orientation, NSDictionary * info) {
+                                                    ZWWLog(@"视频数据 = %@",imageData);
+        NSString *filePath = [[MMMediaManager sharedManager] saveVideo:firstImage];
+        if (_delegate && [_delegate respondsToSelector:@selector(chatBoxViewController: sendVoideMessage: FirstImagePath:WithImage:)]) {
+            [_delegate chatBoxViewController:self sendVoideMessage:imageData FirstImagePath:filePath WithImage:firstImage];
+        }
+    }];
+}
 
 #pragma mark - MMChatBoxDelegate
-
 /**
  *  输入框状态改变
  *

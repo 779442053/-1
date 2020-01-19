@@ -63,9 +63,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return 图片路径
  */
 - (NSString *)saveImage:(UIImage *)image;
+- (NSString *)saveVideo:(UIImage *)Videodata;
 
 - (void)clearCaches;
-
+// 发送视频的地址
+- (NSString *)sendVideoPath:(NSString *)VideoName;
 // 发送图片的地址
 - (NSString *)sendImagePath:(NSString *)imgName;
 

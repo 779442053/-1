@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong)RACCommand *GetuploadFileUrlCommand;
 @property(nonatomic,strong)RACCommand *uploadFileCommand;
 @property(nonatomic,strong)RACCommand *UploadImageToSeverCommand;
+@property(nonatomic,strong)RACCommand *UploadVideoToSeverCommand;
 @end
 
 NS_ASSUME_NONNULL_END

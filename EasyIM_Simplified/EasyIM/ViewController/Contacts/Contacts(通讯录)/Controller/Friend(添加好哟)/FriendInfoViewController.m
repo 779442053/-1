@@ -191,9 +191,7 @@
     [self presentViewController:alert animated:YES completion:nil];
     
     [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        
         [self toDeletefriend];
-        
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"再想想" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [alert dismissViewControllerAnimated:YES completion:nil];
@@ -225,21 +223,6 @@
             
         }
     }];
-    //走htttp
-//    [[self.ViewModel.deleteUserCommand execute:self.userInfoDic.userid] subscribeNext:^(id  _Nullable x) {
-//        if ([x[@"code"] intValue] == 0) {
-//            [[MMChatDBManager shareManager] deleteConversation:weakself.userInfoDic.userid completion:^(NSString * _Nonnull aConversationId, NSError * _Nonnull aError) {
-//                if (!aError) {
-//                    ZWWLog(@"成功")
-//                }else{
-//                    ZWWLog(@"失败")
-//                }
-//            }];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:delfriend object:weakself.userInfoDic.userid];
-//            [weakself.navigationController popToViewController:self.navigationController.viewControllers[0] animated:YES];
-//        }
-//    }];
-
 }
 -(ZWFriendViewModel *)ViewModel{
     if (_ViewModel == nil) {

@@ -540,8 +540,18 @@ static const CGFloat section_header_h = 60;
         [self clientManager:nil didReceivedMessage:message];
     }
 }
-
-//MARK: - 发送图片信息
+// 发送短视频
+- (void) chatBoxViewController:(MMChatBoxViewController *_Nullable)chatboxViewController
+sendVoideMessage:(NSData *_Nullable)voideData
+                FirstImagePath:(NSString *_Nullable)firstImagePath WithImage:(UIImage *_Nullable)firstImage{
+    WEAKSELF
+    MMMessage *message = [[MMChatHandler shareInstance] sendVoideMessage:firstImagePath imageSize:firstImage.size VoideData:voideData toUser:_conversationModel.toUid toUserName:[_conversationModel getTitle] toUserPhotoUrl:_conversationModel.photoUrl cmd:_conversationModel.cmd completion:^(MMMessage * _Nonnull message) {
+        [weakSelf updateSendStatusUIWithMessage:message];
+    }];
+   //这里先用返回回来的状态 也就是Loading...
+   [self clientManager:nil didReceivedMessage:message];
+}
+// - 发送图片信息
 - (void)chatBoxViewController:(MMChatBoxViewController *)chatboxViewController
              sendImageMessage:(UIImage *)image
                     imagePath:(NSString *)imgPath

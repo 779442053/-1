@@ -114,16 +114,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *filePath;
 
 #pragma mark - 语音
-
 /**语音时长,单位是秒*/
 @property (nonatomic, assign) NSInteger duration;
-
 #pragma mark - 图片
-
-/**图片的宽度*/
+/**图片的宽度 & 短视频的宽度*/
 @property (nonatomic, assign) CGFloat width;
-
-/**图片的高度 */
+/**图片的高度 & 短视频的宽度*/
 @property (nonatomic, assign) CGFloat height;
 
 #pragma mark - 文件
@@ -149,6 +145,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *userID;
 @property (nonatomic, copy) NSString *userName;
 
+#pragma mark - 短视频
+@property (nonatomic, copy) NSString *cover;//封面
 @end
 
 

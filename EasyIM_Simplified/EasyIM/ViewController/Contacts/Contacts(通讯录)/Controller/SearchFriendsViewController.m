@@ -38,7 +38,6 @@ static NSString *const page_size = @"10";
  */
 @property (nonatomic, strong) NSMutableArray *frdList;
 @property(nonatomic,strong)ZWAddFriendViewModel *ViewModel;
-
 @end
 @implementation SearchFriendsViewController
 - (void)viewDidLoad {
